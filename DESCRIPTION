@@ -1,0 +1,19 @@
+Package: GWmodel
+Version: 1.1-9
+Date: 2013-06-02
+Title: Geographically weighted models
+Author: Binbin Lu, Paul Harris, Isabella Gollini, Martin Charlton,
+        Chris Brunsdon
+Maintainer: Binbin Lu <lubinbin220@gmail.com>
+Depends: R (>= 3.0.0),maptools (>= 0.5-2), robustbase
+Suggests: mvoutlier, RColorBrewer, gstat
+Description: Functions for computing geographically weighted models
+Copyright: We gratefully acknowledge support from Science Foundation
+        Ireland under the National Development Plan through the award
+        of a Strategic Research Centre grant 07-SRC-I1168
+License: GPL (>= 2)
+URL: http://www.stratag.ie/index.php?id=gw_models_project
+Packaged: 2013-06-02 04:31:10 UTC; ronan
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-06-02 16:59:24

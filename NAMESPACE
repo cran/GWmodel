@@ -1,0 +1,9 @@
+export(montecarlo.gwpca.1,montecarlo.gwpca.2,plot.mcsims,bw.gwr, gwr.cv,gwr.cv.contrib, gwr.aic, gold, gw.dist, coordinate.rotation, Chebyshev, gw.weight.box, gw.weight.gau, gw.weight.bis, gw.weight.tri, gw.weight.gau.ad, gw.weight.bis.ad, gw.weight.tri.ad, gw.weight.box.ad, gw.weight, gwr.basic, gw.reg, print.summary.lm, F1234.test, model.selection.gwr, extract.mat, model.view.gwr, model.sort.gwr, Generate.formula, montecarlo.gwr, writeGWR, writeGWR.shp,gwr.fitted,gwr.generalised,gwr.poisson,gwr.binomial,local.corr,gwss,bw.ggwr,ggwr.cv,ggwr.cv.contrib,ggwr.aic,gwr.poisson.wt,gwr.binomial.wt,wpca,robustSvd,wt.median,rwpca,gwpca,bw.gwpca,gwpca.cv,gwpca.cv.contrib,gwr.lcr,ridge.lm,bw.gwr.lcr,gwr.lcr.cv,gwr.lcr.cv.contrib,gwr.t.adjust,gwr.predict,gw.reg1,gwr.robust,glyph.plot,check.components,gw.pcplot)
+
+S3method(print, mcsims)
+S3method(print, gwrm)
+S3method(print, ggwrm)
+S3method(print, gwss)
+S3method(print, gwrlcr)
+S3method(print, gwrm.pred)
+S3method(plot, mcsims)
