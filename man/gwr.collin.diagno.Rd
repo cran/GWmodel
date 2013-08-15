@@ -1,18 +1,19 @@
-\name{gwr.cv}
-\alias{gwr.cv}
-\title{Cross-validation score for a specified bandwidth for basic GWR}
+\name{gwr.collin.diagno}
+\alias{gwr.collin.diagno}
+\title{Local collinearity diagnostic for GWR}
 \description{
-This function finds the cross-validation score for a specified bandwidth for basic GWR
+This function diagnoses the local collinearity for a basic GWR model
 }
 \usage{
-gwr.cv(bw, X, Y, kernel, adaptive, dp.locat, p, theta,
-                 longlat, dMat, verbose = T)
+gwr.collin.diagno(formula, data, bw, kernel="gaussian",
+                    adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
-  \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{X}{a numeric matrix of independent samples with extra ones vector  for the 1st column}
-  \item{Y}{a one-column vector of dependent samples}
+  \item{formula}{Regression model formula of a \link{formula} object }
+  \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
+  \item{bw}{bandwidth used in the weighting function, possibly calculated by \code{bw.gwr.lcr};
+            fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
@@ -25,16 +26,17 @@ gwr.cv(bw, X, Y, kernel, adaptive, dp.locat, p, theta,
                 
                 boxcar: wgt=1 if dist < bw, wgt=0 otherwise}
   \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth (bw) corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
-  \item{dp.locat}{a two-column numeric array of observation coordinates}
   \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
   \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
-  \item{verbose}{if TRUE (default), reports the progress of search for bandwidth}
 }
 \value{
-  \item{CV.score}{cross-validation score}
+  \item{corr.mat}{Local correlation matrix}
+  \item{vifs.mat}{Local Variance inflation factors (VIFs) matrix}
+  \item{vdp.idx}{Condition index of variance-decomposition proportions}
+  \item{vdp.pi}{Variance-decomposition proportions}
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
-\keyword{cv, GWR}
+\keyword{collinearity,diagnostic, GWR}
 

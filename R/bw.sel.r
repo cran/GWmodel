@@ -14,11 +14,11 @@ bw.gwr<-function(formula, data, approach="CV",kernel="gaussian",adaptive=FALSE, 
   }
   #cat("This selection has been optimised by golden selection.\n")
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data"), names(mf), 0)
+  m <- match(c("formula", "data"), names(mf), 0L)
 
-  mf <- mf[c(1, m)]
+  mf <- mf[c(1L, m)]
   mf$drop.unused.levels <- TRUE
-  mf[[1]] <- as.name("model.frame")
+  mf[[1L]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
   mt <- attr(mf, "terms")
   y <- model.extract(mf, "response")
@@ -107,7 +107,7 @@ bw.gwr<-function(formula, data, approach="CV",kernel="gaussian",adaptive=FALSE, 
 
 ####Calculate the CV score with a given bandwidth
 ##Author: Binbin Lu
-gwr.cv<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+gwr.cv<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat, verbose=T)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -160,12 +160,14 @@ gwr.cv<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
   else
      {
         CV.score<-Inf
-     }  
-  if(adaptive)
-    cat("Adaptive bandwidth:", bw, "CV score:", CV.score, "\n")
-  else
-    cat("Fixed bandwidth:", bw, "CV score:", CV.score, "\n")
-  
+     }
+  if(verbose)
+  {
+    if(adaptive)
+      cat("Adaptive bandwidth:", bw, "CV score:", CV.score, "\n")
+    else
+      cat("Fixed bandwidth:", bw, "CV score:", CV.score, "\n")
+  }
   CV.score
 }
 
@@ -221,7 +223,7 @@ gwr.cv.contrib<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,
 }
 ####Calculate the AICc with a given bandwidth
 ##Author: Binbin Lu
-gwr.aic<-function(bw, X, Y, kernel,adaptive, dp.locat, p=2, theta=0, longlat=F,dMat)
+gwr.aic<-function(bw, X, Y, kernel,adaptive, dp.locat, p=2, theta=0, longlat=F,dMat, verbose=T)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -247,6 +249,7 @@ gwr.aic<-function(bw, X, Y, kernel,adaptive, dp.locat, p=2, theta=0, longlat=F,d
        dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat)
     }
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
+    
     #Ci=solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
     fun2<-function(X,W.i) {Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}}
     Ci<-try(fun2(X,W.i))
@@ -271,11 +274,14 @@ gwr.aic<-function(bw, X, Y, kernel,adaptive, dp.locat, p=2, theta=0, longlat=F,d
     AICc<-dp.n*log(sigma.hat2) + dp.n*log(2*pi) + dp.n *((dp.n + tr.S) / (dp.n - 2 - tr.S))
   }
   else
-    AICc<-Inf   
-  if(adaptive)
-    cat("Adaptive bandwidth (number of nearest neighbours):", bw, "AICc value:", AICc, "\n")
-  else
-    cat("Fixed bandwidth:", bw, "AICc value:", AICc, "\n")
+    AICc<-Inf
+  if(verbose)
+  {     
+    if(adaptive)
+      cat("Adaptive bandwidth (number of nearest neighbours):", bw, "AICc value:", AICc, "\n")
+    else
+      cat("Fixed bandwidth:", bw, "AICc value:", AICc, "\n")
+  }
   AICc
 }
 

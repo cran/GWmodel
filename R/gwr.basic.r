@@ -69,7 +69,7 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
     else
       {
         warning("Output loactions are not packed in a Spatial object,and it has to be a two-column numeric vector")
-        elocat<-dp.locat
+        rp.locat<-dp.locat
       }
   }
   ##Data points{
@@ -88,11 +88,11 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
-    mf[[1]] <- as.name("model.frame")
+    mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")
@@ -107,7 +107,7 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
     colnames(betas) <- colnames(x)
-    colnames(betas)[1]<-"Intercept"
+    #colnames(betas)[1]<-"Intercept"
 
     ##################################################
     #####Linear regression
@@ -289,7 +289,7 @@ print.gwrm<-function(x, ...)
   cat("   ")
   print(x$this.call)
   vars<-all.vars(x$GW.arguments$formula)
-  var.n<-length(vars)
+  var.n<-length(x$lm$coefficients)
 	cat("\n   Dependent (y) variable: ",vars[1])
 	cat("\n   Independent variables: ",vars[-1])
 	dp.n<-length(x$lm$residuals)
@@ -353,6 +353,12 @@ print.gwrm<-function(x, ...)
             warning("NAs in coefficients dropped")
         }
 	CM <- t(apply(df0, 2, summary))[,c(1:3,5,6)]
+	if(var.n==1) 
+    { 
+      CM <- matrix(CM, nrow=1)
+      colnames(CM) <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
+      rownames(CM) <- names(x$SDF)[1]
+    }
 	rnames<-rownames(CM)
 		for (i in 1:length(rnames))
 			 rnames[i]<-paste("   ",rnames[i],sep="")

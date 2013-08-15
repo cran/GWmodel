@@ -41,11 +41,11 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
-    mf[[1]] <- as.name("model.frame")
+    mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")
@@ -66,7 +66,7 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
     colnames(betas) <- colnames(x)
-    colnames(betas)[1]<-"Intercept"
+    #colnames(betas)[1]<-"Intercept"
     ####################################################GWR
 	  #########Distance matrix is given or not
 
@@ -125,6 +125,7 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
       res1<-gwr.poisson(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
     if(family=="binomial")  
       res1<-gwr.binomial(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
+    print(res1)
     ####################################
     CV <- numeric(dp.n)
     if(hatmatrix && cv)
@@ -169,7 +170,7 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
     colnames(betas) <- colnames(x)
-    colnames(betas)[1]<-"Intercept" 
+   # colnames(betas)[1]<-"Intercept" 
     ####################################
     ##model calibration
     it.count <- 0
@@ -287,7 +288,7 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
     colnames(betas) <- colnames(x)
-    colnames(betas)[1]<-"Intercept" 
+    #colnames(betas)[1]<-"Intercept" 
     ####################################
     ##model calibration
     n=rep(1,length(y))
@@ -396,7 +397,7 @@ print.ggwrm<-function(x, ...)
   cat("   ")
   print(x$this.call)
   vars<-all.vars(x$GW.arguments$formula)
-  var.n<-length(vars)
+  var.n<-length(x$glm.res$coefficients)
 	cat("\n   Dependent (y) variable: ",vars[1])
 	cat("\n   Independent variables: ",vars[-1])
 	dp.n<-length(x$glm.res$residuals)
@@ -446,6 +447,12 @@ print.ggwrm<-function(x, ...)
             warning("NAs in coefficients dropped")
         }
 	CM <- t(apply(df0, 2, summary))[,c(1:3,5,6)]
+	if(var.n==1) 
+    { 
+      CM <- matrix(CM, nrow=1)
+      colnames(CM) <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
+      rownames(CM) <- names(x$SDF)[1]
+    }
 	rnames<-rownames(CM)
 		for (i in 1:length(rnames))
 			 rnames[i]<-paste("   ",rnames[i],sep="")

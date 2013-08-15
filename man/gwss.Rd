@@ -60,18 +60,20 @@ localstats1
 ##A function for mapping data
 if(require("RColorBrewer"))
 {
-   quick.map <- function(spdf,var,legend.title,main.title) {
-   x <- spdf@data[,var]
-   cut.vals <- pretty(x)
-   x.cut <- cut(x,cut.vals)
-   cut.levels <- levels(x.cut)
-   cut.band <- match(x.cut,cut.levels)
-   colors <- rev(brewer.pal(length(cut.levels),'YlOrRd'))
-   par(mar=c(1,1,1,1))
-   plot(ewoutline,col='olivedrab',bg='lightblue1')
-   title(main.title)
-   plot(spdf,add=TRUE,col=colors[cut.band],pch=16)
-   legend('topleft',cut.levels,col=colors,pch=16,bty='n',title=legend.title)
+   quick.map <- function(spdf,var,legend.title,main.title) 
+   {
+     x <- spdf@data[,var]
+     cut.vals <- pretty(x)
+     x.cut <- cut(x,cut.vals)
+     cut.levels <- levels(x.cut)
+     cut.band <- match(x.cut,cut.levels)
+     colors <- brewer.pal(length(cut.levels), "YlOrRd")
+     colors <- rev(colors)
+     par(mar=c(1,1,1,1))
+     plot(ewoutline,col="olivedrab",bg="lightblue1")
+     title(main.title)
+     plot(spdf,add=TRUE,col=colors[cut.band],pch=16)
+     legend("topleft",cut.levels,col=colors,pch=16,bty="n",title=legend.title)
   }
   quick.map(localstats1$SDF, "PurPrice_LM", "1000's Uk Pounds", 
   "Geographically Weighted Mean")
@@ -84,7 +86,7 @@ if(require("RColorBrewer"))
   #Robust, Quantile Based Local Summary Statistics
   localstats2 <- gwss(houses.spdf, vars = c("PurPrice", "FlrArea"), 
   bw = 50000, quantile = TRUE)
-  quick.map(localstats2$SDF, "PurPrice_Median", "1000\'s UK Pounds", 
+  quick.map(localstats2$SDF, "PurPrice_Median", "1000 UK Pounds", 
   "Geographically Weighted Median House Price")
 }
 }

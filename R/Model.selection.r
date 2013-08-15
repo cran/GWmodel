@@ -1,5 +1,6 @@
 ##Model selection,specification by a step-wise like AIC procedure in a "forward" direction
-model.selection.gwr<-function(DeVar=NULL,InDeVars=NULL, data=list(),bw=NULL,approach="CV",adaptive=F,kernel="gaussian",dMat=NULL,p=2, theta=0, longlat=F)
+model.selection.gwr<-function(DeVar=NULL,InDeVars=NULL, data=list(),bw=NULL,approach="CV",
+                     adaptive=F,kernel="gaussian",dMat=NULL,p=2, theta=0, longlat=F)
 {
    if(is.null(DeVar)||!is.character(DeVar)||is.null(InDeVars)||!is.character(InDeVars))
     stop("Input are not correct, please recheck!")

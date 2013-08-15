@@ -2,18 +2,19 @@
 ##Change the positions of a sequence randomly
 #Author: Binbin Lu
 
-montecarlo.gwr<-function(formula, data = list(),dMat=NULL,nsims=99, kernel="gaussian",adaptive=F, bw)
+montecarlo.gwr<-function(formula, data = list(),nsims=99, kernel="gaussian",adaptive=F, bw,
+                         p=2, theta=0, longlat=F,dMat)
 {
   ##Extract the model data frame
-  this.call <- match.call()
-  if (!is.numeric(dMat)||!is(dMat, "matrix"))
-      stop("Distance matrix(dMat) has to be specified correctly")
-  else if (is.null(dMat))
-      dMat <- gw.dist(dp.locat=coordinates(data))  
+  this.call <- match.call() 
   if (!is.null(data))
   {
     if (is(data, "Spatial"))
+    {
        data <- as(data, "data.frame")
+       dp.locat <- coordinates(data)
+       dp.n<-nrow(dp.locat)
+    }
     else
     {
       if (!is(data, "data.frame"))
@@ -21,6 +22,18 @@ montecarlo.gwr<-function(formula, data = list(),dMat=NULL,nsims=99, kernel="gaus
     }
   }
   else stop("No regression data frame is avaiable!")
+  if (missing(dMat))
+  {
+      dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
+  }
+  else
+  {
+    dim.dMat<-dim(dMat)
+    if (!is.numeric(dMat)||!is(dMat, "matrix"))
+      stop("Distance matrix(dMat) has to be specified correctly")
+    if (dim.dMat[1]!=dp.n||dim.dMat[2]!=dp.n)
+       stop("Dimensions of dMat are not correct")
+  }
     mf <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data"), names(mf), 0)
 
@@ -33,7 +46,7 @@ montecarlo.gwr<-function(formula, data = list(),dMat=NULL,nsims=99, kernel="gaus
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
   var.n<-ncol(x)
-  dp.n<-dim(dMat)[1]
+  
   if (missing(bw))
       stop("Bandwidth must be given for non-adaptive weights")
   if (adaptive)

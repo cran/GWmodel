@@ -13,11 +13,11 @@ bw.ggwr<-function(formula, data, family ="poisson", approach="CV",kernel="gaussi
   }
   #cat("This selection has been optimised by golden selection.\n")
   mf<- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data"), names(mf), 0)
+  m <- match(c("formula", "data"), names(mf), 0L)
 
-  mf <- mf[c(1, m)]
+  mf <- mf[c(1L, m)]
   mf$drop.unused.levels <- TRUE
-  mf[[1]] <- as.name("model.frame")
+  mf[[1L]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
   mt <- attr(mf, "terms")
   y <- model.extract(mf, "response")
@@ -392,7 +392,7 @@ gwr.binomial.wt<-function(y,x,bw,W.mat)
     llik <- 0.0
     mu <- 0.5
     nu <- 0
-    cat(" Iteration    Log-Likelihood:",bw,")\n=========================\n")
+    cat(" Iteration    Log-Likelihood:(With bandwidth: ",bw,")\n=========================\n")
     wt2 <- rep(1,dp.n)
     repeat {
      y.adj <- nu + (y - n*mu)/(n*mu*(1 - mu))

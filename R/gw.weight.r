@@ -81,9 +81,9 @@ gw.weight.gau.ad<- function(vdist,bw){
 		bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance	
 		wgt<-t(exp(t(vdist*vdist)/{-2*bw*bw}))
 	}else{
-	rnk<-rank(vdist,ties.method='first') # ranked distances
-	bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
-	wgt<- exp(vdist*vdist/{-2*bw*bw})
+    rnk<-rank(vdist,ties.method='first') # ranked distances
+    bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
+    wgt<- exp(vdist*vdist/{-2*bw*bw})
 	}
 	wgt
 	}
@@ -91,9 +91,17 @@ gw.weight.gau.ad<- function(vdist,bw){
 #####
 
 gw.weight.exp.ad<- function(vdist,bw){
-	rnk<-rank(vdist,ties.method='first') # ranked distances
-	bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
-	wgt<- exp(-vdist/bw)
+  if (is.matrix(vdist)){
+		rnk<-apply(vdist,2,rank,ties.method='first')
+		bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance	
+		wgt<-exp(-vdist/bw)
+	}
+	else
+	{
+	  rnk<-rank(vdist,ties.method='first') # ranked distances
+	  bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
+	  wgt<- exp(-vdist/bw)
+	}
 	wgt
 	}
 
@@ -112,14 +120,16 @@ gw.weight.bis.ad<- function(vdist,bw){
 		sqwgt<- t(1-mdist^2/{bw*bw})
 		wgt[cond==1]<-sqwgt*sqwgt
 		
-	}else{
-	rnk<-rank(vdist,ties.method='first') # ranked distances
-	cond<- which(rnk < bw)               # condition for locations less than bw-th
-	bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
-	bw<-bw*bw
-	wgt<-numeric(length(vdist))
-	sqwgt<- 1-vdist[cond]^2/bw
-	wgt[cond]<-sqwgt**2
+	  }
+  else
+  {
+    rnk<-rank(vdist,ties.method='first') # ranked distances
+    cond<- which(rnk < bw)               # condition for locations less than bw-th
+    bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
+    bw<-bw*bw
+    wgt<-numeric(length(vdist))
+    sqwgt<- 1-vdist[cond]^2/bw
+    wgt[cond]<-sqwgt**2
 	}
 	
 	wgt
