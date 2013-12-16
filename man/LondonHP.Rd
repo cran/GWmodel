@@ -39,8 +39,12 @@ A house price data set with 18 hedonic variables for London in 2001 (along the r
   \url{http://www.nuim.ie/ncg/GWR/index.htm}
 }
 \references{
-  Fotheringham, A.S., Brunsdon, C., and Charlton, M.E. (2002), Geographically Weighted Regression: 
-  The Analysis of Spatially Varying Relationships, Chichester: Wiley.
+Fotheringham, A.S., Brunsdon, C., and Charlton, M.E. (2002), Geographically Weighted Regression: 
+The Analysis of Spatially Varying Relationships, Chichester: Wiley.
+  
+LU, B., CHARLTON, M., HARRIS, P. & FOTHERINGHAM, A. S. (2013). Geographically Weighted 
+Regression with a Non-Euclidean Distance Metric: a Case Study using Hedonic House Price Data. 
+International Journal of Geographical Information Science, DOI: 10.1080/13658816.2013.865739 (In press).
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \examples{

@@ -4,7 +4,7 @@
 ##Author: Binbin Lu, Isabella Gollini
 #Binbin - Could you do a bw.gwss() function just for the means and medians?
 #It wouldn't take much to do - i.e. the local means and medians are the predictions for the cross-validation approach.
-gwss <- function (data, summary.locat, vars, kernel = "gaussian", adaptive = FALSE, 
+gwss <- function (data, summary.locat, vars, kernel = "bisquare", adaptive = FALSE, 
           bw, p = 2, theta = 0, longlat = F, dMat, quantile = FALSE) 
 {
   findq <- function(x, w, p = c(0.25, 0.5, 0.75)) {
@@ -204,7 +204,7 @@ gwss <- function (data, summary.locat, vars, kernel = "gaussian", adaptive = FAL
                                     match.ID = F)
   }
   else SDF <- SpatialPointsDataFrame(coords = sp.locat, data = res.df, 
-                                     proj4string = CRS(p4s))
+                                     proj4string = CRS(p4s), match.ID=F)
   res <- list(SDF = SDF, vars = vars, kernel = kernel, adaptive = adaptive, 
               bw = bw, p = p, theta = theta, longlat = longlat, DM.given = DM.given, 
               sp.given = sp.given, quantile = quantile)
@@ -454,7 +454,7 @@ local.corr<-function(x,dp.locat, sp.locat,SD)
 
 
 # Randomisation Tests for GWSS
-montecarlo.gwss<-function(data, vars, kernel = "gaussian", 
+montecarlo.gwss<-function(data, vars, kernel = "bisquare", 
                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, 
                  dMat, quantile=FALSE,nsim=99) 
 {

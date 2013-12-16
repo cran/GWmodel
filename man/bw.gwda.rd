@@ -8,8 +8,8 @@ A function for bandwidth selection for GW Discriminant Analysis
 }
 \usage{
 bw.gwda(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
-                 prior = NULL, wqda = T, kernel = "gaussian", adaptive
-                 = FALSE, p = 2, theta = 0, longlat = F)
+                 prior = NULL, wqda = F, kernel = "bisquare", adaptive
+                 = FALSE, p = 2, theta = 0, longlat = F,dMat)
 }
 
 \arguments{
@@ -35,9 +35,10 @@ bw.gwda(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
   \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
   \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
   \item{longlat}{if TRUE, great circle distances will be calculated}
+  \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
 }
 \value{
-An optimum bandwidth
+Returns the adaptive or fixed distance bandwidth.
 }
 \references{
 Brunsdon, C, Fotheringham S,  and Charlton, M (2007),

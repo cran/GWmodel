@@ -1,4 +1,4 @@
-gwr.robust<-function(formula, data, regression.points, bw,filtered=FALSE, kernel = "gaussian", adaptive = FALSE, p = 2, theta = 0, longlat = F, dMat, F123.test = F,maxiter=20,cut.filter= 3,cut1=2,cut2=3,delta=1.0e-5) 
+gwr.robust<-function(formula, data, regression.points, bw,filtered=FALSE, kernel = "bisquare", adaptive = FALSE, p = 2, theta = 0, longlat = F, dMat, F123.test = F,maxiter=20,cut.filter= 3,cut1=2,cut2=3,delta=1.0e-5) 
     {    	   
     	W.vect<-NULL 	
     	res1<- gwr.basic(formula, data, regression.points, bw, kernel, adaptive, p, theta, longlat, dMat, F123.test, T,W.vect)

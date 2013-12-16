@@ -34,7 +34,7 @@
 # fitlocs         X,Y for fitting locations
 # [returns]       parameter estimates, standard errors
 #
-gwr.lcr <-function(formula, data, regression.points, bw, kernel="gaussian",
+gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
                     lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
                     adaptive=FALSE, p=2, theta=0, longlat=F,cv=T,dMat)
 {
@@ -85,15 +85,18 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="gaussian",
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
-    mf[[1]] <- as.name("model.frame")
+    mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
 	  var.n<-ncol(x)
 	  rp.n<-nrow(rp.locat)
     dp.n<-nrow(data)
@@ -124,7 +127,7 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="gaussian",
    trs <- 0
    trsts <- 0
    colnames(betas) <- colnames(x)
-   colnames(betas)[1]<-"Intercept"
+   #colnames(betas)[1]<-"Intercept"
 
    #######################
    ###### Main Loop ######
@@ -198,7 +201,7 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="gaussian",
       aicc <- dp.n*log(2*pi*s2) + dp.n*( (1+enp/dp.n) / (1-(enp+2)/dp.n) )
       CV<-numeric(dp.n)
       if(cv)
-        CV<-gwr.lcr.cv.contrib(bw,y,x,dp.locat,kernel,lambda,lambda.adjust,cn.thresh,adaptive, p, theta, longlat,dMat)
+        CV<-gwr.lcr.cv.contrib(bw,x,y,dp.locat,kernel,lambda,lambda.adjust,cn.thresh,adaptive, p, theta, longlat,dMat)
       GW.diagnostic<-list(AIC=aic,AICc=aicc,enp=enp, edf=edf,RSS=rss)
    }
    ####encapsulate the GWR results
@@ -337,13 +340,13 @@ ridge.lm <- function(y,X,w=rep(1,length(y)),lambda=0,add.int=TRUE) {
     # Final line does the ridge regression and back-transforms the coefs
     b <- t(solve(crossprod(Xws)+lambda*diag(ncol(Xws)),crossprod(Xws,yws))*ysd / Xsd)
 
-    if (add.int) colnames(b)[1] <- "(Intercept)"
+    if (add.int) colnames(b)[1] <- "Intercept"
     return(list(coef=b))
     }
 #######################################################################
 ############### ridge gwr bandwidth #####################
 #######################################################################
-bw.gwr.lcr <-function(formula, data, kernel="gaussian",
+bw.gwr.lcr <-function(formula, data, kernel="bisquare",
                     lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
                     adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
@@ -438,21 +441,21 @@ bw.gwr.lcr <-function(formula, data, kernel="gaussian",
   }
   #Select the bandwidth by golden selection
   bw<-NA
-  bw <- gold(gwr.lcr.cv,lower,upper,adapt.bw=adaptive,y,x,dp.locat,kernel,lambda,
+  bw <- gold(gwr.lcr.cv,lower,upper,adapt.bw=adaptive,x,y,dp.locat,kernel,lambda,
              lambda.adjust,cn.thresh,adaptive, p, theta, longlat,dMat)
   bw
 }
 
-gwr.lcr.cv <- function(bw,y,x,locs,kernel,
-                    lambda,lambda.adjust,cn.thresh,
-                    adaptive, p, theta, longlat,dMat)
+gwr.lcr.cv <- function(bw,X,Y,locs,kernel="bisquare",
+                    lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
+                    adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
    # get the dimensions of the problem
-   n <- dim(x)[1]
-   p <- dim(x)[2]
+   n <- dim(X)[1]
+   m <- dim(X)[2]
    fitlocs <- locs
    # arrays for the results
-   betas <- array(0, dim=c(n,p))
+   betas <- array(0, dim=c(n,m))
    local.cn <- rep(0,n)
    local.lambda <- rep(0,n)
    if (missing(dMat))
@@ -474,30 +477,30 @@ gwr.lcr.cv <- function(bw,y,x,locs,kernel,
 	  	wgt <-gw.weight(dist.vi,bw,kernel,adaptive)
       wgt[focus] <- 0
       #yw <- y * wgt
-      xw <- as.matrix(sweep(x[,-1],1,wgt,"*"))
+      xw <- as.matrix(sweep(X[,-1],1,wgt,"*"))
       #
       # Condition number check
       # Intercept
-      x1w <- as.matrix(sweep(x,1,wgt,"*"))                    # Weight it
+      x1w <- as.matrix(sweep(X,1,wgt,"*"))                    # Weight it
       svd.x <- svd(sweep(x1w, 2,sqrt(colSums(x1w^2)), "/"))$d  # SVD
-      local.cn[focus] <- svd.x[1] / svd.x[p]
+      local.cn[focus] <- svd.x[1] / svd.x[m]
 
       # this is the currently set global value of lambda
       local.lambda[focus] <- lambda
          # Lambda adjustment for the locally compensated model
          if (lambda.adjust) {
             if (local.cn[focus] > cn.thresh) {
-               local.lambda[focus] <- (svd.x[1] - cn.thresh*svd.x[p]) / (cn.thresh - 1)
+               local.lambda[focus] <- (svd.x[1] - cn.thresh*svd.x[m]) / (cn.thresh - 1)
                #print(paste("Adjust",lambda,lambda.local,local.cn[focus]))
             }
          }
 
       # Now, fit the ridge regression, and save the coefficients for this run
-      ridge.fit <- ridge.lm(y,x,wgt,local.lambda[focus],add.int=F)      # Compute the coefficients
+      ridge.fit <- ridge.lm(Y,X,wgt,local.lambda[focus],add.int=F)      # Compute the coefficients
       betas[focus,] <- ridge.fit$coef                     # store adjusted coefficients for focus
    }
-   yhat <- rowSums(x * betas)
-   residual <- y - yhat
+   yhat <- rowSums(X * betas)
+   residual <- Y - yhat
    cv <- sum(residual^2)
    if(adaptive)
     cat("Adaptive bandwidth(number of nearest neighbours):", bw, "CV score:", cv, "\n")
@@ -506,16 +509,16 @@ gwr.lcr.cv <- function(bw,y,x,locs,kernel,
    cv
 }
  #Contribution of each observation to the score statistic used in cross-validation for lcr.gwr
-gwr.lcr.cv.contrib <- function(bw,y,x,locs,kernel,
-                    lambda,lambda.adjust,cn.thresh,
-                    adaptive, p, theta, longlat,dMat)
+gwr.lcr.cv.contrib <- function(bw,X,Y,locs,kernel="bisquare",
+                    lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
+                    adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
    # get the dimensions of the problem
-   n <- dim(x)[1]
-   p <- dim(x)[2]
+   n <- dim(X)[1]
+   m <- dim(X)[2]
    fitlocs <- locs
    # arrays for the results
-   betas <- array(0, dim=c(n,p))
+   betas <- array(0, dim=c(n,m))
    local.cn <- rep(0,n)
    local.lambda <- rep(0,n)
    if (missing(dMat))
@@ -537,29 +540,29 @@ gwr.lcr.cv.contrib <- function(bw,y,x,locs,kernel,
 	  	wgt <-gw.weight(dist.vi,bw,kernel,adaptive)
       wgt[focus] <- 0
       #yw <- y * wgt
-      xw <- as.matrix(sweep(x[,-1],1,wgt,"*"))
+      xw <- as.matrix(sweep(X[,-1],1,wgt,"*"))
       #
       # Condition number check
       # Intercept
-      x1w <- as.matrix(sweep(x,1,wgt,"*"))                    # Weight it
+      x1w <- as.matrix(sweep(X,1,wgt,"*"))                    # Weight it
       svd.x <- svd(sweep(x1w, 2,sqrt(colSums(x1w^2)), "/"))$d  # SVD
-      local.cn[focus] <- svd.x[1] / svd.x[p]
+      local.cn[focus] <- svd.x[1] / svd.x[m]
 
       # this is the currently set global value of lambda
       local.lambda[focus] <- lambda
          # Lambda adjustment for the locally compensated model
          if (lambda.adjust) {
             if (local.cn[focus] > cn.thresh) {
-               local.lambda[focus] <- (svd.x[1] - cn.thresh*svd.x[p]) / (cn.thresh - 1)
+               local.lambda[focus] <- (svd.x[1] - cn.thresh*svd.x[m]) / (cn.thresh - 1)
                #print(paste("Adjust",lambda,lambda.local,local.cn[focus]))
             }
          }
 
       # Now, fit the ridge regression, and save the coefficients for this run
-      ridge.fit <- ridge.lm(y,x,wgt,local.lambda[focus],add.int=F)      # Compute the coefficients
+      ridge.fit <- ridge.lm(Y,X,wgt,local.lambda[focus],add.int=F)      # Compute the coefficients
       betas[focus,] <- ridge.fit$coef                     # store adjusted coefficients for focus
    }
-   yhat <- rowSums(x * betas)
-   cv <- y - yhat
+   yhat <- rowSums(X * betas)
+   cv <- Y - yhat
    cv
 }

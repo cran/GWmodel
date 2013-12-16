@@ -3,7 +3,7 @@
 #Referenced to Chris' R code
 gwr.fitted <- function(x,b) apply(x*b,1,sum)
 
-gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson", kernel="gaussian",
+gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson", kernel="bisquare",
               adaptive=FALSE, p=2, theta=0, longlat=F, dMat, cv=T,tol=1.0e-5, maxiter=20)
 {
   ##Record the start time
@@ -65,6 +65,9 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
     ##S: hatmatrix
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
     colnames(betas) <- colnames(x)
     #colnames(betas)[1]<-"Intercept"
     ####################################################GWR
@@ -125,7 +128,6 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
       res1<-gwr.poisson(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
     if(family=="binomial")  
       res1<-gwr.binomial(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
-    print(res1)
     ####################################
     CV <- numeric(dp.n)
     if(hatmatrix && cv)
@@ -196,7 +198,6 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
      wt2 <- mu
      it.count <- it.count+1
      if (it.count == maxiter) break}
-     
      if(hatmatrix)
      {
         for (i in 1:rp.n)
@@ -206,7 +207,9 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
           betas[i,]<-gw.resi[[1]] ######See function by IG
           S[i,]<-gw.resi[[2]]
           Ci<-gw.resi[[3]]
-          betas.SE[i,]<-diag(Ci%*%t(Ci))
+          #betas.SE[i,]<-diag(Ci%*%t(Ci)) 
+          invwt2 <- 1.0 /wt2
+          betas.SE[i,] <- diag((Ci*invwt2) %*% t(Ci))# diag(Ci/wt2%*%t(Ci))  #see Nakaya et al. (2005) 
         }
         tr.S<-sum(diag(S))
         tr.StS<-sum(S^2)
@@ -223,7 +226,8 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
            betas.SE[i,]<-sqrt(sigma.hat*betas.SE[i,])
            betas.TV[i,]<-betas[i,]/betas.SE[i,] 
         }
-        AICc <- -2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+        #AICc <- -2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+        AICc <- -2*llik + 2*tr.S + 2*tr.S*(tr.S+1)/(dp.n-tr.S-1)  # This is generic form of AICc (TN)
         yss.g <- sum((y - mean(y))^2)
         gw.R2<-1-rss/yss.g; ##R Square valeu
         gwR2.adj<-1-(1-gw.R2)*(dp.n-1)/(edf-1) #Adjusted R squared value
@@ -248,17 +252,16 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
       gwres.df<-data.frame(betas)
     }
     rownames(rp.locat)<-rownames(gwres.df)
-    
     if (is(regression.points, "SpatialPolygonsDataFrame"))
     {
        polygons<-polygons(regression.points)
        #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
+       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                            function(i) slot(i, "ID"))
        SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
+       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F) 
    ##############
     res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
 }
@@ -307,13 +310,13 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
         betas1[i,]<-gw.resi[[1]]
      }
      nu <- gwr.fitted(x,betas1)
-     mu <- exp(nu)/(1 + exp(nu))
+     mu <- exp(nu)/(1 + exp(nu))  
      old.llik <- llik
      llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/dp.n) + y*log(mu/n))
      if(is.na(llik)) llik <-old.llik
      cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
      if (abs((old.llik - llik)/llik) < tol) break
-     wt2 <- mu
+     wt2 <- n*mu*(1-mu) 
      it.count <- it.count+1
      if (it.count == maxiter) break}
      
@@ -326,7 +329,9 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
           betas[i,]<-gw.resi[[1]] ######See function by IG
           S[i,]<-gw.resi[[2]]
           Ci<-gw.resi[[3]]
-          betas.SE[i,]<-diag(Ci%*%t(Ci))
+          #betas.SE[i,]<-diag(Ci%*%t(Ci))
+          invwt2 <- 1.0 /wt2
+          betas.SE[i,] <- diag((Ci*invwt2) %*% t(Ci))   #see Nakaya et al. (2005)
         }
         tr.S<-sum(diag(S))
         tr.StS<-sum(S^2)
@@ -337,15 +342,16 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
         ########rss <- sum((y - gwr.fitted(x,b))^2)
         rss <- sum(residual^2)
         sigma.hat <- rss/edf
-        sigma.aic <- rss/dp.n
+        sigma.aic <- rss/dp.n   ### can be omitted? (TN)
         for(i in 1:dp.n)
         {
            betas.SE[i,]<-sqrt(sigma.hat*betas.SE[i,])
            betas.TV[i,]<-betas[i,]/betas.SE[i,] 
         }
-        AICc <- -2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+        #AICc <- -2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+        AICc <- -2*llik + 2*tr.S + 2*tr.S*(tr.S+1)/(dp.n-tr.S-1)
         yss.g <- sum((y - mean(y))^2)
-        gw.R2<-1-rss/yss.g; ##R Square valeu
+        gw.R2<-1-rss/yss.g; ##R Square valeu  ### is R2 needed? (TN)
         gwR2.adj<-1-(1-gw.R2)*(dp.n-1)/(edf-1) #Adjusted R squared value
         GW.diagnostic<-list(rss=rss,AICc=AICc,edf=edf,gw.R2=gw.R2,gwR2.adj=gwR2.adj)        
      }
@@ -373,12 +379,12 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     {
        polygons<-polygons(regression.points)
        #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
+       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                              function(i) slot(i, "ID"))
        SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
+       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
     res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
 }

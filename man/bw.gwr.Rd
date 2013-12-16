@@ -7,7 +7,7 @@
   A function for bandwidth selection to calibrate a basic GWR model
 }
 \usage{
-bw.gwr(formula, data, approach="CV",kernel="gaussian",
+bw.gwr(formula, data, approach="CV",kernel="bisquare",
                  adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 \arguments{

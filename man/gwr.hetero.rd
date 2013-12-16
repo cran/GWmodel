@@ -2,10 +2,12 @@
 \alias{gwr.hetero}
 \title{Heteroskedastic GWR }
 \description{
-This function implements Heteroskedastic GWR
+This function implements a heteroskedastic GWR model as described in 
+Fotheringham et al. (2002, p.80-82).  Related heteroskedastic GWR 
+models can be found in Harris et al. (2010; 2011).
 }
 \usage{
-gwr.hetero(formula, data, regression.points, bw, kernel="gaussian",
+gwr.hetero(formula, data, regression.points, bw, kernel="bisquare",
                     adaptive=FALSE, tol=0.0001,maxiter=50,verbose=T,
                     p=2, theta=0, longlat=F,dMat)}
 
@@ -41,6 +43,15 @@ gwr.hetero(formula, data, regression.points, bw, kernel="gaussian",
 \references{
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
+
+Harris P, Fotheringham AS, Juggins S (2010) Robust geographically weighed regression: 
+a technique for quantifying spatial relationships between freshwater acidification 
+critical loads and catchment attributes. Annals of the Association of American Geographers 100(2): 286-306
+
+Harris P, Brunsdon C, Fotheringham AS (2011) Links, comparisons and extensions of the geographically 
+weighted regression model when used as a spatial predictor.  Stochastic Environmental Research 
+and Risk Assessment 25:123-138
+
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \keyword{Heteroskedastic, GWR}

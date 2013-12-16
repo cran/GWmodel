@@ -5,13 +5,14 @@
 This function finds the cross-validation score for a specified bandwidth for generalised GWR
 }
 \usage{
-ggwr.cv(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+ggwr.cv(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.locat,  
+        p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{X}{a numeric matrix of independent samples with extra ones vector  for the 1st column}
-  \item{Y}{a one-column vector of dependent samples}
+  \item{X}{a numeric matrix of the independent data with an extra column of \dQuote{ones} for the 1st column}
+  \item{Y}{a column vector of the dependent data}
   \item{family}{a description of the error distribution and link function to
           be used in the model, which can be specified by \dQuote{poisson} or \dQuote{binomial}}
   \item{kernel}{function chosen as follows:

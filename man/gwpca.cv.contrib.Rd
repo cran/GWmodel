@@ -5,12 +5,12 @@
 This function finds the cross-validation data at each observation location for a basic or robust GWPCA with a specified bandwidth.  Can be used to detect outliers.
 }
 \usage{
-gwpca.cv.contrib(x,loc,bw,k=2,robust=FALSE,kernel,adaptive, p, theta, 
-                 longlat,dMat)
+gwpca.cv.contrib(x,loc,bw, k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,
+                 p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
-  \item{x}{a numeric matrix of independent samples with ones for the 1st column}
+  \item{x}{the variable matrix}
   \item{loc}{a two-column numeric array of observation coordinates}
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{k}{the number of retained components; k must be less than the number of variables}
@@ -33,7 +33,7 @@ gwpca.cv.contrib(x,loc,bw,k=2,robust=FALSE,kernel,adaptive, p, theta,
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
 }
 \value{
-  \item{CV}{a data vector consisting of squared residuals, whose mean is the cross-validation score for the specified bandwidth (bw) and component (k).}
+  \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth (bw) and component (k).}
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \keyword{cv, GWPCA}

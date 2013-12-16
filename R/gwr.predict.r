@@ -3,7 +3,7 @@
 # Author: BL, PH
 # dMat1: distance matrix between data points and prediction locations
 # dMat2: sysmetric distance matrix between data points 
-gwr.predict<-function(formula, data, predictdata, bw, kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F,dMat1, dMat2)
+gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat1, dMat2)
 {
    ##Record the start time
   timings <- list()
@@ -29,9 +29,9 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="gaussian",adaptive
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
@@ -39,6 +39,9 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="gaussian",adaptive
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
 	  var.n<-ncol(x)
+	  idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
 	  inde_vars <- colnames(x)[-1]
   #######data for prediction
   #####Prediction points
@@ -177,9 +180,9 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="gaussian",adaptive
     {
        polygons<-polygons(predict.SPDF)
        #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df)
+       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                            function(i) slot(i, "ID"))
+       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df, match.ID=F)
     }
     else
        SDF <- SpatialPointsDataFrame(coords=pd.locat, data=gwr.pred.df, proj4string=CRS(p4s))

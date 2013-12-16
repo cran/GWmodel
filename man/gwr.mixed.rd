@@ -10,14 +10,14 @@ This function implements mixed GWR
 }
 \usage{
 gwr.mixed(formula, data, regression.points, fixed.vars,
-                     intercept.fixed=FALSE, bw, diagnostic=T, kernel="gaussian", 
+                     intercept.fixed=FALSE, bw, diagnostic=T, kernel="bisquare", 
                      adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
   \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
   \item{regression.points}{a Spatial*DataFrame object, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
-  \item{fixed.vars}{independent variables appeared in the formula to be treated as global}
+  \item{fixed.vars}{independent variables that appeared in the formula that are to be treated as global}
   \item{intercept.fixed}{logical, if TRUE the intercept will be treated as global}
   \item{bw}{bandwidth used in the weighting function, possibly calculated by \link{bw.gwr};fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{diagnostic}{logical, if TRUE the diagnostics will be calculated}
@@ -52,6 +52,16 @@ A list of class \dQuote{mgwr}:
 \references{
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
+
+Brunsdon C, Fotheringham AS, Charlton ME (1999) Some notes on parametric signficance 
+tests for geographically weighted regression. Journal of Regional Science 39(3):497-524
+
+Mei L-M, He S-Y, Fang K-T (2004) A note on the mixed geographically weighted regression 
+model. Journal of regional science 44(1):143-157
+
+Mei L-M, Wang N, Zhang W-X (2006) Testing the importance of the explanatory variables 
+in a mixed geographically weighted regression model. Environment and Planning A 38:587-598
+
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \keyword{mixed, GWR}

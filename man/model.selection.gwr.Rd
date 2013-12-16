@@ -8,7 +8,7 @@ This function selects one GWR model from many alternatives based on the AICc val
 }
 \usage{
 model.selection.gwr(DeVar=NULL,InDeVars=NULL, data=list(),bw=NULL,approach="CV",
-               adaptive=F,kernel="gaussian",dMat=NULL,p=2, theta=0, longlat=F)
+               adaptive=F,kernel="bisquare",dMat=NULL,p=2, theta=0, longlat=F)
 }
 \arguments{
   \item{DeVar}{dependent variable}
@@ -62,6 +62,11 @@ included in the model.
 In this procedure, the independent variables are iteratively included into the model in a "forward" direction.
 Note that there is a clear distinction between the different number of involved variables in a
 selection step, which can be called model levels.
+}
+\references{
+LU, B., CHARLTON, M., HARRIS, P. & FOTHERINGHAM, A. S. (2013). Geographically Weighted 
+Regression with a Non-Euclidean Distance Metric: a Case Study using Hedonic House Price Data. 
+International Journal of Geographical Information Science, DOI: 10.1080/13658816.2013.865739(In press).
 }
 \seealso{\code{\link{model.view.gwr}}, \code{\link{model.sort.gwr}}}
 % Add one or more standard keywords, see file 'KEYWORDS' in the

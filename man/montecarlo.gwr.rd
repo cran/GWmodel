@@ -2,9 +2,10 @@
 \alias{montecarlo.gwr}
 \title{Monte Carlo (randomisation) test for significance of GWR parameter variability}
 \description{
-This function uses Monte Carlo approach to do significance testing for the variability of individual parameters(regression coefficients)}
+This function implements a Monte Carlo (randomisation) test to test for significant 
+(spatial) variability of a GWR model's parameters or coefficients.}
 \usage{
-montecarlo.gwr(formula, data = list(),nsims=99, kernel="gaussian",adaptive=F, bw,
+montecarlo.gwr(formula, data = list(),nsims=99, kernel="bisquare",adaptive=F, bw,
                          p=2, theta=0, longlat=F,dMat)
 }
 \arguments{
@@ -37,19 +38,19 @@ Brunsdon C, Fotheringham AS, Charlton ME (1998) Geographically weighted regressi
 Journal of the Royal Statistical Society, Series D-The Statistician 47(3):431-443
 
 
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://www.nuim.ie/ncg/GWR/index.htm}.
+Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \examples{
 \dontrun{
 data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))
-bw<-bw.gwr(PURCHASE~FLOORSZ,data=londonhp,dMat=DM)
+bw<-bw.gwr(PURCHASE~FLOORSZ,data=londonhp,dMat=DM, kernel="gaussian")
 #See any difference in the next two commands and why?
 res.mont1<-montecarlo.gwr(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
-nsim=99,adaptive=FALSE, bw=3000)
+nsim=99, kernel="gaussian", adaptive=FALSE, bw=3000)
 res.mont2<-montecarlo.gwr(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
-nsim=99,adaptive=FALSE, bw=300000000000)
+nsim=99, kernel="gaussian", adaptive=FALSE, bw=300000000000)
 }
 }
 \keyword{MonteCarlo , test}

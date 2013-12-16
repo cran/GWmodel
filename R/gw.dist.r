@@ -66,7 +66,7 @@
         for (i in 1:n.rp)
         {
           if (longlat)
-             dist.res[,i]<-spDistsN1(dp.locat, rp.locat[i,],longlat=longlat)
+             dist.res[,i]<-spDistsN1(dp.locat, matrix(rp.locat[i,],nrow=1),longlat=longlat)
           else
           {
               for (j in 1:n.dp)
@@ -88,7 +88,9 @@
           for (j in (i+1):n.dp)
           {
             if (longlat)
-               dist.res[j,i]<-spDistsN1(dp.locat[j,], rp.locat[i,],longlat=longlat)
+            {
+               dist.res[j,i]<-spDistsN1(matrix(dp.locat[j,],nrow=1), matrix(rp.locat[i,],nrow=1),longlat=longlat)
+            }
             else
             {
                 if  (p==2)

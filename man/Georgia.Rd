@@ -28,9 +28,6 @@
 \details{
 This data set can also be found in GWR 3 and in spgwr.
 }
-\source{
-  \url{http://www.nuim.ie/ncg/GWR/index.htm}
-}
 \references{
   Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.

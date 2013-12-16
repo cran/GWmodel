@@ -2,7 +2,7 @@
 ##Change the positions of a sequence randomly
 #Author: Binbin Lu
 
-montecarlo.gwr<-function(formula, data = list(),nsims=99, kernel="gaussian",adaptive=F, bw,
+montecarlo.gwr<-function(formula, data = list(),nsims=99, kernel="bisquare",adaptive=F, bw,
                          p=2, theta=0, longlat=F,dMat)
 {
   ##Extract the model data frame
@@ -11,8 +11,8 @@ montecarlo.gwr<-function(formula, data = list(),nsims=99, kernel="gaussian",adap
   {
     if (is(data, "Spatial"))
     {
-       data <- as(data, "data.frame")
        dp.locat <- coordinates(data)
+       data <- as(data, "data.frame")
        dp.n<-nrow(dp.locat)
     }
     else
@@ -52,8 +52,8 @@ montecarlo.gwr<-function(formula, data = list(),nsims=99, kernel="gaussian",adap
   if (adaptive)
   {
     stopifnot(is.numeric(bw))
-    stopifnot((bw >= 0))
-    stopifnot((bw <= 1))
+    stopifnot((bw > 0))
+    stopifnot((bw <= dp.n))
   }
   else
   {

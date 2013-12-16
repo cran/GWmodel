@@ -1,6 +1,6 @@
 ##Bandwidth selection for generalized GWR models
 #Author: Binbin Lu
-bw.ggwr<-function(formula, data, family ="poisson", approach="CV",kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
+bw.ggwr<-function(formula, data, family ="poisson", approach="CV",kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
 	if (is(data, "Spatial"))
   {
@@ -78,9 +78,7 @@ bw.ggwr<-function(formula, data, family ="poisson", approach="CV",kernel="gaussi
   }
   ########################## Now the problem for the golden selection is too computationally heavy
     #Select the bandwidth by golden selection
-    bw<-NA
-    cat(lower,upper)
-    
+    bw<-NA    
     if(approach=="cv"||approach=="CV")
        bw <- gold(ggwr.cv,lower,upper,adapt.bw=adaptive,x,y,family=family,kernel,adaptive, dp.locat, p, theta, longlat,dMat)
     else if(approach=="aic"||approach=="AIC"||approach=="AICc")
@@ -95,7 +93,7 @@ bw.ggwr<-function(formula, data, family ="poisson", approach="CV",kernel="gaussi
 }
 ####Calculate the CV score with a given bandwidth
 ##Author: Binbin Lu
-ggwr.cv<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+ggwr.cv<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.locat,  p=2, theta=0, longlat=F,dMat)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -167,7 +165,7 @@ ggwr.cv<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, longlat,
     }
   }
   if (!any(is.infinite(CV)))
-     CV.score<-t(CV) %*% CV
+     CV.score<-t(CV) %*% CV   ### why squared errors are evaluated here? (TN)
   else
      {
         CV.score<-Inf
@@ -180,7 +178,7 @@ ggwr.cv<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, longlat,
   CV.score
 }
  #Contribution of each observation to the score statistic used in cross-validation for ggwr
-ggwr.cv.contrib<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+ggwr.cv.contrib<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.locat, p=2, theta=0, longlat=F,dMat)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -214,13 +212,13 @@ ggwr.cv.contrib<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p, theta, 
   wt2 <- rep(1,dp.n)
   if (family=="poisson")
   {
-     res1 <- gwr.poisson.wt(Y,X,bw,Wt)
+     res1 <- gwr.poisson.wt(Y,X,bw,Wt, verbose=F)
      wt2<-res1[[1]]
      y.adj <- res1[[3]]
   } 
   else if (family=="binomial")
   {
-     res1 <- gwr.binomial.wt(Y,X,bw,Wt)
+     res1 <- gwr.binomial.wt(Y,X,bw,Wt, verbose=F)
      wt2<-res1[[1]]
      y.adj <- res1[[3]]   
   }
@@ -319,7 +317,8 @@ ggwr.aic<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p=2, theta=0, lon
   if (!any(is.infinite(S)))
   {
     tr.S<-sum(diag(S))
-    AICc<--2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+    #AICc<--2*llik + 2*tr.S*dp.n/(dp.n-tr.S-2)
+    AICc<--2*llik + 2*tr.S + 2*tr.S*(tr.S+1)/(dp.n-tr.S-1)   # This is generic form of AICc (TN)
   }
   else
     AICc<-Inf   
@@ -333,7 +332,7 @@ ggwr.aic<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p=2, theta=0, lon
 
 ######### Two simplified fitting functions for bandwidth selection
 ############ Possipon GWGLM for bandwidth selection
-gwr.poisson.wt<-function(y,x,bw,W.mat)
+gwr.poisson.wt<-function(y,x,bw,W.mat, verbose=T)
 {
     ##Accuracy control
     tol<-1.0e-5
@@ -351,7 +350,8 @@ gwr.poisson.wt<-function(y,x,bw,W.mat)
     llik <- 0.0
     mu <- y + 0.1
     nu <- log(mu)
-    cat(" Iteration    Log-Likelihood(With bandwidth: ",bw,")\n=========================\n")
+    if(verbose)
+       cat(" Iteration    Log-Likelihood(With bandwidth: ",bw,")\n=========================\n")
     wt2 <- rep(1,dp.n)
     repeat {
      y.adj <- nu + (y - mu)/mu
@@ -365,7 +365,8 @@ gwr.poisson.wt<-function(y,x,bw,W.mat)
      mu <- exp(nu)
      old.llik <- llik
      llik <- sum(y*nu - mu - log(gamma(y+1)))
-     cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
+     if(verbose)
+        cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
      if (abs((old.llik - llik)/llik) < tol) break
      wt2 <- mu
      it.count <- it.count+1
@@ -375,7 +376,7 @@ gwr.poisson.wt<-function(y,x,bw,W.mat)
 }
 
 ############ Binomial GWGLM for bandwidth selection
-gwr.binomial.wt<-function(y,x,bw,W.mat)
+gwr.binomial.wt<-function(y,x,bw,W.mat, verbose=T)
 {
     tol=1.0e-5
     maxiter=20
@@ -392,7 +393,8 @@ gwr.binomial.wt<-function(y,x,bw,W.mat)
     llik <- 0.0
     mu <- 0.5
     nu <- 0
-    cat(" Iteration    Log-Likelihood:(With bandwidth: ",bw,")\n=========================\n")
+    if(verbose)
+        cat(" Iteration    Log-Likelihood:(With bandwidth: ",bw,")\n=========================\n")
     wt2 <- rep(1,dp.n)
     repeat {
      y.adj <- nu + (y - n*mu)/(n*mu*(1 - mu))
@@ -407,9 +409,10 @@ gwr.binomial.wt<-function(y,x,bw,W.mat)
      old.llik <- llik
      llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/dp.n) + y*log(mu/n))
      if(is.na(llik)) llik <-old.llik
-    # cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
+     if(verbose)
+        cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
      if (abs((old.llik - llik)/llik) < tol) break
-     wt2 <- mu
+     wt2 <- n*mu*(1-mu)
      it.count <- it.count+1
      if (it.count == maxiter) break}
      res<-list(wt2,llik,y.adj)

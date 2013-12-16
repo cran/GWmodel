@@ -3,10 +3,10 @@
 #discriminant analyses (LDA and QDA) rely only on the mean vector and covariance
 #matrix of {x} for each population (the former assumes that the covariance is the same for all m populations).
 
-gwda <- function(formula, data, predict.data,validation = F, COV.gw=T, 
-                 mean.gw=T, prior.gw=T, prior=NULL, wqda =T,
-                kernel = "gaussian", adaptive = FALSE, bw,
-                 p = 2, theta = 0, longlat = F)
+gwda <- function(formula, data, predict.data,validation = T, COV.gw=T, 
+                 mean.gw=T, prior.gw=T, prior=NULL, wqda =F,
+                kernel = "bisquare", adaptive = FALSE, bw,
+                 p = 2, theta = 0, longlat = F,dMat)
 {
   ##########################
   this.call <- match.call()
@@ -54,8 +54,8 @@ gwda <- function(formula, data, predict.data,validation = F, COV.gw=T,
   vars <- all.vars(formula)
   grouping.nm <- vars[1]
   expl.vars <- vars[-1]
-  p <- length(expl.vars)
-  if (p<2)
+  m <- length(expl.vars)
+  if (m<2)
      stop("Two or more variables shoule be specfied for analysis")
   #x, y from training data
   res1 <-grouping.xy(data, grouping.nm, expl.vars)
@@ -65,7 +65,19 @@ gwda <- function(formula, data, predict.data,validation = F, COV.gw=T,
   #x for prediction data
   x.pr <- grouping.xy(data=pr.data, expl.vars=expl.vars)$x
   #######Distance matrix for training
-   dMat <- gw.dist(dp.locat=dp.locat, rp.locat=pr.locat, p=p, theta=theta, longlat=longlat)
+  dp.n <- nrow(dp.locat)
+  pr.n <- nrow(pr.locat)
+  if (missing(dMat))
+  {
+     dMat <- gw.dist(dp.locat=dp.locat, rp.locat=pr.locat, p=p, theta=theta, longlat=longlat)
+  }
+  else
+  {
+    dim.dMat<-dim(dMat)
+    if (dim.dMat[1]!=dp.n||dim.dMat[2]!=pr.n)
+    stop ("Dimensions of dMat are not correct")
+  }
+  
    ##Weighting matrix for 
    wt <- gw.weight(dMat,bw,kernel,adaptive)
   ##########  prior probility
@@ -102,7 +114,7 @@ gwda <- function(formula, data, predict.data,validation = F, COV.gw=T,
                                     match.ID = F)
   }
   else SDF <- SpatialPointsDataFrame(coords = pr.locat, data = res.df, 
-                                     proj4string = CRS(p4s))
+                                     proj4string = CRS(p4s), match.ID=F)
   res<-list()
   res$SDF<- SDF
   res$this.call <- this.call
@@ -201,7 +213,7 @@ wqda <- function(x, grouping, x.pr, wt, COV.gw=T,
                  mean.gw=T, prior.gw=T, prior=NULL)
 {
   lev <- levels(grouping)
-  p <- length(lev)
+  m <- length(lev)
   dp.n <- nrow(x)
   pr.n <- nrow(x.pr)
   
@@ -217,17 +229,17 @@ wqda <- function(x, grouping, x.pr, wt, COV.gw=T,
   else
   {
     prior.given <- T
-    if(is.numeric(prior) && length(prior)==p && sum(prior)==1)
+    if(is.numeric(prior) && length(prior)==m && sum(prior)==1)
     {
       prior1 <- list()
-      for(i in 1:p)
+      for(i in 1:m)
         prior1[[lev[i]]] <- rep(prior[i], pr.n)
     }
     prior <- prior1    
   }
   ##################################################################
   #Training
-  for (i in 1:p)
+  for (i in 1:m)
   {
      xi <- x.g[[lev[i]]]
      idx <- as.numeric(rownames(xi))
@@ -260,15 +272,15 @@ wqda <- function(x, grouping, x.pr, wt, COV.gw=T,
   }
   ##################################################################
   #prediction
-  log.pf <- matrix(numeric(pr.n*p), ncol=p) 
-  for(i in 1:p)
+  log.pf <- matrix(numeric(pr.n*m), ncol=m) 
+  for(i in 1:m)
     for(j in 1:pr.n)
     {
       x.prj <- as.matrix(x.pr[j,],nrow=1)
       meani <- as.matrix(local.mean[[lev[i]]][j,],nrow=1)
       cov.matj <- sigma.gw[[lev[i]]][j,,]
       
-      log.pf[j,i] <- (p/2)*log(norm(cov.matj)) + 0.5 *t(x.prj - meani)%*%solve(cov.matj)%*% (x.prj - meani) - log(prior[[lev[i]]][j])
+      log.pf[j,i] <- (m/2)*log(norm(cov.matj)) + 0.5 *t(x.prj - meani)%*%solve(cov.matj)%*% (x.prj - meani) - log(prior[[lev[i]]][j])
     }
   colnames(log.pf) <- paste(lev, "logp", sep="_")
   group.pr <- vector("character", pr.n)
@@ -284,7 +296,7 @@ wlda <- function(x, grouping, x.pr, wt, COV.gw=T,
                  mean.gw=T, prior.gw=T, prior=NULL)
 {
   lev <- levels(grouping)
-  p <- length(lev)
+  m <- length(lev)
   dp.n <- nrow(x)
   pr.n <- nrow(x.pr)
   var.n <- ncol(x)
@@ -300,17 +312,17 @@ wlda <- function(x, grouping, x.pr, wt, COV.gw=T,
   else
   {
     prior.given <- T
-    if(is.numeric(prior) && length(prior)==p && sum(prior)==1)
+    if(is.numeric(prior) && length(prior)==m && sum(prior)==1)
     {
       prior1 <- list()
-      for(i in 1:p)
+      for(i in 1:m)
         prior1[[lev[i]]] <- rep(prior[i], pr.n)
     }
     prior <- prior1    
   }
   ##################################################################
   #Training
-  for (i in 1:p)
+  for (i in 1:m)
   {
      xi <- x.g[[lev[i]]]
      idx <- as.numeric(rownames(xi))
@@ -346,7 +358,7 @@ wlda <- function(x, grouping, x.pr, wt, COV.gw=T,
   for (i in 1:pr.n)
   {
     sigmai <- array(0, dim=c(var.n,var.n))
-    for(j in 1:p)
+    for(j in 1:m)
     {
       sigmai <- sigmai + counts[j]*sigma.gw[[lev[j]]][i,,]
     }
@@ -354,14 +366,14 @@ wlda <- function(x, grouping, x.pr, wt, COV.gw=T,
   }
   ##################################################################
   #prediction
-  log.pf <- matrix(numeric(pr.n*p), ncol=p) 
-  for(i in 1:p)
+  log.pf <- matrix(numeric(pr.n*m), ncol=m) 
+  for(i in 1:m)
     for(j in 1:pr.n)
     {
       x.prj <- as.matrix(x.pr[j,],nrow=1)
       meani <- as.matrix(local.mean[[lev[i]]][j,],nrow=1)
       cov.matj <- sigma1.gw[j,,]
-      log.pf[j,i] <- (p/2)*log(norm(cov.matj)) + 0.5 *t(x.prj - meani)%*%solve(cov.matj)%*%(x.prj - meani) - log(prior[[lev[i]]][j])
+      log.pf[j,i] <- (m/2)*log(norm(cov.matj)) + 0.5 *t(x.prj - meani)%*%solve(cov.matj)%*%(x.prj - meani) - log(prior[[lev[i]]][j])
     }
   colnames(log.pf) <- paste(lev, "logp", sep="_")
   group.pr <- vector("character", pr.n)
@@ -430,4 +442,30 @@ wprior <- function(wt, sum.w)
   for (i in 1:pr.n)
     local.prior[i] <- sum(wt[,i])/sum.w
   local.prior
+}
+
+
+##Confusion matrix
+confusion.matrix <- function(original, classified)
+{
+  classes <- levels(original)
+  n <- length(classes)
+  cf.mat <- matrix(nrow=n+1, ncol = n+1)
+  total <- 0
+  for (i in 1:n)
+  {
+    tag1 <- 0
+    for (j in 1:n)
+    {
+       cf.mat[i,j] <- length(which(is.na(match(which(original == classes[j]), which(classified == classes[i])))==FALSE))
+       total <- total + cf.mat[i,j]
+       tag1 <- tag1 + cf.mat[i,j]
+    }
+    cf.mat[i,n+1] <- tag1 
+  }
+  cf.mat[n+1,n+1] <- total
+  for (i in 1:n)
+     cf.mat[n+1,i] <- sum(cf.mat[1:n,i]) 
+  rownames(cf.mat) <- colnames(cf.mat) <- c(classes, "Total")
+  cf.mat
 }

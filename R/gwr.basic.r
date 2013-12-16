@@ -39,7 +39,7 @@
 #Belsey-Kuh-Welsh condition number
 #Variance Inflation Factors
 #Variance decomposition proportions
-gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T,W.vect=NULL)
+gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T,W.vect=NULL)
 {
   ##Record the start time
   timings <- list()
@@ -106,6 +106,9 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
     ##S: hatmatrix
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
     colnames(betas) <- colnames(x)
     #colnames(betas)[1]<-"Intercept"
 
@@ -161,7 +164,7 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
          betas.SE[i,]<-diag(Ci%*%t(Ci))
       }
     }
-   
+  
     ########################Diagnostic information
     
     GW.diagnostic<-NA
@@ -177,6 +180,7 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
       CV <- numeric(dp.n)
       if (cv)
          CV<-gwr.cv.contrib(bw, x, y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+      
       #Studentised residual: Stud_residual=residual.i/(sigma.hat*sqrt(q.ii))
       #sigma.hat1=RSS/(n-2trace(S) + trace(S'S):Effective degrees of freedom
       #####Calculate the standard errors of the parameter estimates
@@ -247,12 +251,12 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="gaussian",adap
     {
        polygons<-polygons(regression.points)
        #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                            function(i) slot(i, "ID"))
+       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df,match.ID=F)
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
+       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
     timings[["stop"]] <- Sys.time()
    ##############
     res<-list(GW.arguments=GW.arguments,GW.diagnostic=GW.diagnostic,lm=lm.res,SDF=SDF,timings=timings,this.call=this.call,Ftest.res=Ftest.res)
@@ -268,6 +272,7 @@ gw.reg<-function(X,Y,W.i,hatmatrix=T,focus)
 		#if(is.matrix(W.i)) betai<- apply(W.i,2,function(w) solve(t(X*w)%*%X)%*%{t(X*w)%*%Y})
 #		else betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}
     #C=inv(XtWiX)XtW
+    Ci <- NULL
     Ci=solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
     betai<-Ci%*%Y
     S.ri<-numeric(nrow(X))
@@ -364,9 +369,9 @@ print.gwrm<-function(x, ...)
 			 rnames[i]<-paste("   ",rnames[i],sep="")
 	rownames(CM) <-rnames 
 	printCoefmat(CM)
-	cat("   ************************Diagnostic information*************************\n")
 	if (x$GW.arguments$hatmatrix) 
   {	
+    cat("   ************************Diagnostic information*************************\n")
 		cat("   Number of data points:", dp.n, "\n")
 		cat("   Effective number of parameters (2trace(S) - trace(S'S)):", x$GW.diagnostic$enp, "\n")
 		cat("   Effective degrees of freedom (n-2trace(S) + trace(S'S)):", x$GW.diagnostic$edf, "\n")
@@ -377,7 +382,7 @@ print.gwrm<-function(x, ...)
     cat("   R-square value: ",x$GW.diagnostic$gw.R2,"\n")
 		cat("   Adjusted R-square value: ",x$GW.diagnostic$gwR2.adj,"\n")	
   }
-  if(x$GW.arguments$F123.test)
+  if(x$GW.arguments$F123.test && x$GW.arguments$hatmatrix)
 		{
 			cat("   ******************F test results of GWR calibration********************\n")
 			cat("   ---F1 test (Leung et al. 2000)\n")
@@ -591,7 +596,7 @@ res
 
 # Randomisation tests for GWR parameters
 
-test.gwr.par<-function(formula, data, regression.points, bw, kernel = "gaussian", 
+test.gwr.par<-function(formula, data, regression.points, bw, kernel = "bisquare", 
     adaptive = FALSE, p = 2, theta = 0, longlat = F, dMat,W.vect=NULL,nperm=999) 
 {
 	timings <- list()

@@ -29,6 +29,8 @@ Variables are from DubVoter.shp.
 }
 \references{
   Kavanagh A (2006) Turnout or turned off? Electoral participation in Dublin in the early 21st Century. Journal of Irish Urban Studies 3(2):1-24
+  
+  Harris P, Brunsdon C, Charlton M (2011) Geographically weighted principal components analysis.  International Journal of Geographical Information Science 25 (10):1717-1736
 }
 \examples{
 

@@ -7,7 +7,7 @@ This function calculates basic and robust GWSS.  This includes geographically we
 geographically weighted correlations.
 }
 \usage{
-gwss(data, summary.locat,vars,kernel="gaussian",adaptive=FALSE, bw,p=2, 
+gwss(data, summary.locat,vars,kernel="bisquare",adaptive=FALSE, bw,p=2, 
             theta=0, longlat=F,dMat,quantile=FALSE)
 }
 \arguments{
@@ -38,7 +38,12 @@ gwss(data, summary.locat,vars,kernel="gaussian",adaptive=FALSE, bw,p=2,
 \value{
 A list of class \dQuote{lss}:
   \item{SDF}{a SpatialPointsDataFrame (may be gridded) or 
-             SpatialPolygonsDataFrame object (see package \dQuote{sp}) integrated with summary.locat,local means,local standard deviations,Local Variance,local skewness,localized coefficient of variation, localized Covariance, Correlation, and Spearman's Rho between these variables in its "data" slot.}
+             SpatialPolygonsDataFrame object (see package \dQuote{sp})
+             with local means,local standard deviations,local variance,
+             local skew,local coefficients of variation, local covariances, 
+             local correlations (Pearson's), local correlations (Spearman's),
+             local medians, local interquartile ranges, local quantile imbalances and coordinates.
+             }
   \item{...}{other information for reporting}          
 }
 \references{

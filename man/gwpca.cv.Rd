@@ -5,12 +5,13 @@
 This function finds the cross-validation score for a specified bandwidth for basic or robust GWPCA
 }
 \usage{
-gwpca.cv(bw,x,loc,k,robust=FALSE,kernel,adaptive, p, theta, longlat,dMat) 
+gwpca.cv(bw,x,loc,k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2, 
+         theta=0, longlat=F,dMat)  
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{x}{a numeric matrix of independent samples with extra ones vector  for the 1st column}
+  \item{x}{the variable matrix}
   \item{loc}{a two-column numeric array of observation coordinates}
   \item{k}{the number of retained components; k must be less than the number of variables}
   \item{robust}{if TRUE, robust GWPCA will be applied; otherwise basic GWPCA will be applied}

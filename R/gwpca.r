@@ -278,8 +278,8 @@ bw.gwpca<-function(data,vars,k=2, robust = FALSE,kernel="bisquare",adaptive=FALS
 
 }
 	
-# Cross-validation function to optimally find a fixed or adaptive bandwidth...  
-gwpca.cv <- function(bw,x,loc,k,robust=FALSE,kernel,adaptive, p, theta, longlat,dMat) 
+# Cross-validation function to optimally find a fixed or adaptive bandwidth... 
+gwpca.cv <- function(bw,x,loc,k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2, theta=0, longlat=F,dMat) 
 {
   if (missing(dMat))
     DM.given<-F
@@ -325,8 +325,8 @@ gwpca.cv <- function(bw,x,loc,k,robust=FALSE,kernel,adaptive, p, theta, longlat,
 }
 
 # Contribution of each observation to the score statistic used in cross-validation for gwpca
-# Outliers taken to correspond to high score (residual) values...
-gwpca.cv.contrib <- function(x,loc,bw,k=2,robust=FALSE,kernel,adaptive, p, theta, longlat,dMat)
+# Outliers taken to correspond to high score (residual) values... 
+gwpca.cv.contrib <- function(x,loc,bw, k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2, theta=0, longlat=F,dMat)
 {
 	if (missing(dMat))
     DM.given<-F

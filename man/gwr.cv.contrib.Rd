@@ -5,13 +5,14 @@
 This function finds the cross-validation data at each observation location for a basic GWR model with a specified bandwidth.  Can be used to detect outliers.
 }
 \usage{
-gwr.cv.contrib(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+gwr.cv.contrib(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, 
+               theta=0, longlat=F,dMat)
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{X}{a numeric matrix of independent samples with ones for the 1st column}
-  \item{Y}{a one-column vector of dependent samples}
+  \item{X}{a numeric matrix of the independent data with an extra column of \dQuote{ones} for the 1st column}
+  \item{Y}{a column vector of the dependent data}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
@@ -31,9 +32,8 @@ gwr.cv.contrib(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
 }
 \value{
-  \item{CV}{a data vector consisting of squared residuals, whose mean is the cross-validation score for the specified bandwidth.}
+  \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth.}
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
-\references{Harris P, Clarke A, Juggins S, Brunsdon C, Charlton M (2013) Investigating change in the spatial structure of environmental data using a non-stationary principal components analysis.  In review}
 \keyword{cv, GWR}
 

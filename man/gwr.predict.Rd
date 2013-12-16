@@ -7,7 +7,7 @@ This function implements basic GWR as a spatial predictor. The GWR prediction fu
 predictions at a set-aside data set(when the new locations are used for prediction). It is also able to reproduce the global OLS regression prediction results.
 }
 \usage{
-gwr.predict(formula, data, predictdata, bw, kernel="gaussian",adaptive=FALSE, p=2,
+gwr.predict(formula, data, predictdata, bw, kernel="bisquare",adaptive=FALSE, p=2,
            theta=0, longlat=F,dMat1, dMat2)}
 
 \arguments{
@@ -49,13 +49,12 @@ using space-varying relationship models. Mathematical Geosciences 43: 265-292
 Harris P, Brunsdon C, Fotheringham AS (2011) Links, comparisons and extensions of the geographically 
 weighted regression model when used as a spatial predictor.  Stochastic Environmental Research and Risk Assessment 25:123-138
 
-Lu B, Charlton M, Harris P, Fotheringham AS (2013) Geographically Weighted Regression with a non-Euclidean distance metric. In review
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \examples{
 \dontrun{
 data(LondonHP)
-gwr.pred<-gwr.predict(PURCHASE~FLOORSZ, data=londonhp, bw=2000)
+gwr.pred<-gwr.predict(PURCHASE~FLOORSZ, data=londonhp, bw=2000,kernel = "gaussian")
 gwr.pred
 #########Global regression  Compare with gstat
 if(require("gstat"))

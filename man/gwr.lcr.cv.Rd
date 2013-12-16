@@ -5,14 +5,15 @@
 This function finds the cross-validation score for a specified bandwidth for GWR-LCR
 }
 \usage{
-gwr.lcr.cv(bw,y,x,locs,kernel,lambda,lambda.adjust,cn.thresh,
-           adaptive, p, theta, longlat,dMat)
+gwr.lcr.cv(bw,X,Y,locs,kernel="bisquare",
+                    lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
+                    adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{y}{a one-column vector of dependent samples}
-  \item{x}{a numeric matrix of independent samples with ones for the 1st column}
+  \item{X}{a numeric matrix of the independent data with an extra column of \dQuote{ones} for the 1st column}
+  \item{Y}{a column vector of the dependent data}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
@@ -25,10 +26,12 @@ gwr.lcr.cv(bw,y,x,locs,kernel,lambda,lambda.adjust,cn.thresh,
                 
                 boxcar: wgt=1 if dist < bw, wgt=0 otherwise}
   \item{locs}{a two-column numeric array of observation coordinates}
-  \item{lambda}{option for a globally-defined (constant) ridge parameter'. Default is lambda=0, which gives a basic GWR fit}
-  \item{lambda.adjust}{a locally-varying ridge parameter. Default FALSE, refers to basic GWR without a local ridge adjustment 
-  (i.e. lambda=0, everywhere); if TRUE, use cn.tresh to set the maximum condition number.  
-   For locations with a condition number (for its local design matrix) above this user-specified threshold, a local ridge parameter is found.}
+  \item{lambda}{option for a globally-defined (constant) ridge parameter. Default is lambda=0, which gives a basic GWR fit}
+  \item{lambda.adjust}{a locally-varying ridge parameter. Default FALSE, refers to: (i) a basic GWR without
+a local ridge adjustment (i.e. lambda=0, everywhere); or (ii) a penalised GWR with a global ridge adjustment 
+(i.e. lambda is user-specified as some constant, other than 0 everywhere); if TRUE, use cn.tresh
+to set the maximum condition number. Here for locations with a condition number (for its local design matrix) 
+above this user-specified threshold, a local ridge parameter is found}
   \item{cn.thresh}{maximum value for condition number, commonly set between 20 and 30}
   \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth (bw) corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
   \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}

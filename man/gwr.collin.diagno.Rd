@@ -1,19 +1,20 @@
 \name{gwr.collin.diagno}
 \alias{gwr.collin.diagno}
-\title{Local collinearity diagnostic for GWR}
+\title{Local collinearity diagnostics for basic GWR}
 \description{
-This function diagnoses the local collinearity for a basic GWR model
+This function provides a series of local collinearity diagnostics for the independent variables of a basic GWR model.
 }
 \usage{
-gwr.collin.diagno(formula, data, bw, kernel="gaussian",
+gwr.collin.diagno(formula, data, bw, kernel="bisquare",
                     adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
   \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
-  \item{bw}{bandwidth used in the weighting function, possibly calculated by \code{bw.gwr.lcr};
-            fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
+  \item{bw}{bandwidth used in the weighting function, probably calculated 
+            by \code{bw.gwr} or \code{bw.gwr.lcr}; fixed (distance) or 
+            adaptive bandwidth (number of nearest neighbours)}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
@@ -33,9 +34,19 @@ gwr.collin.diagno(formula, data, bw, kernel="gaussian",
 }
 \value{
   \item{corr.mat}{Local correlation matrix}
-  \item{vifs.mat}{Local Variance inflation factors (VIFs) matrix}
-  \item{vdp.idx}{Condition index of variance-decomposition proportions}
-  \item{vdp.pi}{Variance-decomposition proportions}
+  \item{VIF}{Local Variance inflation factors (VIFs) matrix}
+  \item{local_CN}{Local condition numbers}
+  \item{VDP}{Local variance-decomposition proportions}
+  \item{SDF}{a SpatialPointsDataFrame (may be gridded) or 
+             SpatialPolygonsDataFrame object (see package \dQuote{sp}) integrated with VIF, local_CN, VDP and corr.mat}
+}
+\references{
+Wheeler D, Tiefelsdorf M (2005) Multicollinearity and correlation among local 
+regression coefficients in geographically weighted regression. Journal of 
+Geographical Systems 7:161-187
+
+Wheeler D (2007) Diagnostic tools and a remedial method for collinearity in 
+geographically weighted regression. Environment and Planning A 39:2464-2481
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \keyword{collinearity,diagnostic, GWR}

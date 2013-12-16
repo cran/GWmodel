@@ -1,8 +1,8 @@
 ###################################################
 #Bandwidth selection using cross-validation
 bw.gwda <- function(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
-                 prior = NULL, wqda = T, kernel = "gaussian", adaptive
-                 = FALSE, p = 2, theta = 0, longlat = F)
+                 prior = NULL, wqda = F, kernel = "bisquare", adaptive
+                 = FALSE, p = 2, theta = 0, longlat = F, dMat)
 {
   #data must be given as training data
   if (is(data, "Spatial")) {
@@ -16,16 +16,25 @@ bw.gwda <- function(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
   vars <- all.vars(formula)
   grouping.nm <- vars[1]
   expl.vars <- vars[-1]
-  p <- length(expl.vars)
-  if (p<2)
+  m <- length(expl.vars)
+  if (m < 2)
      stop("Two or more variables shoule be specfied for analysis")
   #x, y from training data
   res1 <- grouping.xy(data, grouping.nm, expl.vars)
   x<- res1$x
   grouping <- res1$y
   lev <- levels(grouping)
-  dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
   dp.n<-nrow(data)
+  if (missing(dMat))
+  {
+    dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat) 
+  }
+  else
+  {
+    dim.dMat<-dim(dMat)
+    if (dim.dMat[1]!=dp.n||dim.dMat[2]!=dp.n)
+    stop ("Dimensions of dMat are not correct")
+  }
   if(adaptive)
   {
     upper<-dp.n
@@ -47,13 +56,17 @@ bw.gwda <- function(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
                      x=x, grouping=grouping, dMat=dMat, COV.gw=COV.gw,
                  mean.gw=mean.gw, prior.gw=prior.gw, prior=prior,
                  kernel = kernel, adaptive =adaptive)
+  if(adaptive)
+    bw <- round(bw$maximum)
+  else
+    bw <- bw$maximum
   bw
 }
 
 ###Correct ratio
 wqda.cr <- function(bw, x, grouping, dMat, COV.gw=T,
                  mean.gw=T, prior.gw=T, prior=NULL,
-                 kernel = "gaussian", adaptive = FALSE)
+                 kernel = "bisquare", adaptive = FALSE)
 {
   if(adaptive) bw <- round(bw)
   wt <- gw.weight(dMat,bw,kernel,adaptive)
@@ -75,8 +88,9 @@ wqda.cr <- function(bw, x, grouping, dMat, COV.gw=T,
 }
 
 wlda.cr <- function(bw, x, grouping, dMat, COV.gw=T,
-                 mean.gw=T, prior.gw=T, prior=NULL,kernel = "gaussian", adaptive = FALSE)
+                 mean.gw=T, prior.gw=T, prior=NULL,kernel = "bisquare", adaptive = FALSE)
 {
+  if(adaptive) bw <- round(bw)
   wt <- gw.weight(dMat,bw,kernel,adaptive)
   diag(wt) <- 0
   res.df <- try(wlda(x, grouping, x, wt, COV.gw,

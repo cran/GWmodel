@@ -1,9 +1,11 @@
 \name{montecarlo.gwpca.2}
 \alias{montecarlo.gwpca.2}
-\title{Monte Carlo (randomisation) test for significance of GW PCA variability - option 2}
+\title{Monte Carlo (randomisation) test for significance of GW PCA eigenvalue variability
+for the first component only - option 2}
 \description{
 This function implements a Monte Carlo (randomisation) test for a basic or robust GW PCA with the bandwidth
-automatically re-selected via the cross-validation approach. The test evaluates whether the GW eigenvalues vary significantly across space.
+automatically re-selected via the cross-validation approach. The test evaluates whether the GW eigenvalues 
+vary significantly across space for the first component only.
 }
 \usage{
 montecarlo.gwpca.2(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",

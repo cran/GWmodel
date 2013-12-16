@@ -1,6 +1,6 @@
 ###Basic function for bandwidth selction
 ##Author: Binbin Lu
-bw.gwr<-function(formula, data, approach="CV",kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
+bw.gwr<-function(formula, data, approach="CV",kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
     ##Data points{
   if (is(data, "Spatial"))
@@ -107,7 +107,7 @@ bw.gwr<-function(formula, data, approach="CV",kernel="gaussian",adaptive=FALSE, 
 
 ####Calculate the CV score with a given bandwidth
 ##Author: Binbin Lu
-gwr.cv<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat, verbose=T)
+gwr.cv<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0, longlat=F,dMat, verbose=T)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -171,7 +171,7 @@ gwr.cv<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat, ve
   CV.score
 }
 
-gwr.cv.contrib<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+gwr.cv.contrib<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0, longlat=F,dMat)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
@@ -223,7 +223,7 @@ gwr.cv.contrib<-function(bw, X, Y, kernel,adaptive, dp.locat, p, theta, longlat,
 }
 ####Calculate the AICc with a given bandwidth
 ##Author: Binbin Lu
-gwr.aic<-function(bw, X, Y, kernel,adaptive, dp.locat, p=2, theta=0, longlat=F,dMat, verbose=T)
+gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0, longlat=F,dMat, verbose=T)
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not

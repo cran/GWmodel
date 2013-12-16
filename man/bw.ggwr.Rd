@@ -7,7 +7,7 @@
 }
 \usage{
 bw.ggwr(formula, data, family ="poisson", approach="CV",
-kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
+kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 }
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }

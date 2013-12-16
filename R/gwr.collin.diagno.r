@@ -1,5 +1,5 @@
 #local collinearity diagnostic function for GWR
-gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
+gwr.collin.diagno <- function(formula, data, bw, kernel="bisquare",
                     adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
   ##Record the start time
@@ -10,10 +10,17 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
   p4s <- as.character(NA)
   #####Check the given data frame and regression points
   ##Data points{
+  polygons <- NULL
   if (is(data, "Spatial"))
   {
     p4s <- proj4string(data)
-    dp.locat<-coordinates(data)
+    if (is(data, "SpatialPolygonsDataFrame"))
+    {
+       polygons <- polygons(data)
+       dp.locat<-coordinates(data)
+    }
+    else
+       dp.locat<-coordinates(data)
     data <- as(data, "data.frame")
   }
   else
@@ -34,7 +41,10 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
-    x<-x[,-1]
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
+    x1<-x[,-1]
 	  var.n<-ncol(x)
 	  var.nms <- colnames(x)
     if (var.n<=1)
@@ -65,10 +75,10 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
    #                   nrow = dp.n)
     corr.mat <- matrix(numeric((var.n - 1) * var.n * dp.n/2), 
                        nrow = dp.n)
-    vifs.mat <- matrix(numeric(var.n * dp.n), 
+    vifs.mat <- matrix(numeric((var.n-1) * dp.n), 
                        nrow = dp.n)
     vdp.idx <- matrix(numeric(var.n * dp.n), 
-                       nrow = dp.n)      # condition index
+                       nrow = dp.n)      # condition index, the same as condition number
     vdp.pi <- array(0, dim=c(dp.n,var.n,var.n))   # VDPs
     
     for (i in 1:dp.n) 
@@ -77,7 +87,7 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
         dist.vi <- dMat[, i]
       else 
       {
-       dist.vi <- gw.dist(dp.locat = dp.locat, focus = i, 
+         dist.vi <- gw.dist(dp.locat = dp.locat, focus = i, 
                                 p = p, theta = theta, longlat = longlat)
       }
       W.i <- matrix(gw.weight(dist.vi, bw, kernel, adaptive), 
@@ -94,7 +104,7 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
         #s.corr.mat[i, tag] <- cov.wt(cbind(rank(x[, j]), rank(x[, k])), wt=Wi[1,],cor=TRUE)$cor[1,2] # Had to replace Spearmans Rho function - supplied one not correct for weighted version
       }
       ####Again correlation matrix for calculating local Variance inflation factors (VIFs)
-      corr.mati <- cov.wt(x, wt=Wi[1,],cor=TRUE)$cor
+      corr.mati <- cov.wt(x1, wt=Wi[1,],cor=TRUE)$cor
       vifs.mat[i,] <- diag(solve(corr.mati))
       ################### Variance-decomposition proportions
       xw <- as.matrix(sweep(x,1,Wi,"*"))
@@ -114,10 +124,30 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="gaussian",
         corr.nms <- c(corr.nms, corr.v1v2)
       }
     }
-    colnames(corr.mat) <- corr.nms
-    colnames(vifs.mat) <-paste(var.nms,"VIF", sep = "_")
-    res <- list(corr.mat, vifs.mat, vdp.idx, vdp.pi)
+    nm1 <- corr.nms
+    nm2 <-paste(var.nms[-1],"VIF", sep = "_")
+    local_CN <- vdp.idx[, var.n]
+    VDP <- vdp.pi[,var.n,]
+    nm3 <-paste(var.nms,"VDP", sep = "_")
+    res.df <- data.frame(vifs.mat,local_CN, VDP,corr.mat)
+    colnames(res.df) <- c(nm2, "local_CN", nm3, nm1)
+    if (!is.null(polygons))
+    {
+       rownames(res.df) <- sapply(slot(polygons, "polygons"),
+                            function(i) slot(i, "ID"))
+       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=res.df, match.ID=F)
+    }
+    else
+       SDF <- SpatialPointsDataFrame(coords=dp.locat, data=res.df, proj4string=CRS(p4s), match.ID=F)
+    
+    res <- list()
+    res$corr.mat <- corr.mat
+    res$VIF <- vifs.mat
+    res$local_CN <- local_CN 
+    res$VDP <- VDP
+    res$SDF <- SDF
+    #res <- list(corr.mat, vifs.mat, vdp.idx, vdp.pi)
     timings[["stop"]] <- Sys.time()
-    res$timings <- timings
+    #res$timings <- timings
     res
 }

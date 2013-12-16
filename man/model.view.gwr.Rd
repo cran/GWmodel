@@ -20,7 +20,8 @@ data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))
 DeVar<-"PURCHASE"
 InDeVars<-c("FLOORSZ","GARAGE1","BLDPWW1","BLDPOSTW")
-model.sel<-model.selection.gwr(DeVar,InDeVars, data=londonhp,dMat=DM,bw=5000)
+model.sel<-model.selection.gwr(DeVar,InDeVars, data=londonhp,
+kernel = "gaussian", dMat=DM,bw=5000)
 model.list<-model.sel[[1]]
 model.view.gwr(DeVar, InDeVars, model.list=model.list)
 }

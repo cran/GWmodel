@@ -1,8 +1,11 @@
 \name{montecarlo.gwpca.1}
 \alias{montecarlo.gwpca.1}
-\title{Monte Carlo (randomisation) test for significance of GW PCA variability - option 1}
+\title{Monte Carlo (randomisation) test for significance of GW PCA eigenvalue variability
+for the first component only - option 1}
 \description{
-This function implements a Monte Carlo (randomisation) test for a basic or robust GW PCA with the bandwidth pre-specified  and constant. The test evaluates whether the GW eigenvalues vary significantly across space.
+This function implements a Monte Carlo (randomisation) test for a basic or robust 
+GW PCA with the bandwidth pre-specified  and constant. The test evaluates whether 
+the GW eigenvalues vary significantly across space for the first component only.
 }
 \usage{
 montecarlo.gwpca.1(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",

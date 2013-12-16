@@ -11,7 +11,7 @@ This function implements generalised GWR
 }
 \usage{
 gwr.generalised(formula, data, regression.points, bw, family ="poisson",
- kernel="gaussian",adaptive=FALSE, p=2, theta=0, longlat=F, dMat, cv=T,tol=1.0e-5, 
+ kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F, dMat, cv=T,tol=1.0e-5, 
  maxiter=20)}
 
 \arguments{
@@ -59,9 +59,13 @@ Geographically Weighted Regression: The Analysis of Spatially Varying Relationsh
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \examples{
 data(LondonHP)
+\dontrun{
 DM<-gw.dist(dp.locat=coordinates(londonhp))
-res.possion<-gwr.generalised(BATH2~FLOORSZ, bw=3000,data=londonhp, dMat=DM)
-res.binomial<-gwr.generalised(BATH2~FLOORSZ, bw=3000,data=londonhp, dMat=DM,
+bw.f1 <- bw.ggwr(BATH2~FLOORSZ,data=londonhp, dMat=DM)
+res.poisson<-gwr.generalised(BATH2~FLOORSZ, bw=bw.f1,data=londonhp, dMat=DM)
+bw.f2 <- bw.ggwr(BATH2~FLOORSZ,data=londonhp, dMat=DM,family ="binomial")
+res.binomial<-gwr.generalised(BATH2~FLOORSZ, bw=bw.f2,data=londonhp, dMat=DM,
               family ="binomial")
+}
 }
 \keyword{generalised, GWR}

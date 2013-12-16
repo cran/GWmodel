@@ -6,7 +6,7 @@ This function provides a geographically weighted parallel coordinate plot for in
 }
 \usage{
 gw.pcplot(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, theta=0, 
-longlat=F,dMat,...) 
+          longlat=F,dMat,...) 
 }
 
 \arguments{
@@ -25,9 +25,10 @@ longlat=F,dMat,...)
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \references{
-Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2013)
-Multivariate spatial outlier detection using robust geographically weighted techniques.
-In review
+Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2013) 
+Multivariate spatial outlier detection using robust geographically weighted methods.  
+Mathematical Geosciences DOI 10.1007/s11004-013-9491-0
+
 }
 \keyword{GW, PCP}
 

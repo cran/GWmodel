@@ -14,6 +14,6 @@ This function prints out the GWR results from the function \code{\link{gwr.basic
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \references{
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://www.nuim.ie/ncg/GWR/index.htm}.
+Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }
 \keyword{gwr, print}

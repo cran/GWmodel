@@ -1,4 +1,4 @@
-gwr.hetero <- function(formula, data, regression.points, bw, kernel="gaussian",
+gwr.hetero <- function(formula, data, regression.points, bw, kernel="bisquare",
                     adaptive=FALSE, tol=0.0001,maxiter=50,verbose=T,
                     p=2, theta=0, longlat=F,dMat)
 {
@@ -71,14 +71,17 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="gaussian",
   ####################
   ######Extract the data frame
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data"), names(mf), 0)
-  mf <- mf[c(1,m)]
+  m <- match(c("formula", "data"), names(mf), 0L)
+  mf <- mf[c(1L,m)]
   mf$drop.unused.levels <- TRUE
   mf[[1]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
   mt <- attr(mf, "terms")
   y <- model.extract(mf, "response")
   x <- model.matrix(mt, mf)
+  idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
   this.w <- rep(1,dp.n)
   ones <- as.matrix(this.w, ncol=1)
   iter <- 1
@@ -122,11 +125,11 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="gaussian",
       {
          polygons<-polygons(regression.points)
          #SpatialPolygons(regression.points)
-         #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                            #  function(i) slot(i, "ID"))
+         rownames(reg.df) <- sapply(slot(polygons, "polygons"),
+                              function(i) slot(i, "ID"))
          SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df)
        }
        else
-         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s))
+         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s), match.ID=F)
       SDF    
 }

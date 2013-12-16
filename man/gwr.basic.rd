@@ -16,7 +16,7 @@
 This function implements basic GWR
 }
 \usage{
-gwr.basic(formula, data, regression.points, bw, kernel="gaussian",
+gwr.basic(formula, data, regression.points, bw, kernel="bisquare",
 adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T, W.vect=NULL)}
 
 \arguments{
@@ -74,9 +74,9 @@ Geographically Weighted Regression: The Analysis of Spatially Varying Relationsh
 Leung, Y, Mei, CL, and Zhang, WX (2000), Statistical tests for spatial nonstationarity 
 based on the geographically weighted regression model. Environment and Planning A, 32, 9-32.
 
-Lu B, Charlton M, Fotheringham S (2011), Geographically Weighted
-Regression Using a Non]Euclidean Distance Metric with a Study on London House Price
-Data. Procedia Environmental Science 7C pp 92-97
+LU, B., CHARLTON, M., HARRIS, P. & FOTHERINGHAM, A. S. (2013). Geographically Weighted 
+Regression with a Non-Euclidean Distance Metric: a Case Study using Hedonic House Price Data. 
+International Journal of Geographical Information Science, DOI: 10.1080/13658816.2013.865739(In press).
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \examples{
@@ -84,13 +84,16 @@ data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))
 ##Compare the time consumed with and without a specified distance matrix
 \dontrun{
-system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000))
+system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000,
+            kernel = "gaussian"))
 system.time(DM<-gw.dist(dp.locat=coordinates(londonhp)))
-system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000,dMat=DM))
+system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000,
+            kernel = "gaussian", dMat=DM))
 }
 ## specify an optimum bandwidth by cross-validation appraoch
-bw1<-bw.gwr(PURCHASE~FLOORSZ, data=londonhp, dMat=DM)
-gwr.res1<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=bw1,dMat=DM)
+bw1<-bw.gwr(PURCHASE~FLOORSZ, data=londonhp, kernel = "gaussian",dMat=DM)
+gwr.res1<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=bw1,kernel = "gaussian", 
+                   dMat=DM)
 gwr.res1
 data(LondonBorough)
 
@@ -107,8 +110,10 @@ if(require("RColorBrewer"))
   col.regions=mypalette, sp.layout=list(nsa, londonborough))}
 }
 \dontrun{
-bw2<-bw.gwr(PURCHASE~FLOORSZ,approach="aic",adaptive=TRUE, data=londonhp, dMat=DM)
-gwr.res2<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=bw2,adaptive=TRUE,dMat=DM)
+bw2<-bw.gwr(PURCHASE~FLOORSZ,approach="aic",adaptive=TRUE, data=londonhp, 
+            kernel = "gaussian", dMat=DM)
+gwr.res2<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=bw2,adaptive=TRUE,
+                    kernel = "gaussian", dMat=DM)
 gwr.res2
 if(require("RColorBrewer"))
 {

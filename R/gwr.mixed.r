@@ -1,5 +1,5 @@
 gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fixed=FALSE, bw, diagnostic=T,
-             kernel="gaussian", adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
+             kernel="bisquare", adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
    ##Record the start time
   timings <- list()
@@ -66,16 +66,20 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
   }
   ####################
   ######Extract the data frame
-  mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data"), names(mf), 0)
-  mf <- mf[c(1,m)]
-  mf$drop.unused.levels <- TRUE
-  mf[[1]] <- as.name("model.frame")
-  mf <- eval(mf, parent.frame())
-  mt <- attr(mf, "terms")
-  y <- model.extract(mf, "response")
-  x <- model.matrix(mt, mf)
-  colnames(x)[1]<-"Intercept"
+   mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data"), names(mf), 0L)
+
+    mf <- mf[c(1L, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    mt <- attr(mf, "terms")
+    y <- model.extract(mf, "response")
+    x <- model.matrix(mt, mf)
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
+  #colnames(x)[1]<-"Intercept"
   if (missing(fixed.vars))
   {
     warning("No independent variables in the formula is specified as fixed terms!")
@@ -107,12 +111,12 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
     {
        polygons<-polygons(regression.points)
        #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
+       rownames(mgwr.df) <- sapply(slot(polygons, "polygons"),
+                          function(i) slot(i, "ID"))
        SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df)
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s))
+       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s), match.ID=F)
    res$SDF <- SDF
    if (diagnostic)
    {
@@ -141,7 +145,7 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
 
 ##Mixed GWR
 gwr.mixed.2 <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc[,1])+var(loc[,2])),
-               kernel="gaussian", p=2, theta=0, longlat=F,dMat)
+               kernel="bisquare", p=2, theta=0, longlat=F,dMat)
 {
   gwr.fitted <- function(x,b) apply(x*b,1,sum)
   dp.n <- nrow(loc)
@@ -176,7 +180,7 @@ gwr.mixed.2 <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc
 #
 
 gwr.mixed.trace <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc[,1])+var(loc[,2])),
-               kernel="gaussian", p=2, theta=0, longlat=F,dMat)
+               kernel="bisquare", p=2, theta=0, longlat=F,dMat)
   {gwr.fitted <- function(x,b) apply(x*b,1,sum)
    e.vec <- function(m,n) as.numeric(m == 1:n)
    dp.n <- nrow(loc)
@@ -270,7 +274,8 @@ print.mgwr <- function(x, ...)
      }
    cat("\n   ****************Summary of mixed GWR coefficient estimates:******************\n")       
 	 cat("   Estimated global variables :\n")
-	 gCM <- as.matrix(x$global,nrow=1)
+	 
+	 gCM <- matrix(x$global,nrow=1)
 	 rownames(gCM) <- "   Estimated global coefficients:" 
    colnames(gCM) <- global.names 
    printCoefmat(gCM)
@@ -286,7 +291,7 @@ print.mgwr <- function(x, ...)
     	cat("   ************************Diagnostic information*************************\n")
      cat("   Effective D.F.:  ",format(x$df.used,digits=4),"\n")
      cat("   Corrected AIC:  ",format(x$aic,digits=4),"\n")
-     cat("   Residual sum of squares:  ",format(x$aic,digits=4),"\n")
+     cat("   Residual sum of squares:  ",format(x$rss,digits=4),"\n")
    }
   cat("\n   ***********************************************************************\n")
 	cat("   Program stops at:", as.character(x$timings$stop), "\n")

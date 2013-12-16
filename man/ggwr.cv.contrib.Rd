@@ -5,14 +5,14 @@
 This function finds the cross-validation data at each observation location for a generalised GWR model with a specified bandwidth.  Can be used to detect outliers.
 }
 \usage{
-ggwr.cv.contrib(bw, X, Y,family, kernel,adaptive, dp.locat, p, 
-                theta, longlat,dMat)
+ggwr.cv.contrib(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, 
+                dp.locat, p=2, theta=0, longlat=F,dMat)
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{X}{a numeric matrix of independent samples with ones for the 1st column}
-  \item{Y}{a one-column vector of dependent samples}
+  \item{X}{a numeric matrix of the independent data with an extra column of \dQuote{ones} for the 1st column}
+  \item{Y}{a column vector of the dependent data}
   \item{family}{a description of the error distribution and link function to
           be used in the model, which can be specified by \dQuote{poisson} or \dQuote{binomial}}
   \item{kernel}{function chosen as follows:
@@ -34,7 +34,7 @@ ggwr.cv.contrib(bw, X, Y,family, kernel,adaptive, dp.locat, p,
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
 }
 \value{
-  \item{CV}{a data vector consisting of squared residuals, whose mean is the cross-validation score for the specified bandwidth}
+  \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth}
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \keyword{cv, GWR}

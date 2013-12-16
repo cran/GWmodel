@@ -13,8 +13,6 @@ This function prints out the generalised GWR results from the function \code{\li
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \references{
-Brunsdon C (2010) An R library for GWR
-
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://www.nuim.ie/ncg/GWR/index.htm}.
+Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }
 \keyword{gwr, print}

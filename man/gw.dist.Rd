@@ -4,16 +4,16 @@
 \alias{coordinate.rotation}
 \title{Distance matrix calculation}
 \description{
-  Calculate a distance matrix between any GW model point and data points.
+  Calculate a distance matrix between any GW model calibration points and the data points.
 }
 \usage{
 gw.dist(dp.locat, rp.locat, focus=0, p=2, theta=0, longlat=F)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{dp.locat}{numeric vector of two colunms, coordinates of data points}
-  \item{rp.locat}{numeric vector of two colunms, coordinates of regression points}
-  \item{focus}{an integer, indexing to the current GW model point, if focus=0, all the distances between all the GW model points and data points will be calculated and a distance matrix will be returned; if 0<focus<length(rp.locat), then the distances between the 'focus'th GW model points and data points will be calculated and a distance vector will be returned}
+  \item{dp.locat}{a numeric matrix of two columns giving the coordinates of the data points}
+  \item{rp.locat}{a numeric matrix of two columns giving the coordinates of the GW model calibration points}
+  \item{focus}{an integer, indexing to the current GW model point, if focus=0, all the distances between all the GW model calibration points and data points will be calculated and a distance matrix will be returned; if 0<focus<length(rp.locat), then the distances between the 'focus'th GW model points and data points will be calculated and a distance vector will be returned}
   \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
   \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
   \item{longlat}{if TRUE, great circle distances will be calculated}
@@ -21,7 +21,7 @@ gw.dist(dp.locat, rp.locat, focus=0, p=2, theta=0, longlat=F)
 
 \value{
  returns a numeric distance matrix or vector;
- matrix with its rows corresponding to the observations and its columns corresponds to the GW model points.
+ matrix with its rows corresponding to the observations and its columns corresponds to the GW model calibration points.
 }
 \author{Binbin Lu \email{lubinbin220@gmail.com}}
 \seealso{\code{\link{dist}} in \pkg{stats}}

@@ -9,9 +9,6 @@
 \details{
 Variables are from GWR3 file GData_utm.csv.
 }
-\source{
-  \url{http://www.nuim.ie/ncg/GWR/index.htm}
-}
 \examples{
 data(GeorgiaCounties)
 plot(Gedu.counties)

@@ -5,14 +5,14 @@
 This function finds the cross-validation score for a specified bandwidth for basic GWR
 }
 \usage{
-gwr.cv(bw, X, Y, kernel, adaptive, dp.locat, p, theta,
-                 longlat, dMat, verbose = T)
+gwr.cv(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0, 
+       longlat=F,dMat, verbose=T)
 }
 
 \arguments{
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
-  \item{X}{a numeric matrix of independent samples with extra ones vector  for the 1st column}
-  \item{Y}{a one-column vector of dependent samples}
+  \item{X}{a numeric matrix of the independent data with an extra column of \dQuote{ones} for the 1st column}
+  \item{Y}{a column vector of the dependent data}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
