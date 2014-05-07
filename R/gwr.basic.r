@@ -39,7 +39,8 @@
 #Belsey-Kuh-Welsh condition number
 #Variance Inflation Factors
 #Variance decomposition proportions
-gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T,W.vect=NULL)
+gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",
+           adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T,W.vect=NULL)
 {
   ##Record the start time
   timings <- list()
@@ -71,6 +72,15 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",adap
         warning("Output loactions are not packed in a Spatial object,and it has to be a two-column numeric vector")
         rp.locat<-dp.locat
       }
+  }
+  #Regression data is gridded or not
+  griddedObj <- F
+  if(is(regression.points, "Spatial"))
+  {
+    if (is(regression.points, "SpatialPolygonsDataFrame"))
+       polygons<-polygons(regression.points)
+    else
+        griddedObj <- gridded(regression.points)
   }
   ##Data points{
   if (is(data, "Spatial"))
@@ -226,12 +236,14 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",adap
       if (is.null(W.vect))
       {
          gwres.df<-data.frame(betas,y,yhat,residual,CV,Stud_residual,betas.SE,betas.TV)
-         colnames(gwres.df)<-c(c(c(colnames(betas),c("y","yhat","residual","CV_Score","Stud_residual")),paste(colnames(betas), "SE", sep="_")),paste(colnames(betas), "TV", sep="_"))
+         colnames(gwres.df)<-c(c(c(colnames(betas),c("y","yhat","residual","CV_Score","Stud_residual")),
+                             paste(colnames(betas), "SE", sep="_")),paste(colnames(betas), "TV", sep="_"))
       }
       else
       {
          gwres.df<-data.frame(betas,y,yhat,residual,CV,Stud_residual,betas.SE,betas.TV, W.vect)
-         colnames(gwres.df)<-c(c(c(colnames(betas),c("y","yhat","residual","CV_Score","Stud_residual")),paste(colnames(betas), "SE", sep="_")),paste(colnames(betas), "TV", sep="_"), "E_weigts")
+         colnames(gwres.df)<-c(c(c(colnames(betas),c("y","yhat","residual","CV_Score","Stud_residual")),
+                            paste(colnames(betas), "SE", sep="_")),paste(colnames(betas), "TV", sep="_"), "E_weigts")
       }
       
     }
@@ -256,10 +268,15 @@ gwr.basic<-function(formula, data, regression.points, bw, kernel="bisquare",adap
        SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df,match.ID=F)
     }
     else
+    {
        SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
+       if(griddedObj)
+          gridded(SDF) <- T
+    }
     timings[["stop"]] <- Sys.time()
    ##############
-    res<-list(GW.arguments=GW.arguments,GW.diagnostic=GW.diagnostic,lm=lm.res,SDF=SDF,timings=timings,this.call=this.call,Ftest.res=Ftest.res)
+    res<-list(GW.arguments=GW.arguments,GW.diagnostic=GW.diagnostic,lm=lm.res,SDF=SDF,
+              timings=timings,this.call=this.call,Ftest.res=Ftest.res)
     class(res) <-"gwrm"
     invisible(res)  
 }

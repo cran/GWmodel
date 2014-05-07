@@ -78,7 +78,7 @@ check.components <- function(ld,loc) {
 # Can use this plot to inspect for a possible outlier (as identifed above)...
 # Note there are many parameters (esp for 'wts' and 'tsc') that can be tweaked with this function
 # & thus it needs to be made more general...
-gw.pcplot <- function(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, theta=0, longlat=F,dMat,...) 
+gw.pcplot <- function(data,vars,focus,bw,adaptive = FALSE, ylim=NULL,ylab="",fixtrans=FALSE, p=2, theta=0, longlat=F,dMat,...) 
 {
 	if (is(data, "Spatial"))
   {
@@ -116,9 +116,15 @@ gw.pcplot <- function(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, 
 	if(DM.given)
 	   dists <- dMat[,i]
   else
-     dists <-gw.dist(dp.locat=loc, focus = i, p=p, theta=theta, longlat=longlat) 
+     dists <-gw.dist(dp.locat=loc, focus = i, p=p, theta=theta, longlat=longlat)
+  if(adaptive)
+  {
+    rnk<- rank(dists, ties.method='first')
+		bw<- dists[rnk==bw]  
+  }
+  #dists <- dists**2
+	nbrlist <- which(dists < bw)
   dists <- dists**2
-	nbrlist <- which(dists < bw*bw)
   wts <- (1 - dists/(bw*bw))^12
 #  if(adaptive)
 #    bw<-dists[bw]
@@ -135,8 +141,12 @@ gw.pcplot <- function(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, 
 	abline(v=1:m,col=grey(0.6))
 	lines(c(1,m),c(0,0),col=grey(0.6))
 	if (fixtrans) {
-	    for (nbr in nbrlist) lines(span,xss[nbr,],col=rgb(0,0,0,0.3), lwd=3) }
-  else {
-      for (nbr in nbrlist) lines(span,xss[nbr,],col=rgb(0,0,0,tsc*wts[nbr]), lwd=3)} 
+	    for (nbr in nbrlist) 
+          lines(span,xss[nbr,],col=rgb(0,0,0,0.3), lwd=3) }
+  else 
+  {
+      for (nbr in nbrlist)
+          lines(span,xss[nbr,],col=rgb(0,0,0,tsc*wts[nbr]), lwd=3)  
+  } 
 
 }

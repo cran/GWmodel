@@ -252,16 +252,26 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
       gwres.df<-data.frame(betas)
     }
     rownames(rp.locat)<-rownames(gwres.df)
-    if (is(regression.points, "SpatialPolygonsDataFrame"))
-    {
-       polygons<-polygons(regression.points)
-       #SpatialPolygons(regression.points)
-       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                            function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+    griddedObj <- F
+    if (is(regression.points, "Spatial"))
+    { 
+        if (is(regression.points, "SpatialPolygonsDataFrame"))
+        {
+           polygons<-polygons(regression.points)
+           #SpatialPolygons(regression.points)
+           #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                              #  function(i) slot(i, "ID"))
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+        }
+        else
+        {
+           griddedObj <- gridded(regression.points)
+           SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
+           gridded(SDF) <- griddedObj 
+        }
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F) 
+        SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
     res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
 }
@@ -375,16 +385,26 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     }
     rownames(rp.locat)<-rownames(gwres.df)
     
-    if (is(regression.points, "SpatialPolygonsDataFrame"))
-    {
-       polygons<-polygons(regression.points)
-       #SpatialPolygons(regression.points)
-       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                              function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+    griddedObj <- F
+    if (is(regression.points, "Spatial"))
+    { 
+        if (is(regression.points, "SpatialPolygonsDataFrame"))
+        {
+           polygons<-polygons(regression.points)
+           #SpatialPolygons(regression.points)
+           #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                              #  function(i) slot(i, "ID"))
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+        }
+        else
+        {
+           griddedObj <- gridded(regression.points)
+           SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
+           gridded(SDF) <- griddedObj 
+        }
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
+        SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
     res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
 }

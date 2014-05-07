@@ -5,8 +5,8 @@
 This function provides a geographically weighted parallel coordinate plot for investigating a multivariate data set.  It has an option that weights the lines of the plot with increasing levels of transparency, according to their observation's distance from a specified focal/observation point.  This plot can be used to identify outliers.
 }
 \usage{
-gw.pcplot(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, theta=0, 
-          longlat=F,dMat,...) 
+gw.pcplot(data,vars,focus,bw,adaptive = FALSE, ylim=NULL,ylab="",fixtrans=FALSE, 
+          p=2, theta=0, longlat=F,dMat,...) 
 }
 
 \arguments{
@@ -14,6 +14,7 @@ gw.pcplot(data,vars,focus,bw,ylim=NULL,ylab="",fixtrans=FALSE, p=2, theta=0,
   \item{vars}{a vector of variable names to be evaluated}
   \item{focus}{an integer, indexing to the observation point}
   \item{bw}{bandwidth used in the weighting function;fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
+  \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth (bw) corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
   \item{ylim}{the y limits of the plot}
   \item{ylab}{a label for the y axis}
   \item{fixtrans}{if TRUE, the transparency of the neighbouring observation plot lines increases with distance; If FALSE a standard (non-spatial) parallel coordinate plot is returned.}

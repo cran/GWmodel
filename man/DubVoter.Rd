@@ -4,7 +4,8 @@
 \docType{data}
 \title{Voter turnout data in Greater Dublin(SpatialPolygonsDataFrame)}
 \description{
-  Voter turnout and social characters data in Greater Dublin for 2004 election.
+  Voter turnout and social characters data in Greater Dublin for the 2002 General election and the 2002 census.
+  Note that this data set was originally thought to relate to 2004, so for continuity we have retained the associated variable names.
 }
 \usage{data(DubVoter)}
 \format{

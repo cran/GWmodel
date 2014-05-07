@@ -121,15 +121,37 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="bisquare",
                         p=p, theta=theta, longlat=longlat, wt2=this.w)
       reg.df <- as.data.frame(this.reg)
       rownames(rp.locat)<-rownames(reg.df)
-       if (is(regression.points, "SpatialPolygonsDataFrame"))
-      {
-         polygons<-polygons(regression.points)
-         #SpatialPolygons(regression.points)
-         rownames(reg.df) <- sapply(slot(polygons, "polygons"),
-                              function(i) slot(i, "ID"))
-         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df)
-       }
-       else
-         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s), match.ID=F)
+      griddedObj <- F
+      if (is(regression.points, "Spatial"))
+      { 
+          if (is(regression.points, "SpatialPolygonsDataFrame"))
+          {
+             polygons<-polygons(regression.points)
+             #SpatialPolygons(regression.points)
+             #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                                #  function(i) slot(i, "ID"))
+             SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df)
+          }
+          else
+          {
+             griddedObj <- gridded(regression.points)
+             SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s), match.ID=F)
+             gridded(SDF) <- griddedObj 
+          }
+      }
+      else
+          SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s), match.ID=F)
+        
+      
+       #if (is(regression.points, "SpatialPolygonsDataFrame"))
+#      {
+#         polygons<-polygons(regression.points)
+#         #SpatialPolygons(regression.points)
+#         rownames(reg.df) <- sapply(slot(polygons, "polygons"),
+#                              function(i) slot(i, "ID"))
+#         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df)
+#       }
+#       else
+#         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=reg.df, proj4string=CRS(p4s), match.ID=F)
       SDF    
 }

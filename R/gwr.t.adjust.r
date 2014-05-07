@@ -48,12 +48,34 @@ gwr.t.adjust <- function(gwm.Obj)
      locat <- coordinates(gwm.Obj$SDF)
      rownames(locat)<-rownames(df.res)
   }
-  if (is(gwm.Obj$SDF, "SpatialPolygonsDataFrame"))
-  {
-     SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=df.res)
+  griddedObj <- F
+  if (is(gwm.Obj$SDF, "Spatial"))
+  { 
+      if (is(gwm.Obj$SDF, "SpatialPolygonsDataFrame"))
+      {
+         polygons<-polygons(gwm.Obj$SDF)
+         #SpatialPolygons(regression.points)
+         #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                            #  function(i) slot(i, "ID"))
+         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=df.res)
+      }
+      else
+      {
+         griddedObj <- gridded(gwm.Obj$SDF)
+         SDF <- SpatialPointsDataFrame(coords=locat, data=df.res, proj4string=CRS(p4s), match.ID=F)
+         gridded(SDF) <- griddedObj 
+      }
   }
   else
-     SDF <- SpatialPointsDataFrame(coords=locat, data=df.res, proj4string=CRS(p4s))
+      SDF <- SpatialPointsDataFrame(coords=locat, data=df.res, proj4string=CRS(p4s), match.ID=F)
+   
+#  if (is(gwm.Obj$SDF, "SpatialPolygonsDataFrame"))
+#  {
+#     SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=df.res)
+#  }
+#  else
+#     SDF <- SpatialPointsDataFrame(coords=locat, data=df.res, proj4string=CRS(p4s))
+  
   res<-list(results=results, SDF=SDF)
   res
 }

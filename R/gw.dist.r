@@ -31,7 +31,7 @@
    n.rp<-length(rp.locat[,1])
    n.dp<-length(dp.locat[,1])
    if (focus>0)
-       dist.res<-numeric(n.rp)
+       dist.res<-numeric(n.dp)
    else
        dist.res<-matrix(numeric(n.rp*n.dp),nrow=n.dp)
    ###Rotate the coordiante system

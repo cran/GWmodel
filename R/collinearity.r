@@ -219,17 +219,26 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
       colnames(gwres.df)<-c(colnames(betas),c("Local_CN","Local_Lambda"))
     }
     rownames(rp.locat)<-rownames(gwres.df)
-
-    if (is(regression.points, "SpatialPolygonsDataFrame"))
-    {
-       polygons<-polygons(regression.points)
-       #SpatialPolygons(regression.points)
-       #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                          #  function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+    griddedObj <- F
+    if (is(regression.points, "Spatial"))
+    { 
+        if (is(regression.points, "SpatialPolygonsDataFrame"))
+        {
+           polygons<-polygons(regression.points)
+           #SpatialPolygons(regression.points)
+           #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                              #  function(i) slot(i, "ID"))
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+        }
+        else
+        {
+           griddedObj <- gridded(regression.points)
+           SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
+           gridded(SDF) <- griddedObj 
+        }
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
+        SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s))
     timings[["stop"]] <- Sys.time()
 
      if(rp.given)
@@ -375,11 +384,11 @@ bw.gwr.lcr <-function(formula, data, kernel="bisquare",
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
-    mf[[1]] <- as.name("model.frame")
+    mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")

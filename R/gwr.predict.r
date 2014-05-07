@@ -176,16 +176,38 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive
   gwr.pred.df <- data.frame(betas1, gw.predict, predict.var)
   colnames(gwr.pred.df) <- c(paste(colnames(x), "coef", sep = "_"), "prediction", "prediction_var")
   rownames(pd.locat)<-rownames(gwr.pred.df)
-  if (is(predict.SPDF, "SpatialPolygonsDataFrame"))
-    {
-       polygons<-polygons(predict.SPDF)
-       #SpatialPolygons(regression.points)
-       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
-                            function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df, match.ID=F)
-    }
-    else
-       SDF <- SpatialPointsDataFrame(coords=pd.locat, data=gwr.pred.df, proj4string=CRS(p4s))
+  griddedObj <- F
+  if (is(predict.SPDF, "Spatial"))
+  { 
+      if (is(predict.SPDF, "SpatialPolygonsDataFrame"))
+      {
+         polygons<-polygons(predict.SPDF)
+         #SpatialPolygons(regression.points)
+         #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                            #  function(i) slot(i, "ID"))
+         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df)
+      }
+      else
+      {
+         griddedObj <- gridded(predict.SPDF)
+         SDF <- SpatialPointsDataFrame(coords=pd.locat, data=gwr.pred.df, proj4string=CRS(p4s), match.ID=F)
+         gridded(SDF) <- griddedObj 
+      }
+  }
+  else
+      SDF <- SpatialPointsDataFrame(coords=pd.locat, data=gwr.pred.df, proj4string=CRS(p4s), match.ID=F)
+  
+ # if (is(predict.SPDF, "SpatialPolygonsDataFrame"))
+#    {
+#       polygons<-polygons(predict.SPDF)
+#       #SpatialPolygons(regression.points)
+#       rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+#                            function(i) slot(i, "ID"))
+#       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df, match.ID=F)
+#    }
+#    else
+#       SDF <- SpatialPointsDataFrame(coords=pd.locat, data=gwr.pred.df, proj4string=CRS(p4s))
+       
     timings[["stop"]] <- Sys.time()
   ##############
   GW.arguments<-list(formula=formula,bw=bw, kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat, fd.n=fd.n, DM.given=DM3.given)

@@ -122,6 +122,7 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
     stop("Variables input error")
   if(missing(bw)||bw<=0)
     stop("Bandwidth is not specified incorrectly")
+  len.var <- length(vars)
   ##########Extract data
   col.nm<-colnames(data)
   var.idx<-match(vars, col.nm)[!is.na(match(vars, col.nm))]
@@ -130,6 +131,8 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
   x<-as.matrix(x)
   var.nms<-colnames(x)
   var.n<-ncol(x)
+  if(len.var > var.n)
+     warning("Invalid variables have been specified, please check them again!")
   ############################# WPCA
 	w <- array(0,c(ep.n,var.n,k))
 	d <- matrix(0,ep.n,k)

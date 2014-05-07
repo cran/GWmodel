@@ -107,16 +107,38 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
    mgwr.df <- data.frame(model$local, model$global)
    colnames(mgwr.df) <- c(paste(colnames(x1), "L", sep="_"), paste(colnames(x2), "F", sep="_"))
    rownames(rp.locat)<-rownames(mgwr.df)
-   if (is(regression.points, "SpatialPolygonsDataFrame"))
-    {
-       polygons<-polygons(regression.points)
-       #SpatialPolygons(regression.points)
-       rownames(mgwr.df) <- sapply(slot(polygons, "polygons"),
-                          function(i) slot(i, "ID"))
-       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df)
+  griddedObj <- F
+    if (is(regression.points, "Spatial"))
+    { 
+        if (is(regression.points, "SpatialPolygonsDataFrame"))
+        {
+           polygons<-polygons(regression.points)
+           #SpatialPolygons(regression.points)
+           #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+                              #  function(i) slot(i, "ID"))
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df)
+        }
+        else
+        {
+           griddedObj <- gridded(regression.points)
+           SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s), match.ID=F)
+           gridded(SDF) <- griddedObj 
+        }
     }
     else
-       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s), match.ID=F)
+        SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s), match.ID=F)
+ #  
+#   if (is(regression.points, "SpatialPolygonsDataFrame"))
+#    {
+#       polygons<-polygons(regression.points)
+#       #SpatialPolygons(regression.points)
+#       rownames(mgwr.df) <- sapply(slot(polygons, "polygons"),
+#                          function(i) slot(i, "ID"))
+#       SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df)
+#    }
+#    else
+#       SDF <- SpatialPointsDataFrame(coords=rp.locat, data=mgwr.df, proj4string=CRS(p4s), match.ID=F)
+   
    res$SDF <- SDF
    if (diagnostic)
    {

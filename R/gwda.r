@@ -108,13 +108,33 @@ gwda <- function(formula, data, predict.data,validation = T, COV.gw=T,
   #####output in a spatial*dataframe#
     res.df <- data.frame(res.df)
     rownames(res.df) <- rownames(pr.locat)
-   if (is(predict.data, "SpatialPolygonsDataFrame")) {
-    polygons <- polygons(predict.data)
-    SDF <- SpatialPolygonsDataFrame(Sr = polygons, data = res.df, 
+    griddedObj <- F
+    if (is(predict.data, "Spatial"))
+    { 
+        if (is(predict.data, "SpatialPolygonsDataFrame"))
+        {
+          polygons <- polygons(predict.data)
+          SDF <- SpatialPolygonsDataFrame(Sr = polygons, data = res.df, 
                                     match.ID = F)
-  }
-  else SDF <- SpatialPointsDataFrame(coords = pr.locat, data = res.df, 
+        }
+        else
+        {
+           griddedObj <- gridded(predict.data)
+           SDF <- SpatialPointsDataFrame(coords = pr.locat, data = res.df, 
                                      proj4string = CRS(p4s), match.ID=F)
+           gridded(SDF) <- griddedObj 
+        }
+    }
+    else
+        SDF <- SpatialPointsDataFrame(coords = pr.locat, data = res.df, 
+                                     proj4string = CRS(p4s), match.ID=F)   
+#   if (is(predict.data, "SpatialPolygonsDataFrame")) {
+#    polygons <- polygons(predict.data)
+#    SDF <- SpatialPolygonsDataFrame(Sr = polygons, data = res.df, 
+#                                    match.ID = F)
+#  }
+#  else SDF <- SpatialPointsDataFrame(coords = pr.locat, data = res.df, 
+#                                     proj4string = CRS(p4s), match.ID=F)                                     
   res<-list()
   res$SDF<- SDF
   res$this.call <- this.call

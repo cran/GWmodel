@@ -11,6 +11,7 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="bisquare",
   #####Check the given data frame and regression points
   ##Data points{
   polygons <- NULL
+  griddedObj <- F
   if (is(data, "Spatial"))
   {
     p4s <- proj4string(data)
@@ -20,7 +21,10 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="bisquare",
        dp.locat<-coordinates(data)
     }
     else
+    {
        dp.locat<-coordinates(data)
+       griddedObj <- gridded(data)
+    }
     data <- as(data, "data.frame")
   }
   else
@@ -32,20 +36,26 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="bisquare",
   ######Extract the data frame
   ####Refer to the function lm
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0L)
 
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$drop.unused.levels <- TRUE
-    mf[[1]] <- as.name("model.frame")
+    mf[[1L]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
     idx1 <- match("(Intercept)", colnames(x))
+    var.n<-ncol(x)
     if(!is.na(idx1))
+    {
       colnames(x)[idx1]<-"Intercept" 
-    x1<-x[,-1]
-	  var.n<-ncol(x)
+      x1<-x[,-1]
+    }
+    else
+    {
+      x1 <- x
+    }
 	  var.nms <- colnames(x)
     if (var.n<=1)
        stop("The number of independent variables must be larger than one")
@@ -138,7 +148,11 @@ gwr.collin.diagno <- function(formula, data, bw, kernel="bisquare",
        SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=res.df, match.ID=F)
     }
     else
+    {
        SDF <- SpatialPointsDataFrame(coords=dp.locat, data=res.df, proj4string=CRS(p4s), match.ID=F)
+       if(griddedObj)
+          gridded(SDF) <- griddedObj 
+    }   
     
     res <- list()
     res$corr.mat <- corr.mat

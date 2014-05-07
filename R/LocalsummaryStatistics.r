@@ -73,6 +73,7 @@ gwss <- function (data, summary.locat, vars, kernel = "bisquare", adaptive = FAL
     stop("Variables input error")
   if (missing(bw) || bw <= 0) 
     stop("Bandwidth is not specified incorrectly")
+  len.var <- length(vars)
   col.nm <- colnames(data)
   var.idx <- match(vars, col.nm)[!is.na(match(vars, col.nm))]
   if (length(var.idx) == 0) 
@@ -81,6 +82,9 @@ gwss <- function (data, summary.locat, vars, kernel = "bisquare", adaptive = FAL
   x <- as.matrix(x)
   var.nms <- names(data)[var.idx]
   var.n <- ncol(x)
+  if(len.var > var.n)
+     warning("Invalid variables have been specified, please check them again!")
+  
   local.mean <- matrix(numeric(var.n * sp.n), ncol = var.n)
   standard.deviation <- matrix(numeric(var.n * sp.n), ncol = var.n)
   local.skewness <- matrix(numeric(var.n * sp.n), ncol = var.n)
@@ -198,13 +202,26 @@ gwss <- function (data, summary.locat, vars, kernel = "bisquare", adaptive = FAL
                             LVar, local.skewness, LCV)
   }
   rownames(res.df) <- rownames(sp.locat)
-  if (is(summary.locat, "SpatialPolygonsDataFrame")) {
-    polygons <- polygons(summary.locat)
-    SDF <- SpatialPolygonsDataFrame(Sr = polygons, data = res.df, 
-                                    match.ID = F)
+  griddedObj <- F
+  if (is(summary.locat, "Spatial"))
+  { 
+    if (is(summary.locat, "SpatialPolygonsDataFrame")) 
+    {
+      polygons <- polygons(summary.locat)
+      SDF <- SpatialPolygonsDataFrame(Sr = polygons, data = res.df, 
+                                      match.ID = F)
+    }
+    else
+    {
+      griddedObj <- gridded(summary.locat)
+      SDF <- SpatialPointsDataFrame(coords = sp.locat, data = res.df, 
+                                       proj4string = CRS(p4s), match.ID=F)
+      gridded(SDF) <- griddedObj
+    }
   }
-  else SDF <- SpatialPointsDataFrame(coords = sp.locat, data = res.df, 
-                                     proj4string = CRS(p4s), match.ID=F)
+  else
+    SDF <- SpatialPointsDataFrame(coords = sp.locat, data = res.df, 
+                                       proj4string = CRS(p4s), match.ID=F) 
   res <- list(SDF = SDF, vars = vars, kernel = kernel, adaptive = adaptive, 
               bw = bw, p = p, theta = theta, longlat = longlat, DM.given = DM.given, 
               sp.given = sp.given, quantile = quantile)
