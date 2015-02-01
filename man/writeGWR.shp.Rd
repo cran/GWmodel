@@ -11,7 +11,7 @@ writeGWR.shp(x,fn="GWRresults")
   \item{fn}{file name for the written results, by default the output files can be found
             in the working directory, \dQuote{GWRresults(.shp, .shx, .dbf)}}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \seealso{\code{\link{writeGWR}}}
 \note{
   The projection file is missing for the written shapefiles.

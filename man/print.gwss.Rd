@@ -11,5 +11,5 @@ This function prints out the results from \link{gwss}.
   \item{x}{an object of class \dQuote{gwss}, returned by the function \link{gwss}}
   \item{...}{arguments passed through (unused)}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{gwss, print}

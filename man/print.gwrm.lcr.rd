@@ -11,5 +11,5 @@ This function prints out the results from the function \link{gwr.lcr}.
   \item{x}{an object of class \dQuote{gwrlcr}, returned by the function \link{gwr.lcr}}
   \item{...}{arguments passed through (unused)}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{gwr.lcr, print}

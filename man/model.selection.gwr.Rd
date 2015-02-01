@@ -41,7 +41,7 @@ A list of:
   \item{GWR.df}{a data frame consited of four columns: bandwidth, AIC, AICc, RSS}
 }
 
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \note{
 The algorithm for selecting GWR models consists of the following four steps:
 
@@ -64,9 +64,9 @@ Note that there is a clear distinction between the different number of involved 
 selection step, which can be called model levels.
 }
 \references{
-LU, B., CHARLTON, M., HARRIS, P. & FOTHERINGHAM, A. S. (2013). Geographically Weighted 
-Regression with a Non-Euclidean Distance Metric: a Case Study using Hedonic House Price Data. 
-International Journal of Geographical Information Science, DOI: 10.1080/13658816.2013.865739(In press).
+Lu, B, Charlton, M, Harris, P, Fotheringham, AS (2014) Geographically weighted regression 
+with a non-Euclidean distance metric: a case study using hedonic house price data. 
+International Journal of Geographical Information Science 28(4): 660-681
 }
 \seealso{\code{\link{model.view.gwr}}, \code{\link{model.sort.gwr}}}
 % Add one or more standard keywords, see file 'KEYWORDS' in the

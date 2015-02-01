@@ -42,6 +42,6 @@ above this user-specified threshold, a local ridge parameter is found}
 \value{
   \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth.}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{cv, GWR}
 

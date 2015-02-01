@@ -1,16 +1,15 @@
 Package: GWmodel
-Version: 1.2-3
-Date: 2014-05-07
-Title: Geographically weighted models
-Author: Binbin Lu[aut], Paul Harris[aut], Martin Charlton[aut], Chris Brunsdon[aut], Tomoki Nakaya[aut], Isabella Gollini[ctb]
-Maintainer: Binbin Lu <lubinbin220@gmail.com>
-Depends: R (>= 3.0.0),maptools (>= 0.5-2), robustbase
+Version: 1.2-5
+Date: 2015-02-01
+Title: Geographically-Weighted Models
+Depends: R (>= 3.0.0),maptools (>= 0.5-2), robustbase,sp
 Suggests: mvoutlier, RColorBrewer, gstat
-Description: Functions for computing geographically weighted
-        models
+Description: In GWmodel, we introduce techniques from a particular branch of spatial statistics,termed geographically-weighted (GW) models. GW models suit situations when data are not described well by some global model, but where there are spatial regions where a suitably localised calibration provides a better description. GWmodel includes functions to calibrate: GW summary statistics, GW principal components analysis, GW discriminant analysis and various forms of GW regression; some of which are provided in basic and robust (outlier resistant) forms.
+Author: Binbin Lu[aut], Paul Harris[aut], Martin Charlton[aut], Chris Brunsdon[aut], Tomoki Nakaya[aut], Isabella Gollini[ctb]
+Maintainer: Binbin Lu <binbinlu@whu.edu.cn>
 License: GPL (>= 2)
-URL: http://www.stratag.ie/index.php?id=gw_models_project
-Packaged: 2014-05-07 05:44:33 UTC; Administrator
-NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-05-12 07:50:05
+URL: http://gwr.nuim.ie/
+Packaged: 2015-02-01 14:16:43 UTC; Administrator
+NeedsCompilation: no
+Date/Publication: 2015-02-01 17:38:21

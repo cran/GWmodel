@@ -1,0 +1,23 @@
+citHeader("To cite GWmodel in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{GWmodel}: An {R} Package for Exploring Spatial Heterogeneity Using Geographically Weighted Models",
+  author       = personList(as.person("Isabella Gollini"),
+                   as.person("Binbin Lu"),
+                   as.person("Martin Charlton"),
+                   as.person("Christopher Brunsdon"),
+                   as.person("Paul Harris")),
+  journal      = "Journal of Statistical Software",
+  year         = "2015",
+  volume       = "63",
+  number       = "17",
+  pages        = "1--50",
+  url          = "http://www.jstatsoft.org/v63/i17/",
+
+  textVersion  =
+  paste("Isabella Gollini, Binbin Lu, Martin Charlton, Christopher Brunsdon, Paul Harris (2015).",
+        "GWmodel: An R Package for Exploring Spatial Heterogeneity Using Geographically Weighted Models.",
+        "Journal of Statistical Software, 63(17), 1-50.",
+        "URL http://www.jstatsoft.org/v63/i17/.")
+)
+

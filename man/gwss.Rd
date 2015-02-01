@@ -52,7 +52,7 @@ Geographically Weighted Regression: The Analysis of Spatially Varying Relationsh
 
 Brunsdon C, Fotheringham AS, Charlton ME (2002) Geographically weighted summary statistics - a framework for localised exploratory data analysis. Computers, Environment and Urban Systems 26:501-524
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(EWHP)

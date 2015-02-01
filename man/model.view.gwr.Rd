@@ -12,7 +12,7 @@ model.view.gwr(DeVar, InDeVars, model.list)
   \item{InDeVars}{a vector of independent variables for model selection}
   \item{model.list}{a list of all GWR model tried in \code{\link{model.selection.gwr}}}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
 \seealso{\code{\link{model.selection.gwr}}, \code{\link{model.sort.gwr}}}
 \examples{

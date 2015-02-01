@@ -3,11 +3,11 @@
 \alias{GWmodel}
 \docType{package}
 \title{
-Geographically weighted models
+Geographically-Weighted Models
 }
 \description{
 In GWmodel, we introduce techniques from a particular branch of spatial statistics, 
-termed geographically weighted (GW) models. GW models suit situations when data are 
+termed geographically-weighted (GW) models. GW models suit situations when data are 
 not described well by some global model, but where there are spatial regions where 
 a suitably localised calibration provides a better description. GWmodel includes functions 
 to calibrate: GW summary statistics, GW principal components analysis, GW discriminant analysis 
@@ -17,8 +17,8 @@ and various forms of GW regression; some of which are provided in basic and robu
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 1.2-2\cr
-Date: \tab 2013-12-12\cr
+Version: \tab 1.2-5\cr
+Date: \tab 2015-02-01\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -27,7 +27,7 @@ LazyLoad: \tab yes\cr
 \author{
 Binbin Lu, Paul Harris, Martin Charlton, Chris Brunsdon, Tomoki Nakaya, Isabella Gollini
 
-Maintainer: Binbin Lu <lubinbin220@gmail.com>
+Maintainer: Binbin Lu <binbinlu@whu.edu.cn>
 }
 \note{
 Acknowledgement: We gratefully acknowledge support from Science Foundation Ireland 
@@ -36,12 +36,13 @@ grant 07-SRC-I1168.
 }
 
 \references{
-Gollini I, Lu B, Charlton M, Brunsdon C, Harris P (2013) GWmodel: an R Package 
-for exploring Spatial Heterogeneity using Geographically Weighted Models. 
-\url{http://arxiv.org/abs/1306.0413}
+Gollini I, Lu B, Charlton M, Brunsdon C, Harris P (2015) GWmodel: an R Package 
+for exploring Spatial Heterogeneity using Geographically Weighted Models. Journal 
+of Statistical Software, 63(17):1-50, \url{http://www.jstatsoft.org/v63/i17/}
 
-Lu B, Harris P, Charlton M, Brunsdon C (2013) The GWmodel R Package: further 
+Lu B, Harris P, Charlton M, Brunsdon C (2014) The GWmodel R Package: further 
 topics for exploring Spatial Heterogeneity using Geographically Weighted Models.
-\url{http://arxiv-web3.library.cornell.edu/abs/1312.2753}
+Geo-spatial Information Science 17(2): 85-101, 
+\url{http://www.tandfonline.com/doi/abs/10.1080/10095020.2014.917453}
 }
 \keyword{ package }

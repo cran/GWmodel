@@ -47,7 +47,7 @@ Brunsdon C, Fotheringham AS, Charlton ME (2002) Geographically weighted summary 
 
 Harris P, Brunsdon C (2010) Exploring spatial variation and spatial relationships in a freshwater acidification critical load data set for Great Britain using geographically weighted summary statistics. Computers & Geosciences 36:54-70
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(LondonHP)

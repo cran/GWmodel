@@ -13,7 +13,7 @@ This function plots the results from the functions \link{montecarlo.gwpca.1} and
   \item{sname}{the label for the observed value on the plot}
   \item{...}{arguments passed through (unused)}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
 \keyword{Monte Carlo, GWPCA}
 

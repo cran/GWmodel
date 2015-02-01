@@ -23,7 +23,7 @@ gw.dist(dp.locat, rp.locat, focus=0, p=2, theta=0, longlat=F)
  returns a numeric distance matrix or vector;
  matrix with its rows corresponding to the observations and its columns corresponds to the GW model calibration points.
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \seealso{\code{\link{dist}} in \pkg{stats}}
 \examples{
 dp<-cbind(sample(100),sample(100))

@@ -45,7 +45,7 @@ This note is applicable to GW regression and all other GW models
   Returns the adaptive or fixed distance bandwidth
 }
 
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
 \keyword{bandwidth}
 

@@ -12,7 +12,7 @@ model.sort.gwr(Sorting.list , numVars, ruler.vector)
   \item{numVars}{the number of independent variables involved in model selection}
   \item{ruler.vector}{a numeric vector as the sorting basis}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \note{
   The function sorts the results of model selection within invidual levels.
 }

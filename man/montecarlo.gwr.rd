@@ -40,7 +40,7 @@ Journal of the Royal Statistical Society, Series D-The Statistician 47(3):431-44
 
 Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(LondonHP)

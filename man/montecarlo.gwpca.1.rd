@@ -41,7 +41,7 @@ A list of components:
   \item{actual}{the observed standard deviations (SD) of eigenvalues}
   \item{sims}{a vector of the simulated SDs of eigenvalues}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(DubVoter)

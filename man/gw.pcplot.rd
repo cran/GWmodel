@@ -24,12 +24,11 @@ gw.pcplot(data,vars,focus,bw,adaptive = FALSE, ylim=NULL,ylab="",fixtrans=FALSE,
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
   \item{...}{other graphical parameters, (see \link{par})}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \references{
-Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2013) 
-Multivariate spatial outlier detection using robust geographically weighted methods.  
-Mathematical Geosciences DOI 10.1007/s11004-013-9491-0
-
+Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2014) Multivariate spatial 
+outlier detection using robust geographically weighted methods.  Mathematical 
+Geosciences 46(1) 1-31
 }
 \keyword{GW, PCP}
 

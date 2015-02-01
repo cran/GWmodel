@@ -35,6 +35,6 @@ gwpca.cv(bw,x,loc,k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2,
 \value{
   \item{CV.score}{cross-validation score}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{cv, GWPCA}
 

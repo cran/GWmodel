@@ -507,6 +507,7 @@ montecarlo.gwss<-function(data, vars, kernel = "bisquare",
     x <- as.matrix(x)
     var.nms <- colnames(x)
     var.n <- ncol(x)
+    colnames(x) <- vars
 
  
 	dataI<-SpatialPointsDataFrame(dp.locat,data.frame(x))

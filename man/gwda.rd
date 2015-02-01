@@ -59,6 +59,6 @@ A class of object \dQuote{gwda}
 Brunsdon, C, Fotheringham S,  and Charlton, M (2007),
 Geographically Weighted Discriminant Analysis, Geographical Analysis 39:376-396
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{GWDA}
 

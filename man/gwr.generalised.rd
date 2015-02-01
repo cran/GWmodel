@@ -51,12 +51,12 @@ A list of class \dQuote{ggwrm}:
   \item{CV}{a data vector consisting of the cross-validation data}
 }
 \references{
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://www.nuim.ie/ncg/GWR/index.htm}.
+Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://gwr.nuim.ie/}.
 
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 data(LondonHP)
 \dontrun{

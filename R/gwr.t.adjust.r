@@ -14,12 +14,20 @@ gwr.t.adjust <- function(gwm.Obj)
   n <- dim(gwmx)[1]
   m <- dim(gwmx)[2]
   vnames<-all.vars(gwm.Obj$GW.arguments$formula)
-  vnames[1]<-"Intercept"
+  if(length(vnames)==length(names(gwm.Obj$lm$coefficients)))
+     vnames[1]<-"Intercept"
   nv <- length(vnames)
   np <- nv
   ntests <- n * np
   enp <- gwm.Obj$GW.diagnostic$enp
-  tvals <- as.matrix(gwmx[, (m-1-nv):(m-2)])
+  SDFnms <- names(gwmx)
+  idx <- c()
+  for(i in 1:m)
+  {
+    if(grepl("_TV", SDFnms[i]))
+      idx <- c(idx, i)
+  }
+  tvals <- as.matrix(gwmx[, idx])
   pvals <- round(2 * (1 - pt(abs(tvals), ntests)), 3)
 
   bey_pvals <- round(p.adjust(pvals, "BY", n = ntests))

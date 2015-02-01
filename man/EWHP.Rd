@@ -2,7 +2,7 @@
 \alias{EWHP}
 \alias{ewhp}
 \docType{data}
-\title{house price data set (DataFrame) in England and Wales}
+\title{House price data set (DataFrame) in England and Wales}
 \description{
 A house price data set over the England and Wales with 9 hedonic variables from 1999.
 }
@@ -28,7 +28,7 @@ A house price data set over the England and Wales with 9 hedonic variables from 
   Fotheringham, A.S., Brunsdon, C., and Charlton, M.E. (2002), Geographically Weighted Regression: 
   The Analysis of Spatially Varying Relationships, Chichester: Wiley.
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 ###
 data(EWHP)

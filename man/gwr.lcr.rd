@@ -60,14 +60,12 @@ Brunsdon C, Charlton M, Harris P (2012) Living with collinearity in Local Regres
 
 Brunsdon C, Charlton M, Harris P (2012) Living with collinearity in Local Regression Models. Spatial Accuracy 2012, Brazil
 
-Harris P, Charlton M, Brunsdon C, Lu B (2013) Collinearity in geographically weighted regression: 
-an assessment of parameter accuracy using simulated data.  In review
-
-Harris P, Charlton M, Brunsdon C, Lu B (2013) Collinearity in geographically weighted regression: 
-an assessment of prediction accuracy using simulated data.  In review
+Gollini I, Lu B, Charlton M, Brunsdon C, Harris P (2015) GWmodel: an R Package for 
+exploring Spatial Heterogeneity using Geographically Weighted Models.  Journal of 
+Statistical Software 63(17): 1-50
 
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 data(DubVoter)
 require(RColorBrewer)

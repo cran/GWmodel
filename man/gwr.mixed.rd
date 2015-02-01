@@ -63,6 +63,6 @@ Mei L-M, Wang N, Zhang W-X (2006) Testing the importance of the explanatory vari
 in a mixed geographically weighted regression model. Environment and Planning A 38:587-598
 
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{mixed, GWR}
 

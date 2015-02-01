@@ -12,7 +12,7 @@ gwr.t.adjust(gwm.Obj)
 \arguments{
   \item{gwm.Obj}{an object of class \dQuote{gwrm}, returned by the function \link{gwr.basic}}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \references{
 Byrne, G., Charlton, M. and Fotheringham, S., 2009. Multiple dependent hypothesis tests 
 in geographically weighted regression. In: Lees, B. and Laffan, S. eds. 10th 

@@ -53,6 +53,6 @@ weighted regression model when used as a spatial predictor.  Stochastic Environm
 and Risk Assessment 25:123-138
 
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{Heteroskedastic, GWR}
 

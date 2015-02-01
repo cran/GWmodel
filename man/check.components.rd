@@ -12,7 +12,7 @@ check.components(ld,loc)
   \item{ld}{GWPCA loadings returned by \link{gwpca}}
   \item{loc}{a 2-column numeric array of GWPCA evaluation locations}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \seealso{\link{glyph.plot}}
 \keyword{glyph plot, GWPCA}
 

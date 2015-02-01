@@ -48,6 +48,6 @@ Geographical Systems 7:161-187
 Wheeler D (2007) Diagnostic tools and a remedial method for collinearity in 
 geographically weighted regression. Environment and Planning A 39:2464-2481
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{collinearity,diagnostic, GWR}
 

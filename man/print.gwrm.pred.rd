@@ -11,5 +11,5 @@ This function prints out the GWR results from the function \code{gwr.predict}
   \item{x}{an object of class \dQuote{gwrm.pred}, returned by the function \link{gwr.predict}}
   \item{...}{arguments passed through (unused)}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{gwr, print}

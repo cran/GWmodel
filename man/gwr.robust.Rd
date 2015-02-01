@@ -58,7 +58,7 @@ Geographically Weighted Regression: The Analysis of Spatially Varying Relationsh
 
 Harris P, Fotheringham AS, Juggins S (2010) Robust geographically weighed regression: a technique for quantifying spatial relationships between freshwater acidification critical loads and catchment attributes. Annals of the Association of American Geographers 100(2): 286-306
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(DubVoter)

@@ -6,5 +6,5 @@
 Outline (SpatialPolygonsDataFrame) of England and Wales for data \link{EWHP}.
 }
 \usage{data(EWOutline)}
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{outline,England, Wales}

@@ -34,6 +34,6 @@ bw.gwpca(data,vars,k=2, robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2,
 \value{
 Returns the adaptive or fixed distance bandwidth
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{robust, GWPCA, bandwidth}
 

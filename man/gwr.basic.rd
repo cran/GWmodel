@@ -66,7 +66,7 @@ the adaptive bandwidth is equal to or larger than the number of observations for
 Brunsdon, C, Fotheringham, S, Charlton, M (1996), Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity. 
 Geographical Analysis 28(4):281-298
 
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://www.nuim.ie/ncg/GWR/index.htm}.
+Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://gwr.nuim.ie/}.
 
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
@@ -74,11 +74,11 @@ Geographically Weighted Regression: The Analysis of Spatially Varying Relationsh
 Leung, Y, Mei, CL, and Zhang, WX (2000), Statistical tests for spatial nonstationarity 
 based on the geographically weighted regression model. Environment and Planning A, 32, 9-32.
 
-LU, B., CHARLTON, M., HARRIS, P. & FOTHERINGHAM, A. S. (2013). Geographically Weighted 
-Regression with a Non-Euclidean Distance Metric: a Case Study using Hedonic House Price Data. 
-International Journal of Geographical Information Science, DOI: 10.1080/13658816.2013.865739(In press).
+Lu, B, Charlton, M, Harris, P, Fotheringham, AS (2014) Geographically weighted regression 
+with a non-Euclidean distance metric: a case study using hedonic house price data. 
+International Journal of Geographical Information Science 28(4): 660-681
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))

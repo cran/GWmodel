@@ -11,7 +11,7 @@ This function prints out the generalised GWR results from the function \code{\li
   \item{x}{an object of class \dQuote{ggwrm}, returned by the function \link{gwr.generalised}}
   \item{...}{arguments passed through (unused)}
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \references{
 Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }

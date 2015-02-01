@@ -50,7 +50,7 @@ Harris P, Brunsdon C, Fotheringham AS (2011) Links, comparisons and extensions o
 weighted regression model when used as a spatial predictor.  Stochastic Environmental Research and Risk Assessment 25:123-138
 
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(LondonHP)

@@ -39,6 +39,6 @@ above this user-specified threshold, a local ridge parameter is found}
 \value{
   Returns the adaptive or fixed distance bandwidth
 }
-\author{Binbin Lu \email{lubinbin220@gmail.com}}
+\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{ridge, bandwidth, GWR}
 
