@@ -454,7 +454,7 @@ wvarcov <- function(x, wt)
   }
   cov.mat
 }
-##Weighted means
+##Weighted prior
 wprior <- function(wt, sum.w)
 {
   pr.n <- ncol(wt)

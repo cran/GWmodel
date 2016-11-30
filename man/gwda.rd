@@ -22,7 +22,7 @@ gwda(formula, data, predict.data,validation = T, COV.gw=T,
 }
 
 \arguments{
-  \item{formula}{Regression model formula of a \link{formula} object }
+  \item{formula}{Model formula of a \link{formula} object }
   \item{data}{a Spatial*DataFrame for training, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
   \item{predict.data}{a Spatial*DataFrame object for prediction, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as 
   defined in package \pkg{sp}; if it is not given, the traing data will be predicted using leave-one-out cross-validation.}
@@ -43,7 +43,7 @@ gwda(formula, data, predict.data,validation = T, COV.gw=T,
                 tricube: wgt = (1-(vdist/bw)^3)^3 if vdist < bw, wgt=0 otherwise; 
                 
                 boxcar: wgt=1 if dist < bw, wgt=0 otherwise}
-  \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth (bw) corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
+  \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
   \item{bw}{bandwidth used in the weighting function, possibly calculated by \link{bw.gwpca};fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
   \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
@@ -58,6 +58,10 @@ A class of object \dQuote{gwda}
 \references{
 Brunsdon, C, Fotheringham S,  and Charlton, M (2007),
 Geographically Weighted Discriminant Analysis, Geographical Analysis 39:376-396
+
+Lu B, Harris P, Charlton M, Brunsdon C (2014) The GWmodel R Package: further 
+topics for exploring Spatial Heterogeneity using Geographically Weighted Models.
+Geo-spatial Information Science 17(2): 85-101
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{GWDA}

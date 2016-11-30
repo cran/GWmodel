@@ -1,10 +1,21 @@
 \name{gw.dist}
 \alias{gw.dist}
-\alias{Chebyshev}
-\alias{coordinate.rotation}
+\alias{coordinate_rotate}
+\alias{eu_dist_mat}
+\alias{eu_dist_smat}
+\alias{eu_dist_vec}
+\alias{mk_dist_mat}
+\alias{mk_dist_smat}
+\alias{mk_dist_vec}
+\alias{cd_dist_mat}
+\alias{cd_dist_smat}
+\alias{cd_dist_vec}
+\alias{md_dist_mat}
+\alias{md_dist_smat}
+\alias{md_dist_vec}
 \title{Distance matrix calculation}
 \description{
-  Calculate a distance matrix between any GW model calibration points and the data points.
+  Calculate a distance vector(matrix) between any GW model calibration point(s) and the data points.
 }
 \usage{
 gw.dist(dp.locat, rp.locat, focus=0, p=2, theta=0, longlat=F)
@@ -20,7 +31,7 @@ gw.dist(dp.locat, rp.locat, focus=0, p=2, theta=0, longlat=F)
 }
 
 \value{
- returns a numeric distance matrix or vector;
+ Returns a numeric distance matrix or vector;
  matrix with its rows corresponding to the observations and its columns corresponds to the GW model calibration points.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}

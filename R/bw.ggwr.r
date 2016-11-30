@@ -97,7 +97,7 @@ ggwr.cv<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.lo
 {
    dp.n<-length(dp.locat[,1])
    #########Distance matrix is given or not
-
+  
   if (is.null(dMat))
       DM.given<-F
   else
@@ -110,21 +110,23 @@ ggwr.cv<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.lo
   ############################################CV                                               
   CV<-numeric(dp.n)
   Wt<-matrix(numeric(dp.n*dp.n),ncol=dp.n)
+   
   for (i in 1:dp.n)
   {
     if (DM.given)
          dist.vi<-dMat[,i]
     else
     {
-       dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat)         
+       dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=2, theta=theta, longlat=longlat)
     }
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
+    
     #W.i<-gwr.Gauss(dist.vi^2, bw)
-    #print(W.i)
     W.i[i]<-0
     Wt[,i]<-W.i
   }
   wt2 <- rep(1,dp.n)
+  
   if (family=="poisson")
   {
      res1 <- gwr.poisson.wt(Y,X,bw,Wt)
@@ -137,19 +139,20 @@ ggwr.cv<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.lo
      wt2<-res1[[1]]
      y.adj <- res1[[3]]   
   }
+      
   for (i in 1:dp.n)
   {
     ##lm.i <- try(lm.wfit(y = y, x = x, w = w.i))  
     W.i<-Wt[,i]*wt2
-    fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
-    gw.resi<-try(fun1(X,y.adj,W.i))
-  
-    #gw.resi <- try(lm.wfit(y = Y, x = X, w = W.i))
+    #fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
+    #gwsi<-try(fun1(X,y.adj,W.i))
+    gwsi<-try(gw_reg(X,y.adj,W.i,FALSE,i))
+    #gwsi <- try(lm.wfit(y = Y, x = X, w = W.i))
 
-    if(!inherits(gw.resi, "try-error"))
+    if(!inherits(gwsi, "try-error"))
     {
-      #b <- coefficients(gw.resi)
-      yhat.noi<-X[i,]%*%gw.resi
+      #b <- coefficients(gwsi)
+      yhat.noi<-X[i,]%*%(gwsi[[1]])
       #CV[i] <- Y[i] - (t(b) %*% X[i,])
       if (family=="poisson")
         CV[i]<-Y[i]- exp(yhat.noi)
@@ -174,7 +177,6 @@ ggwr.cv<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F, dp.lo
     cat("Adaptive bandwidth:", bw, "CV score:", CV.score, "\n")
   else
     cat("Fixed bandwidth:", bw, "CV score:", CV.score, "\n")
-  
   CV.score
 }
  #Contribution of each observation to the score statistic used in cross-validation for ggwr
@@ -205,7 +207,6 @@ ggwr.cv.contrib<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=
     }
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
     #W.i<-gwr.Gauss(dist.vi^2, bw)
-    #print(W.i)
     W.i[i]<-0
     Wt[,i]<-W.i
   }
@@ -226,15 +227,15 @@ ggwr.cv.contrib<-function(bw, X, Y,family="poisson", kernel="bisquare",adaptive=
   {
     ##lm.i <- try(lm.wfit(y = y, x = x, w = w.i))  
     W.i<-Wt[,i]*wt2
-    fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
-    gw.resi<-try(fun1(X,y.adj,W.i))
+    #fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
+    #gwsi<-try(fun1(X,y.adj,W.i))
   
-    #gw.resi <- try(lm.wfit(y = Y, x = X, w = W.i))
-
-    if(!inherits(gw.resi, "try-error"))
+    #gwsi <- try(lm.wfit(y = Y, x = X, w = W.i))
+    gwsi<-try(gw_reg(X,y.adj,W.i,FALSE,i))
+    if(!inherits(gwsi, "try-error"))
     {
-      #b <- coefficients(gw.resi)
-      yhat.noi<-X[i,]%*%gw.resi
+      #b <- coefficients(gwsi)
+      yhat.noi<-X[i,]%*%gwsi[[1]]
       #CV[i] <- Y[i] - (t(b) %*% X[i,])
       if (family=="poisson")
         CV[i]<-Y[i]- exp(yhat.noi)
@@ -285,26 +286,27 @@ ggwr.aic<-function(bw, X, Y,family, kernel,adaptive, dp.locat, p=2, theta=0, lon
   wt2 <- rep(1,dp.n)
   if (family=="poisson")
   {
-     gw.possion.res<-gwr.poisson.wt(Y,X,bw,Wt)
-     wt2<-gw.possion.res[[1]]
-     llik<-gw.possion.res[[2]]
+     gw.possions<-gwr.poisson.wt(Y,X,bw,Wt)
+     wt2<-gw.possions[[1]]
+     llik<-gw.possions[[2]]
   }
   else if (family=="binomial")
   {
-     gw.binomial.res<-gwr.binomial.wt(Y,X,bw,Wt)
-     wt2<-gw.binomial.res[[1]]
-     llik<-gw.binomial.res[[2]]
+     gw.binomials<-gwr.binomial.wt(Y,X,bw,Wt)
+     wt2<-gw.binomials[[1]]
+     llik<-gw.binomials[[2]]
   }
   for (i in 1:dp.n)
   {
     #Ci=solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
     W.i<-Wt[,i]*wt2
-    fun2<-function(X,W.i) {Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}}
-    Ci<-try(fun2(X,W.i))
+    #fun2<-function(X,W.i) {Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}}
+    
+    Ci<-try(Ci_mat(X,W.i))
     #Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
-   # gw.resi<-gw.reg(X,Y,W.i,hatmatrix=T,focus=i)
-    #betas[i,]<-gw.resi[[1]] ######See function by IG
-    #S[i,]<-gw.resi[[2]]
+   # gwsi<-gwg(X,Y,W.i,hatmatrix=T,focus=i)
+    #betas[i,]<-gwsi[[1]] ######See function by IG
+    #S[i,]<-gwsi[[2]]
     if(!inherits(Ci, "try-error"))
       S[i,]<-X[i,]%*%Ci   
     else
@@ -350,6 +352,7 @@ gwr.poisson.wt<-function(y,x,bw,W.mat, verbose=T)
     llik <- 0.0
     mu <- y + 0.1
     nu <- log(mu)
+    
     if(verbose)
        cat(" Iteration    Log-Likelihood(With bandwidth: ",bw,")\n=========================\n")
     wt2 <- rep(1,dp.n)
@@ -358,10 +361,10 @@ gwr.poisson.wt<-function(y,x,bw,W.mat, verbose=T)
      for (i in 1:dp.n)
      {
         W.i<-W.mat[,i]
-        gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
-        betas1[i,]<-gw.resi[[1]]
+        gwsi<-gw_reg(x,y.adj,W.i*wt2,FALSE,i)
+        betas1[i,]<-gwsi[[1]]
      }
-     nu <- gwr.fitted(x,betas1)
+     nu <- gw.fitted(x,betas1)
      mu <- exp(nu)
      old.llik <- llik
      llik <- sum(y*nu - mu - log(gamma(y+1)))
@@ -401,10 +404,10 @@ gwr.binomial.wt<-function(y,x,bw,W.mat, verbose=T)
      for (i in 1:dp.n)
      {
         W.i<-W.mat[,i]
-        gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
-        betas1[i,]<-gw.resi[[1]]
+        gwsi<-gw_reg(x,y.adj,W.i*wt2,FALSE,i)
+        betas1[i,]<-gwsi[[1]]
      }
-     nu <- gwr.fitted(x,betas1)
+     nu <- gw.fitted(x,betas1)
      mu <- exp(nu)/(1 + exp(nu))
      old.llik <- llik
      llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/dp.n) + y*log(mu/n))

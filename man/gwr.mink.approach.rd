@@ -1,15 +1,16 @@
-\name{mink.approach}
+\name{gwr.mink.approach}
+\alias{gwr.mink.approach}
 \alias{mink.approach}
 \alias{bw.gwr1}
 \alias{gwr.aic1}
 \alias{gwr.cv1}
-\title{Minkovski approach}
+\title{Minkovski approach for GWR}
 \description{
 This function implements the Minkovski approach to select an 'optimum' distance metric
 for calibrating a GWR model.
 }
 \usage{
-mink.approach(formula, data, criterion="AIC", bw, bw.sel.approach = "AIC",adaptive=F, 
+gwr.mink.approach(formula, data, criterion="AIC", bw, bw.sel.approach = "AIC",adaptive=F, 
               kernel="bisquare", p.vals=seq(from=0.25, to=8, length.out=32), p.inf = T,
                           theta.vals = seq(from=0, to=0.5*pi, length.out=10), verbose=F, 
                           nlower = 10)}
@@ -44,10 +45,13 @@ A list of:
   \item{diag.df}{a data frame with four columns (p, theta, bandwidth, AICc/CV), each row corresponds to a calibration}
   \item{coefs.all}{a list class object including all the estimated coefficients}
 }
+\note{
+The function \dQuote{mink.approach} (in the early versions of GWmodel) has been renamed as
+ \dQuote{gwr.mink.approach}, while the old name is still kept valid.
+}
 \references{
-Lu, B., et al. (2011). Distance metric selection for calibrating a geographically 
-weighted regression model. The 11th International Conference on GeoComputation. London.
+Lu, B, Charlton, M, Brunsdon, C & Harris, P(2016). The Minkowski approach for choosing the distance metric in Geographically Weighted Regression. International Journal of Geographical Information Science, 30(2): 351-368.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{metric, selection}
+\keyword{distance metric, selection}
 

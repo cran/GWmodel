@@ -4,7 +4,7 @@
 \docType{data}
 \title{Georgia census data set (csv file)}
 \description{
-  The Georgia census data set from Fotheringham et al. (2002). 
+  Census data from the county of Georgia, USA 
 }
 \usage{data(Georgia)}
 \format{

@@ -136,15 +136,14 @@ gwr.cv<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, thet
     #print(W.i)
     W.i[i]<-0
     ##lm.i <- try(lm.wfit(y = y, x = x, w = w.i))
-    fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
-    gw.resi<-try(fun1(X,Y,W.i))
+    gw.resi<- try(gw_reg(X, Y, W.i, FALSE, i))
   
     #gw.resi <- try(lm.wfit(y = Y, x = X, w = W.i))
-
+    
     if(!inherits(gw.resi, "try-error"))
     {
       #b <- coefficients(gw.resi)
-      yhat.noi<-X[i,]%*%gw.resi
+      yhat.noi<-X[i,]%*%gw.resi[[1]]
       #CV[i] <- Y[i] - (t(b) %*% X[i,])
       CV[i]<-Y[i]-yhat.noi
       
@@ -200,17 +199,20 @@ gwr.cv.contrib<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p
     #print(W.i)
     W.i[i]<-0
     ##lm.i <- try(lm.wfit(y = y, x = x, w = w.i))
-    fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
-    gw.resi<-try(fun1(X,Y,W.i))
+    #fun1<-function(X,Y,W.i) {betai<- solve(t(X*W.i)%*%X)%*%{t(X*W.i)%*%Y}}
+    #gw.resi<-try(fun1(X,Y,W.i))
+    gw.resi<- try(gw_reg(X, Y, W.i, FALSE, i))
   
     #gw.resi <- try(lm.wfit(y = Y, x = X, w = W.i))
 
     if(!inherits(gw.resi, "try-error"))
     {
       #b <- coefficients(gw.resi)
-      yhat.noi<-X[i,]%*%gw.resi
+      yhat.noi<-X[i,]%*%gw.resi[[1]]
+      #yhat.noi<- fitted(mat X, mat beta) 
       #CV[i] <- Y[i] - (t(b) %*% X[i,])
       CV[i]<-Y[i]-yhat.noi
+      #CV[i]<-ehat(Y[i], X[i,], gw.resi[[1]])
       
     }
     else
@@ -226,6 +228,7 @@ gwr.cv.contrib<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p
 gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0, longlat=F,dMat, verbose=T)
 {
    dp.n<-length(dp.locat[,1])
+   var.n <- ncol(X)
    #########Distance matrix is given or not
 
   if (is.null(dMat))
@@ -240,6 +243,7 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
   ############################################AIC
   ###In this function, the whole hatmatrix is not fully calculated and only the diagonal elements are computed
   S<-matrix(nrow=dp.n,ncol=dp.n)
+  betas <-matrix(nrow=dp.n, ncol=var.n)
   for (i in 1:dp.n)
   {
     if (DM.given)
@@ -249,16 +253,20 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
        dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat)
     }
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
-    
+    res<- try(gw_reg(X,Y,W.i,TRUE,i))
     #Ci=solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
-    fun2<-function(X,W.i) {Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}}
-    Ci<-try(fun2(X,W.i))
+    #fun2<-function(X,W.i) {Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}}
+    #Ci<-try(fun2(X,W.i))
+    
     #Ci<-solve(t(X*W.i)%*%X)%*%{t(X*W.i)}
    # gw.resi<-gw.reg(X,Y,W.i,hatmatrix=T,focus=i)
     #betas[i,]<-gw.resi[[1]] ######See function by IG
     #S[i,]<-gw.resi[[2]]
-    if(!inherits(Ci, "try-error"))
-      S[i,]<-X[i,]%*%Ci   
+    if(!inherits(res, "try-error"))
+    {
+      S[i,]<-res[[2]]   
+      betas[i,] <- res[[1]]
+    }
     else
     {
       S[i,]<-Inf
@@ -268,10 +276,11 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
   
   if (!any(is.infinite(S)))
   {
-    tr.S<-sum(diag(S))
-    RSS.gw<-t(Y)%*%t(diag(dp.n)-S)%*%(diag(dp.n)-S)%*%Y
-    sigma.hat2 <- RSS.gw/dp.n
-    AICc<-dp.n*log(sigma.hat2) + dp.n*log(2*pi) + dp.n *((dp.n + tr.S) / (dp.n - 2 - tr.S))
+    #tr.S<-sum(diag(S))
+#    RSS.gw<-t(Y)%*%t(diag(dp.n)-S)%*%(diag(dp.n)-S)%*%Y
+#    sigma.hat2 <- RSS.gw/dp.n
+#    AICc<-dp.n*log(sigma.hat2) + dp.n*log(2*pi) + dp.n *((dp.n + tr.S) / (dp.n - 2 - tr.S))
+     AICc<-AICc(Y,X,betas, S)
   }
   else
     AICc<-Inf

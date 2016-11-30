@@ -28,7 +28,7 @@ gwr.t.adjust <- function(gwm.Obj)
       idx <- c(idx, i)
   }
   tvals <- as.matrix(gwmx[, idx])
-  pvals <- round(2 * (1 - pt(abs(tvals), ntests)), 3)
+  pvals <- round(2 * (1 - pt(abs(tvals), enp)), 3)
 
   bey_pvals <- round(p.adjust(pvals, "BY", n = ntests))
   beh_pvals <- round(p.adjust(pvals, "BH", n = ntests))
@@ -65,7 +65,7 @@ gwr.t.adjust <- function(gwm.Obj)
          #SpatialPolygons(regression.points)
          #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                             #  function(i) slot(i, "ID"))
-         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=df.res)
+         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=df.res, match.ID=F)
       }
       else
       {

@@ -4,7 +4,7 @@
 \docType{data}
 \title{London house price data set (SpatialPointsDataFrame)}
 \description{
-A house price data set with 18 hedonic variables for London in 2001 (along the river Thames area).
+A house price data set with 18 hedonic variables for London in 2001.
 }
 \usage{data(LondonHP)}
 \format{

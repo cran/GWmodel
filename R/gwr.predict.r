@@ -131,7 +131,7 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive
     betas1[i,]<-gw.resi[[1]]
     xtxinv[i,,] <-gw.resi[[2]]
   }
-  gw.predict <- gwr.fitted(x.p, betas1)
+  gw.predict <- gw.fitted(x.p, betas1)
   ###### fit the model
   betas2 <- matrix(nrow=fd.n, ncol=var.n)
   S <- matrix(nrow=fd.n, ncol=fd.n)
@@ -144,7 +144,7 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive
         dist.vi<-gw.dist(fd.locat, focus=i, p, theta, longlat)
     }
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
-    gw.resi<-gw.reg(x,y,W.i,T,i)
+    gw.resi<-gw_reg(x,y,W.i,T,i)
     betas2[i,]<-gw.resi[[1]] ######See function by IG
     S[i,]<-gw.resi[[2]]
     #Ci<-gw.resi[[3]]
@@ -185,7 +185,7 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive
          #SpatialPolygons(regression.points)
          #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                             #  function(i) slot(i, "ID"))
-         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df)
+         SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwr.pred.df, match.ID=F)
       }
       else
       {

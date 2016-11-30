@@ -2,7 +2,7 @@
 \alias{gw.pcplot}
 \title{Geographically weighted parallel coordinate plot for investigating multivariate data sets}
 \description{
-This function provides a geographically weighted parallel coordinate plot for investigating a multivariate data set.  It has an option that weights the lines of the plot with increasing levels of transparency, according to their observation's distance from a specified focal/observation point.  This plot can be used to identify outliers.
+This function provides a geographically weighted parallel coordinate plot for locally investigating a multivariate data set.  It has an option that weights the lines of the plot with increasing levels of transparency, according to their observation's distance from a specified focal/observation point.
 }
 \usage{
 gw.pcplot(data,vars,focus,bw,adaptive = FALSE, ylim=NULL,ylab="",fixtrans=FALSE, 
@@ -29,6 +29,10 @@ gw.pcplot(data,vars,focus,bw,adaptive = FALSE, ylim=NULL,ylab="",fixtrans=FALSE,
 Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2014) Multivariate spatial 
 outlier detection using robust geographically weighted methods.  Mathematical 
 Geosciences 46(1) 1-31
+
+Harris P, Clarke A, Juggins S, Brunsdon C, Charlton M (2015) Enhancements to a 
+geographically weighted principal components analysis in the context of an 
+application to an environmental data set.  Geographical Analysis 47: 146-172
 }
 \keyword{GW, PCP}
 

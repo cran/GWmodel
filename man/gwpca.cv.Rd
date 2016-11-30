@@ -2,7 +2,8 @@
 \alias{gwpca.cv}
 \title{Cross-validation score for a specified bandwidth for GWPCA}
 \description{
-This function finds the cross-validation score for a specified bandwidth for basic or robust GWPCA
+This function finds the cross-validation score for a specified bandwidth for basic or robust GWPCA.
+It can be used to construct the bandwidth function across all possible bandwidths and compared to that found automatically.
 }
 \usage{
 gwpca.cv(bw,x,loc,k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2, 

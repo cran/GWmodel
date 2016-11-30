@@ -1,4 +1,3 @@
 .onAttach <- function(lib, pkg) {
-	packageStartupMessage("Welcome to GWmodel version 1.2-5.\n Note: The default kernel for all the functions have been set as bisquare from this release\n",
-            appendLF = FALSE)
-}
+	packageStartupMessage("Welcome to GWmodel version 2.0-1.\n Note: This verision has been re-built with RcppArmadillo to improve its performance.\n", appendLF = FALSE)
+  }

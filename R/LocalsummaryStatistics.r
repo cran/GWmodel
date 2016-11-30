@@ -445,32 +445,80 @@ print.gwss<-function(x, ...)
   }
 	cat("\n   ************************************************************************\n")
 	invisible(x)
-}
-
-#  Local correlation calculator - can do adaptive and non-adaptive bandwidths.
-#Author: Binbin Lu
-local.corr<-function(x,dp.locat, sp.locat,SD)
-{
-  var.nms<-colnames(x)
-  var.n<-length(var.nms)
-  dp.n<-nrow(dp.locat)
-  sp.n<-nrow(sp.locat)
-  
-  for (i in 1:(var.n-1))
-  {
-    for(j in (i+1):var.n)
-    {
-      cov.v1v2<-paste("Cov",paste(var.nms[i],var.nms[j],sep="."),sep="_")
-      corr.v1v2<-paste("Corr",paste(var.nms[i],var.nms[j],sep="."),sep="_")
-      cov.nms<-c(cov.nms,cov.v1v2)
-      corr.nms<-c(corr.nms, corr.v1v2)
-      
-    }
-  }
-}     
+}    
 
 
 # Randomisation Tests for GWSS
+gwss.montecarlo<-function(data, vars, kernel = "bisquare", 
+                 adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, 
+                 dMat, quantile=FALSE,nsim=99) 
+{
+	if (is(data, "Spatial")) {
+        p4s <- proj4string(data)
+        dp.locat <- coordinates(data)
+    }
+    else if (is(data, "data.frame") && (!missing(dMat))) 
+        data <- data
+    else stop("Given data must be a Spatial*DataFrame or data.frame object")
+    data <- as(data, "data.frame")
+    dp.n <- nrow(data)
+    if (missing(dMat))
+    { 
+        DM.given <- F
+        dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
+    }
+    else {
+        DM.given <- T
+        dim.dMat <- dim(dMat)
+        if (dim.dMat[1] != dp.n || dim.dMat[2] != dp.n) 
+            stop("Dimensions of dMat are not correct")
+    }
+    if (missing(vars)) 
+        stop("Variables input error")
+    if (missing(bw) || bw <= 0) 
+        stop("Bandwidth is not specified incorrectly")
+    col.nm <- colnames(data)
+    var.idx <- match(vars, col.nm)[!is.na(match(vars, col.nm))]
+    if (length(var.idx) == 0) 
+        stop("Variables input doesn't match with data")
+    x <- data[, var.idx]
+    x <- as.matrix(x)
+    var.nms <- colnames(x)
+    var.n <- ncol(x)
+    colnames(x) <- vars
+
+ 
+	dataI<-SpatialPointsDataFrame(dp.locat,data.frame(x))
+
+	resi<-(gwss(data=dataI, vars=vars, kernel=kernel, adaptive=adaptive, bw=bw, p=p, theta=theta, 
+                      longlat=longlat, dMat=dMat, quantile=quantile)$SDF)@data
+	
+	nstats<-ncol(resi)
+	
+	lss.i<-array(0,dim=c(dp.n,nstats,nsim+1))
+
+	lss.i[,,1]<- as.matrix(resi)
+	dMat1<- dMat
+	for(i in 1:nsim)
+	{
+		mcs <- sample(dp.n)   	
+		dataI<-SpatialPointsDataFrame(dp.locat[mcs,],data.frame(x), match.ID = F)
+		dMat1[mcs,]<-dMat[1:dp.n,]
+		dMat1[,mcs]<-dMat[,1:dp.n]
+		resi<-(gwss(data=dataI, vars=vars, kernel=kernel, adaptive=adaptive, 
+                       bw=bw, p=p, theta=theta, longlat=longlat, dMat=dMat1, quantile=quantile)$SDF)@data		
+		lss.i[,,i+1]<-as.matrix(resi)
+	}
+	
+	dimnames(lss.i)[[1]]<-seq(0,dp.n-1)
+	dimnames(lss.i)[[2]]<-names(resi)
+	dimnames(lss.i)[[3]]<-c('Original_Data',paste('Sample',seq(1:nsim),sep='_'))	
+	test<-apply(lss.i,c(1,2),function(x,n) 1 - rank(x,ties.method='first')[1]/n,n=nsim+1)	
+	test
+}
+
+# Randomisation Tests for GWSS
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)
 montecarlo.gwss<-function(data, vars, kernel = "bisquare", 
                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, 
                  dMat, quantile=FALSE,nsim=99) 
@@ -524,7 +572,7 @@ montecarlo.gwss<-function(data, vars, kernel = "bisquare",
 	for(i in 1:nsim)
 	{
 		mcs <- sample(dp.n)   	
-		dataI<-SpatialPointsDataFrame(dp.locat[mcs,],data.frame(x))
+		dataI<-SpatialPointsDataFrame(dp.locat[mcs,],data.frame(x), match.ID = F)
 		dMat1[mcs,]<-dMat[1:dp.n,]
 		dMat1[,mcs]<-dMat[,1:dp.n]
 		resi<-(gwss(data=dataI, vars=vars, kernel=kernel, adaptive=adaptive, 
@@ -537,5 +585,4 @@ montecarlo.gwss<-function(data, vars, kernel = "bisquare",
 	dimnames(lss.i)[[3]]<-c('Original_Data',paste('Sample',seq(1:nsim),sep='_'))	
 	test<-apply(lss.i,c(1,2),function(x,n) 1 - rank(x,ties.method='first')[1]/n,n=nsim+1)	
 	test
-}
-                                    
+}                                    

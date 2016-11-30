@@ -17,8 +17,8 @@ and various forms of GW regression; some of which are provided in basic and robu
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 1.2-5\cr
-Date: \tab 2015-02-01\cr
+Version: \tab 2.0-1\cr
+Date: \tab 2016-09-30\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -30,9 +30,14 @@ Binbin Lu, Paul Harris, Martin Charlton, Chris Brunsdon, Tomoki Nakaya, Isabella
 Maintainer: Binbin Lu <binbinlu@whu.edu.cn>
 }
 \note{
-Acknowledgement: We gratefully acknowledge support from Science Foundation Ireland 
+Acknowledgements: We gratefully acknowledge support from Science Foundation Ireland 
 under the National Development Plan through the award of a Strategic Research Centre 
 grant 07-SRC-I1168.
+
+Beta versions can always be found at \url{https://github.com/lbb220/GWmodel},
+which includes all the newly developed functions for GW models.
+
+For latest tutorials on using GWmodel please go to: \url{https://rpubs.com/gwmodel}
 }
 
 \references{

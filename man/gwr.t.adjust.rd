@@ -2,7 +2,7 @@
 \alias{gwr.t.adjust}
 \title{Adjust p-values for multiple hypothesis tests in basic GWR}
 \description{
-Given a set of p-values from the pseudo t-tests of GWR outputs, this function returns adjusted p-values using: 
+Given a set of p-values from the pseudo t-tests of basic GWR outputs, this function returns adjusted p-values using: 
 (a) Bonferroni, (b) Benjamini-Hochberg, (c) Benjamini-Yekutieli and
 (d) Fotheringham-Byrne procedures.
 }

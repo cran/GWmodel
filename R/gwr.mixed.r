@@ -98,9 +98,10 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
   if (!is.null(x2)) x2 <- as.matrix(x2, nrow = dp.n)
   colnames(x1) <- colnames(x)[-idx.fixed]
   colnames(x2) <- colnames(x)[idx.fixed]
-  y <- as.matrix(y, nrow = dp.n)
+  #y <- as.matrix(y, nrow = dp.n)
+  
   model <- gwr.mixed.2(x1, x2, y, dp.locat, out.loc=rp.locat, adaptive=adaptive, bw=bw,
-                      kernel=kernel, p=p, theta=theta, longlat=longlat,dMat)
+                        kernel=kernel, p=p, theta=theta, longlat=longlat,dMat)                     
   res <- list()
    res$local <- model$local 
    res$global <- apply(model$global,2,mean,na.rm=T) 
@@ -114,9 +115,9 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
         {
            polygons<-polygons(regression.points)
            #SpatialPolygons(regression.points)
-           #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
+           #rownames(mgwr.df) <- sapply(slot(polygons, "polygons"),
                               #  function(i) slot(i, "ID"))
-           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df)
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=mgwr.df, match.ID=F)
         }
         else
         {
@@ -147,14 +148,15 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
                kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)
       model2 <- gwr.mixed.2(x1, x2, y, dp.locat, adaptive=adaptive, bw=bw, 
                 kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)
-      rss <- sum((y - gwr.fitted(model2$global, x2) - gwr.fitted(model2$local,x1))^2)
+      #r.ss <- rss(y, cbind(x1,x2), cbind(model2$local, model2$global)) 
+      r.ss <- sum((y - gwr.fitted(model2$global, x2) - gwr.fitted(model2$local,x1))^2)
       n1 <- length(y)
-      sigma.aic <- rss / n1
+      sigma.aic <- r.ss / n1
       aic <- log(sigma.aic*2*pi) + 1 + 2*(edf + 1)/(n1 - edf - 2)
       aic <- n1*aic
       res$aic <- aic
       res$df.used <- edf
-      res$rss <- rss
+      res$r.ss <- r.ss
    }
    GW.arguments<-list(formula=formula,rp.given=rp.given,hatmatrix=hatmatrix,bw=bw, 
                        kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat,DM.given=DM1.given,diagnostic=diagnostic)
@@ -169,7 +171,7 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
 gwr.mixed.2 <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc[,1])+var(loc[,2])),
                kernel="bisquare", p=2, theta=0, longlat=F,dMat)
 {
-  gwr.fitted <- function(x,b) apply(x*b,1,sum)
+  #gwr.fitted <- function(x,b) apply(x*b,1,sum)
   dp.n <- nrow(loc)
    
    ncols.2 <- dim(x2)[2]
@@ -179,17 +181,17 @@ gwr.mixed.2 <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc
    {
       m.temp <-gwr.q(x1, x2[,i], loc, adaptive=adaptive, bw=bw,
                   kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)
-      x3 <- cbind(x3,x2[,i]-gwr.fitted(x1,m.temp))
+      x3 <- cbind(x3,x2[,i]-gw.fitted(x1,m.temp))
    }
    colnames(x3) <- colnames(x2)
    m.temp <-gwr.q(x1, y, loc, adaptive=adaptive, bw=bw,
                   kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)
-   y2 <- y - gwr.fitted(x1,m.temp)
+   y2 <- y - gw.fitted(x1,m.temp)
    
 
    model2 <-gwr.q(x3, y2, loc, adaptive=TRUE, bw=1.0e6, kernel="boxcar",
                   p=p, theta=theta, longlat=longlat,dMat=dMat)
-   fit2 <- gwr.fitted(x2,model2)
+   fit2 <- gw.fitted(x2,model2)
    model1 <-gwr.q(x1, y-fit2, loc, out.loc=out.loc,adaptive=adaptive, bw=bw,
                   kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)
    model2 <-gwr.q(x3, y2, loc,out.loc=out.loc, adaptive=TRUE, bw=1.0e6, kernel="boxcar",
@@ -215,12 +217,11 @@ gwr.mixed.trace <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var
    #n.items <- length(y)
 
    x3 <- NULL
-
    for (i in 1:ncols.2)
      {m.temp <-gwr.q(x1, x2[,i], loc, adaptive=adaptive, bw=bw,
                   kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat) 
-      x3 <- cbind(x3,x2[,i]-gwr.fitted(x1,m.temp))}
-
+      x3 <- cbind(x3,x2[,i]-gw.fitted(x1,m.temp))}
+    
    colnames(x3) <- colnames(x2)
    hii <- NULL
 
@@ -229,6 +230,7 @@ gwr.mixed.trace <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var
        m.temp <-gwr.q(x1, e.vec(i,dp.n), loc, adaptive=adaptive, bw=bw,
                   kernel=kernel, p=p, theta=theta, longlat=longlat,dMat=dMat)  
        y2 <- e.vec(i,dp.n) - gwr.fitted(x1,m.temp)
+
        model2 <-gwr.q(x3,y2, loc,  adaptive=TRUE, bw=1.0e6, kernel="boxcar",
                 p=p, theta=theta, longlat=longlat,dMat=dMat)
        fit2 <- gwr.fitted(x2,model2)
@@ -236,8 +238,10 @@ gwr.mixed.trace <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var
        {
           model1 <-gwr.q(x1, e.vec(i,dp.n)-fit2, loc, out.loc=matrix(loc[i,], ncol=2), adaptive=adaptive, bw=bw,
                   kernel=kernel, dMat=matrix(dMat[,i], ncol=1))
+          
           model2 <-gwr.q(x3,y2, loc, out.loc=matrix(loc[i,], ncol=2),  adaptive=TRUE, bw=1.0e6, kernel="boxcar",
                         dMat=matrix(dMat[,i], ncol=1))
+          
        }
        else
        {
@@ -246,9 +250,7 @@ gwr.mixed.trace <- function(x1, x2, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var
           model2 <-gwr.q(x3,y2, loc, out.loc=matrix(loc[i,], ncol=2),  adaptive=TRUE, bw=1.0e6, kernel="boxcar",
                         p=p, theta=theta, longlat=longlat)
        }  
-       
-       hii <- c(hii,gwr.fitted(x1[i,],model1)+gwr.fitted(x2[i,],model2)) }
-
+       hii <- c(hii,gwr.fitted(matrix(x1[i,],nrow=1),model1)+gwr.fitted(matrix(x2[i,],nrow=1),model2)) }                   
    sum(hii)
   }
 
@@ -302,7 +304,12 @@ print.mgwr <- function(x, ...)
    colnames(gCM) <- global.names 
    printCoefmat(gCM)
    cat("   Estimated GWR variables :\n")
-   	CM <- t(apply(x$local, 2, summary))[,c(1:3,5,6)] 	 	
+   	CM <- t(apply(x$local, 2, summary))[,c(1:3,5,6)]
+   if(!is.matrix(CM))
+   {
+      CM <- as.matrix(t(CM), nrow=1)
+      rownames(CM) <- gwr.names[1]
+   }
     rnames<-rownames(CM)
     for (i in 1:length(rnames))
 			 rnames[i]<-paste("   ",rnames[i],sep="")
@@ -313,7 +320,7 @@ print.mgwr <- function(x, ...)
     	cat("   ************************Diagnostic information*************************\n")
      cat("   Effective D.F.:  ",format(x$df.used,digits=4),"\n")
      cat("   Corrected AIC:  ",format(x$aic,digits=4),"\n")
-     cat("   Residual sum of squares:  ",format(x$rss,digits=4),"\n")
+     cat("   Residual sum of squares:  ",format(x$r.ss,digits=4),"\n")
    }
   cat("\n   ***********************************************************************\n")
 	cat("   Program stops at:", as.character(x$timings$stop), "\n")
@@ -338,7 +345,7 @@ gwr.q <- function(x, y, loc, out.loc=loc, adaptive=F, bw=sqrt(var(loc[,1])+var(l
     else
        dist.vi <- gw.dist(loc, out.loc, focus=i, p, theta, longlat)
     W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
-    gw.resi<-gw.reg(x,y,as.vector(W.i*wt2),hatmatrix=F,i)
+    gw.resi<-gw_reg(x,y,as.vector(W.i*wt2),hatmatrix=F,i)
     betas[i,]<-gw.resi[[1]]
   }
   colnames(betas) <- colnames(x)

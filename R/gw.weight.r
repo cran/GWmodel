@@ -1,7 +1,4 @@
 ################## NAME: gw.weight ###################
-## AUTHOR: IG (and MC gw_ridge_regression_02.R)
-## DESCRIPTION: The function finds the weights for one particular point, given the distances and the desired kernel function. 
-## FUNCTION DEPENDING ON: gw.dist
 ## ARGUMENTS IN:
 #### vdist: numeric vector or matrix of distances (from gw.dist.r)
 #### bw: scalar, bandwidth or number of nearest neighbours
@@ -23,48 +20,64 @@
 # exponential kernel
 
 gw.weight.exponential <- function(vdist,bw){
-	 exp(-vdist/bw)
+	 if (is.matrix(vdist))
+   {
+      m <- ncol(vdist)
+      bw <- rep(bw, m)
+      wt <- exp_wt_mat(vdist, bw)
+   }
+   else
+      wt <- as.numeric(exp_wt_vec(vdist, bw))
+   wt
 	}
 
 
 # Boxcar kernel
 
-gw.weight.box <- function(vdist,bw){
+gw.weight.box  <- function(vdist,bw){
 	{vdist<= bw}*1
 	}
 
 # Gaussian kernel
 
-gw.weight.gau <- function(vdist,bw){
-	exp(vdist*vdist/{-2*bw*bw})
+gw.weight.gau  <- function(vdist,bw){
+	if (is.matrix(vdist))
+   {
+      m <- ncol(vdist)
+      bw <- rep(bw, m)
+      wt <- gauss_wt_mat(vdist, bw)
+   }
+   else
+      wt <- as.numeric(gauss_wt_vec(vdist, bw))
+   wt
 	}
 
 # Fixed Bisquare kernel
 	
-gw.weight.bis<- function(vdist,bw){
-	cond<- which(vdist< bw)          # condition for locations within the bandwidth
-	
-	wgt<-numeric(length(vdist))
-	sqwgt<- 1-vdist[cond]^2/{bw*bw}
-	wgt[cond]<-sqwgt*sqwgt
-	
-	if (is.matrix(vdist)) wgt<-matrix(wgt,dim(vdist))
-	
-	wgt
+gw.weight.bis <- function(vdist,bw){
+	if (is.matrix(vdist))
+   {
+      m <- ncol(vdist)
+      bw <- rep(bw, m)
+      wt <- bisq_wt_mat(vdist, bw)
+   }
+   else
+      wt <- as.numeric(bisq_wt_vec(vdist, bw))
+   wt
 	}
 
 # Fixed Tricube kernel
 	
-gw.weight.tri<- function(vdist,bw){
-	cond<- which(vdist<= bw)          # condition for locations within the bandwidth
-	
-	wgt<-numeric(length(vdist))
-	sqwgt<- 1-vdist[cond]^3/{bw*bw*bw}
-	wgt[cond]<-sqwgt*sqwgt*sqwgt
-	
-	if (is.matrix(vdist)) wgt<-matrix(wgt,dim(vdist))
-	
-	wgt
+gw.weight.tri <- function(vdist,bw){
+	if (is.matrix(vdist))
+   {
+      m <- ncol(vdist)
+      bw <- rep(bw, m)
+      wt <- tri_wt_mat(vdist, bw)
+   }
+   else
+      wt <- as.numeric(tri_wt_vec(vdist, bw))
+   wt
 	}
 
 ####### Adaptive Kernel
@@ -74,13 +87,13 @@ gw.weight.tri<- function(vdist,bw){
 
 #####
 
-gw.weight.gau.ad<- function(vdist,bw){
+gw.weight.gau.ad <- function(vdist,bw){
 	
 	if (is.matrix(vdist)){
 		rnk<-apply(vdist,2,rank,ties.method='first')
 		bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance	
-    if(bw>0)
-    	wgt<-t(exp(t(vdist*vdist)/{-2*bw*bw}))
+    if(length(bw)>0)
+    	wgt<- gauss_wt_mat(vdist, bw)
     else
       wgt <- diag(1, dim(vdist)[1], dim(vdist)[2])
 	}else{
@@ -88,7 +101,7 @@ gw.weight.gau.ad<- function(vdist,bw){
     cond<- which(rnk <= bw) 
     bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
     if(bw>0)
-      wgt<- exp(vdist*vdist/{-2*bw*bw})
+      wgt<- as.numeric(gauss_wt_vec(vdist, bw))
     else
     {
       wgt <- numeric(length(vdist))
@@ -100,12 +113,12 @@ gw.weight.gau.ad<- function(vdist,bw){
 
 #####
 
-gw.weight.exp.ad<- function(vdist,bw){
+gw.weight.exp.ad <- function(vdist,bw){
   if (is.matrix(vdist)){
 		rnk<-apply(vdist,2,rank,ties.method='first')
 		bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance	
-    if(bw>0)
-		  wgt<-exp(-vdist/bw)
+    if(length(bw)>0)
+		  wgt<-exp_wt_mat(vdist, bw)
     else
       wgt <- diag(1, dim(vdist)[1], dim(vdist)[2])
 	}
@@ -114,8 +127,8 @@ gw.weight.exp.ad<- function(vdist,bw){
 	  rnk<-rank(vdist,ties.method='first') # ranked distances
     cond<- which(rnk <= bw) 
 	  bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
-    if(bw>0)
-	    wgt<- exp(-vdist/bw)
+    if(length(bw)>0)
+	    wgt<- as.numeric(exp_wt_vec(vdist, bw))
     else
     {
       wgt <- numeric(length(vdist))
@@ -128,7 +141,7 @@ gw.weight.exp.ad<- function(vdist,bw){
 #####
 
 
-gw.weight.bis.ad<- function(vdist,bw){
+gw.weight.bis.ad <- function(vdist,bw){
 	
 	if (is.matrix(vdist))
   {
@@ -136,11 +149,9 @@ gw.weight.bis.ad<- function(vdist,bw){
 		cond<- rnk <=bw  
 		bw<- vdist[rnk == bw]
 	  wgt<- matrix(0,nrow(vdist),ncol(vdist))
-    if(bw>0)
+    if(length(bw)>0)
     {
-		  mdist<- matrix(vdist[cond==1],nrow=ncol(vdist),byrow=TRUE)
-		  sqwgt<- t(1-mdist^2/{bw*bw})
-		  wgt[cond==1]<-sqwgt*sqwgt
+		  wgt<- bisq_wt_mat(vdist, bw)
     }
     else
       diag(wgt) <- 1
@@ -152,11 +163,9 @@ gw.weight.bis.ad<- function(vdist,bw){
     cond<- which(rnk <= bw)               # condition for locations less than bw-th
     bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance
     wgt<-numeric(length(vdist))
-    if(bw >0)
+    if(!is.na(bw) >0)
     {
-      bw<-bw*bw
-      sqwgt<- 1-vdist[cond]^2/bw
-      wgt[cond]<-sqwgt**2
+      wgt<- as.numeric(bisq_wt_vec(vdist, bw))
     }
     else
     {
@@ -170,18 +179,16 @@ gw.weight.bis.ad<- function(vdist,bw){
 
 #####
 
-gw.weight.tri.ad<- function(vdist,bw){
+gw.weight.tri.ad <- function(vdist,bw){
 	
 	if (is.matrix(vdist)){
 		rnk<-apply(vdist,2,rank,ties.method='first')
 		cond<- rnk<= bw 
 		bw<- vdist[rnk == bw]
 		wgt<- matrix(0,nrow(vdist),ncol(vdist))
-		mdist<- matrix(vdist[cond==1],nrow=ncol(vdist),byrow=TRUE)
-    if(bw>0)
+    if(length(bw)>0)
     {
-		  sqwgt<- t(1-mdist^3/{bw*bw*bw})
-		  wgt[cond==1]<-sqwgt*sqwgt*sqwgt
+		  wgt <- tri_wt_mat(vdist, bw)
     }
     else
       diag(wgt) <- 1
@@ -191,10 +198,9 @@ gw.weight.tri.ad<- function(vdist,bw){
 	cond<- which(rnk <= bw)               # condition for locations less than bw-th
 	bw<- vdist[rnk==bw]                  # bandwidth is at bw-th distance	
 	wgt<-numeric(length(vdist))
-  if(bw>0)
+  if(!is.na(bw))
   {
-	  sqwgt<- 1-vdist[cond]^3/{bw*bw*bw}
-	  wgt[cond]<-sqwgt*sqwgt*sqwgt
+	  wgt <- as.numeric(tri_wt_vec(vdist, bw))
   }
   else
     wgt[cond]<-1
@@ -205,7 +211,7 @@ gw.weight.tri.ad<- function(vdist,bw){
 
 #####
 
-gw.weight.box.ad<- function(vdist,bw){
+gw.weight.box.ad <- function(vdist,bw){
 	
 	if (is.matrix(vdist)) rnk<-apply(vdist,2,rank,ties.method='first')
 	
@@ -217,21 +223,21 @@ gw.weight.box.ad<- function(vdist,bw){
 
 # MAIN FUNCTION
 
-gw.weight<-function(vdist,bw,kernel,adaptive=FALSE){
+gw.weight <-function(vdist,bw,kernel,adaptive=FALSE){
 	
 	    if(adaptive==FALSE) switch(kernel,
-	    gaussian = gw.weight.gau(vdist,bw),
-        bisquare = gw.weight.bis(vdist,bw),
-        tricube  = gw.weight.tri(vdist,bw),
-        boxcar   = gw.weight.box(vdist,bw),
-        exponential = gw.weight.exponential(vdist,bw))
+	    gaussian = gw.weight.gau (vdist,bw),
+        bisquare = gw.weight.bis (vdist,bw),
+        tricube  = gw.weight.tri (vdist,bw),
+        boxcar   = gw.weight.box (vdist,bw),
+        exponential = gw.weight.exponential (vdist,bw))
         
         else switch(kernel,
-	      gaussian = gw.weight.gau.ad(vdist,bw),
-        bisquare = gw.weight.bis.ad(vdist,bw),
-        tricube  = gw.weight.tri.ad(vdist,bw),
-        boxcar   = gw.weight.box.ad(vdist,bw),
-        exponential = gw.weight.exp.ad(vdist,bw))
+	      gaussian = gw.weight.gau.ad (vdist,bw),
+        bisquare = gw.weight.bis.ad (vdist,bw),
+        tricube  = gw.weight.tri.ad (vdist,bw),
+        boxcar   = gw.weight.box.ad (vdist,bw),
+        exponential = gw.weight.exp.ad (vdist,bw))
 }
 
 

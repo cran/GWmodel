@@ -4,7 +4,7 @@
 \alias{wlda.cr}
 \title{Bandwidth selection for GW Discriminant Analysis}
 \description{
-A function for bandwidth selection for GW Discriminant Analysis
+A function for automatic bandwidth selection for GW Discriminant Analysis using a cross-validation approach only
 }
 \usage{
 bw.gwda(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
@@ -13,13 +13,13 @@ bw.gwda(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
 }
 
 \arguments{
-  \item{formula}{Regression model formula of a \link{formula} object }
+  \item{formula}{Model formula of a \link{formula} object }
   \item{data}{a Spatial*DataFrame for training, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
   \item{COV.gw}{if true, localised variance-covariance matrix is used for GW discriminant analysis; otherwise, global variance-covariance matrix is used}
   \item{mean.gw}{if true, localised mean is used for GW discriminant analysis; otherwise, global mean is used}
   \item{prior.gw}{if true, localised prior probability is used for GW discriminant analysis; otherwise, fixed prior probability is used}
   \item{prior}{a vector of given prior probability}
-  \item{wqda}{if TRUE, weighted quadratic discriminant analysis will be applied; otherwise weighted linear discriminant analysis will be applied}
+  \item{wqda}{if TRUE, a weighted quadratic discriminant analysis will be applied; otherwise a weighted linear discriminant analysis will be applied}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);
@@ -37,12 +37,17 @@ bw.gwda(formula, data, COV.gw = T, prior.gw = T, mean.gw = T,
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
 }
+\note{
+For a discontinuous kernel function, a bandwidth can be specified either as a fixed (constant) distance or 
+as a fixed (constant) number of local data (i.e. an adaptive distance).  For a continuous kernel function, 
+a bandwidth can be specified either as a fixed distance or as a 'fixed quantity that reflects local sample size'  
+(i.e. still an 'adaptive' distance but the actual local sample size will be the sample size as functions are continuous).  
+In practise a fixed bandwidth suits fairly regular sample configurations whilst an adaptive bandwidth suits highly irregular 
+sample configurations. Adaptive bandwidths ensure sufficient (and constant) local information for each local calibration. 
+This note is applicable to all GW models
+}
 \value{
 Returns the adaptive or fixed distance bandwidth.
-}
-\references{
-Brunsdon, C, Fotheringham S,  and Charlton, M (2007),
-Geographically Weighted Discriminant Analysis, Geographical Analysis 39: 376-396
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{GWDA}

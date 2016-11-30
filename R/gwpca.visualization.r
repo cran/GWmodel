@@ -4,6 +4,62 @@
 
 
 # This could do with some manipulation so that the size of the glyphs are controllable...
+gwpca.glyph.plot <- function(ld,loc,
+	r1=50,
+	add=FALSE,alpha=1,sep.contrasts=FALSE) {
+	
+	r <- max(max(loc[,1])-min(loc[,1]),max(loc[,2])-min(loc[,2]))/r1
+
+  glyph.plot1 <- function(ld,loc,r=max(max(loc[,1])-min(loc[,1]),max(loc[,2])-min(loc[,2]))/r1,add=FALSE,alpha=1) {
+		rowmax <- function(z) z[cbind(1:nrow(z),max.col(abs(z)))]
+		ld <- sweep(ld,1,sign(rowmax(ld)),'*')
+		ld.max <- max(ld)
+		ld.min <- min(ld)
+		n.col <- ncol(ld)
+		n.row <- nrow(ld)
+		angles <- (0:(n.col-1))*pi/n.col
+		J <- 0+1i
+		disp <- exp((pi/2-angles)*J)*r
+		loc2 <- loc[,1] + loc[,2]*J
+		ld.scaled <- 2*ld/(max(ld.max,-ld.min))
+		if (!add) plot(loc,asp=1,type='n')
+		points(loc,pch=16,cex=0.1,col='black')
+		for (i in 1:n.row) {
+			for (j in 1:n.col) {
+				l.from <-  loc2[i]
+				l.to   <-  loc2[i]+disp[j]*ld.scaled[i,j]
+				col <- if (ld[i,j] > 0) {rgb(0,0,1,alpha)}
+					   else {rgb(1,0,0,alpha)}
+				lines(Re(c(l.from,l.to)),Im(c(l.from,l.to)),col=col) }}}
+
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)        
+	glyph.plot2 <- function(ld,loc,r=max(max(loc[,1])-min(loc[,1]),max(loc[,2])-min(loc[,2]))/r1,add=FALSE,alpha=1) {
+		rowmax <- function(z) z[cbind(1:nrow(z),max.col(abs(z)))]
+		ld <- sweep(ld,1,sign(rowmax(ld)),'*')
+		ld.max <- max(ld)
+		ld.min <- min(ld)
+		n.col <- ncol(ld)
+		n.row <- nrow(ld)
+		angles <- (0:(n.col-1))*2*pi/n.col
+		J <- 0+1i
+		disp <- exp((pi/2-angles)*J)*r
+		loc2 <- loc[,1] + loc[,2]*J
+		ld.scaled <- abs(ld)/(max(ld.max))
+		if (!add) plot(loc,asp=1,type='n')
+		points(loc,pch=16,cex=0.1,col='black')
+		for (i in 1:n.row) {
+			for (j in 1:n.col) {
+				l.from <-  loc2[i]
+				l.to   <-  loc2[i]+disp[j]*ld.scaled[i,j]
+				col <- if (ld[i,j] > 0) {rgb(0,0,1,alpha)}
+					   else {rgb(1,0,0,alpha)}
+				lines(Re(c(l.from,l.to)),Im(c(l.from,l.to)),col=col) }}}
+
+		if (sep.contrasts)
+			{glyph.plot1(ld,loc,r,add,alpha)}
+		else
+			{glyph.plot2(ld,loc,r,add,alpha)}}
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1) 
 glyph.plot <- function(ld,loc,
 	r1=50,
 	add=FALSE,alpha=1,sep.contrasts=FALSE) {
@@ -32,6 +88,7 @@ glyph.plot <- function(ld,loc,
 					   else {rgb(1,0,0,alpha)}
 				lines(Re(c(l.from,l.to)),Im(c(l.from,l.to)),col=col) }}}
 
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)        
 	glyph.plot2 <- function(ld,loc,r=max(max(loc[,1])-min(loc[,1]),max(loc[,2])-min(loc[,2]))/r1,add=FALSE,alpha=1) {
 		rowmax <- function(z) z[cbind(1:nrow(z),max.col(abs(z)))]
 		ld <- sweep(ld,1,sign(rowmax(ld)),'*')
@@ -59,9 +116,8 @@ glyph.plot <- function(ld,loc,
 		else
 			{glyph.plot2(ld,loc,r,add,alpha)}}
 
-
 # To interact with the glyph map...
-check.components <- function(ld,loc) {
+gwpca.check.components <- function(ld,loc) {
 	for (i in 1:ncol(ld)) cat(sprintf("%10s ",colnames(ld)[i]))
 	cat('\n')
 	repeat {
@@ -70,8 +126,17 @@ check.components <- function(ld,loc) {
 		for (i in 1:ncol(ld)) cat(sprintf("%10.5f ",ld[this,i]))
 		cat('\n')}
     }
-    
-    
+
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)      
+check.components <- function(ld,loc) {
+	for (i in 1:ncol(ld)) cat(sprintf("%10s ",colnames(ld)[i]))
+	cat('\n')
+	repeat {
+		this <- identify(loc,n=1,plot=FALSE)
+		if (length(this)==0) break
+		for (i in 1:ncol(ld)) cat(sprintf("%10.5f ",ld[this,i]))
+		cat('\n')}
+    }    
 ########################################GW PCP plot
 # GW parallel coordinate plot (PCP) to inspect an individual observation against its neighbouring observations
 # The transparency of the neighbouring observation plot lines increases with distance...

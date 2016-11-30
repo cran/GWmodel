@@ -2,7 +2,8 @@
 \alias{gwr.lcr.cv}
 \title{Cross-validation score for a specified bandwidth for GWR-LCR model}
 \description{
-This function finds the cross-validation score for a specified bandwidth for GWR-LCR
+This function finds the cross-validation score for a specified bandwidth for GWR-LCR.
+It can be used to construct the bandwidth function across all possible bandwidths and compared to that found automatically.
 }
 \usage{
 gwr.lcr.cv(bw,X,Y,locs,kernel="bisquare",

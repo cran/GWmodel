@@ -2,7 +2,8 @@
 \alias{gwr.lcr.cv.contrib}
 \title{Cross-validation data at each observation location for the GWR-LCR model}
 \description{
-This function finds the cross-validation data at each observation location for a GWR-LCR model with a specified bandwidth.  Can be used to detect outliers.
+This function finds the individual cross-validation score at each observation location, for a GWR-LCR model, for a specified bandwidth.
+These data can be mapped to detect unusually high or low cross-validations scores.
 }
 \usage{
 gwr.lcr.cv.contrib(bw,X,Y,locs,kernel="bisquare",

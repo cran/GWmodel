@@ -23,117 +23,85 @@
        rp.locat<- dp.locat
      } 
    
-   if (!is.numeric(rp.locat)||dim(rp.locat)[2]!=2)
+   if (!is.numeric(rp.locat))
       stop("Please input correct coordinates of regression points")
+   else
+      rp.locat <- matrix(rp.locat, ncol=2)
    if (focus<0||focus>length(rp.locat[,1]))
       stop("No regression point is fixed")
 
    n.rp<-length(rp.locat[,1])
    n.dp<-length(dp.locat[,1])
    if (focus>0)
-       dist.res<-numeric(n.dp)
+       dists<-numeric(n.dp)
    else
-       dist.res<-matrix(numeric(n.rp*n.dp),nrow=n.dp)
+       dists<-matrix(numeric(n.rp*n.dp),nrow=n.dp)
    ###Rotate the coordiante system
-   if (p!=2||theta!=0||!longlat)
+   if (p!=2&&theta!=0&&!longlat)
    {
-     dp.locat<-coordinate.rotation(dp.locat, theta)
-     rp.locat<-coordinate.rotation(rp.locat, theta)
+     dp.locat<-coordinate_rotate(dp.locat, theta)
+     rp.locat<-coordinate_rotate(rp.locat, theta)
    }
+
    ####Calculate a distance vector at regression point "focus"
    if (focus>0)
    {
       if (longlat)   ###Great circle distance, and FORTRAN or C++ code to be added
-         dist.res<-spDistsN1(dp.locat, rp.locat[focus,],longlat=longlat)
+         dists<-spDistsN1(dp.locat, rp.locat[focus,],longlat=longlat)
       else
       { 
-          for (i in 1:n.dp)
-          {
-            
-            if (p==2)
-               dist.res[i]<-dist(rbind(dp.locat[i,],rp.locat[focus,]))
-            else if (is.infinite(p))
-               dist.res[i]<-dist(rbind(dp.locat[i,],rp.locat[focus,]),method="maximum")
-            else
-               dist.res[i]<-dist(rbind(dp.locat[i,],rp.locat[focus,]),method="minkowski",p=p)
-          }
-      }               
+         if(p==2)
+         {
+             dists<-eu_dist_vec(dp.locat,rp.locat[focus,])
+         }
+         else if(is.infinite(p))
+             dists<-cd_dist_vec(dp.locat,rp.locat[focus,])
+         else if(p==1)
+             dists<-md_dist_vec(dp.locat,rp.locat[focus,])
+         else
+             dists<-mk_dist_vec(dp.locat,rp.locat[focus,],p) 
+      }              
    }
    else
    {
-      if(rp.given) ####Regression points are given, which means different sets of points are used for fitting and sampling
+      if (longlat)
       {
-        for (i in 1:n.rp)
-        {
-          if (longlat)
-             dist.res[,i]<-spDistsN1(dp.locat, matrix(rp.locat[i,],nrow=1),longlat=longlat)
-          else
-          {
-              for (j in 1:n.dp)
-              {
-                if (p==2)
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]))
-                else if (is.infinite(p))
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]),method="maximum")
-                else
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]),method="minkowski",p=p)
-              }
-          }
-        }
+         for (i in 1:n.rp)
+           dists[,i]<-spDistsN1(dp.locat, matrix(rp.locat[i,],nrow=1),longlat=longlat)
       }
       else
       {
-        for (i in 1:(n.rp-1))
-        {
-          for (j in (i+1):n.dp)
-          {
-            if (longlat)
-            {
-               dist.res[j,i]<-spDistsN1(matrix(dp.locat[j,],nrow=1), matrix(rp.locat[i,],nrow=1),longlat=longlat)
-            }
-            else
-            {
-                if  (p==2)
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]))
-                else if (is.infinite(p))
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]),method="maximum")
-                else
-                   dist.res[j,i]<-dist(rbind(dp.locat[j,],rp.locat[i,]),method="minkowski",p=p)
-            }
-            dist.res[i,j]<-dist.res[j,i]
-          }
-        }
-      }
+         if(p==2)
+         {
+             if(rp.given)
+                dists<-eu_dist_mat(dp.locat,rp.locat)
+             else
+                dists<-eu_dist_smat(dp.locat)
+         }
+         else if(is.infinite(p))
+         {
+             if(rp.given)
+                dists<-cd_dist_mat(dp.locat,rp.locat)
+             else
+                dists<-cd_dist_smat(dp.locat)
+             
+         }    
+         else if(p==1)
+         {
+             if(rp.given)
+                dists<-md_dist_mat(dp.locat,rp.locat)
+             else
+                dists<-md_dist_smat(dp.locat)
+         }
+         else
+         {
+             if(rp.given)
+                dists<-mk_dist_mat(dp.locat,rp.locat,p)
+             else
+                dists<-mk_dist_smat(dp.locat,p)  
+         }
+      }     
    }
-        
-   
-   dist.res     
+   dists     
 
  }
- 
- 
- 
- ##Transform coordinates after rotating the coordinate axes by theta
- ##This function should be writted in FORTRAN or C++
-coordinate.rotation<-function(coords, theta)
-{
-  n<-as.integer(nrow(coords))
-  Xlist<-as.double(coords[,1])
-  Ylist<-as.double(coords[,2])
-  rotated.x<-Xlist*cos(theta)-Ylist*sin(theta)
-  rotated.y<-Xlist*sin(theta)+Ylist*cos(theta)
-  rotated.xy<-cbind(rotated.x,rotated.y)
-  rotated.xy
-}
-
-####Chebyshev distance
-Chebyshev<-function(dp.locat, rp.focus)
-{
-  N<-length(dp.locat[,1])
-  dist.V<-numeric(N)
-  for (i in 1:N)
-   dist.V[i]<-max(c(abs(dp.locat[i,1]-rp.focus[1]),abs(dp.locat[i,2]-rp.focus[2])))
-
-  dist.V
-}
-

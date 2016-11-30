@@ -1,6 +1,7 @@
 \name{gwss}
 \alias{gwss}
 \alias{local.corr}
+\alias{print.gwss}
 \title{Geographically weighted summary statistics (GWSS)}
 \description{
 This function calculates basic and robust GWSS.  This includes geographically weighted means, standard deviations and skew. Robust alternatives include geographically weighted medians, inter-quartile ranges and quantile imbalances. This function also calculates basic geographically weighted covariances together with basic and robust
@@ -9,6 +10,7 @@ geographically weighted correlations.
 \usage{
 gwss(data, summary.locat,vars,kernel="bisquare",adaptive=FALSE, bw,p=2, 
             theta=0, longlat=F,dMat,quantile=FALSE)
+\method{print}{gwss}(x, \dots)
 }
 \arguments{
   \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
@@ -34,6 +36,8 @@ gwss(data, summary.locat,vars,kernel="bisquare",adaptive=FALSE, bw,p=2,
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
   \item{quantile}{if TRUE, median, interquartile range, quantile imbalance will be calculated}
+  \item{x}{an object of class \dQuote{gwss}, returned by the function \link{gwss}}
+  \item{...}{arguments passed through (unused)}
 }
 \value{
 A list of class \dQuote{lss}:
@@ -51,6 +55,10 @@ Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
 
 Brunsdon C, Fotheringham AS, Charlton ME (2002) Geographically weighted summary statistics - a framework for localised exploratory data analysis. Computers, Environment and Urban Systems 26:501-524
+
+Harris P, Clarke A, Juggins S, Brunsdon C, Charlton M (2014) Geographically 
+weighted methods and their use in network re-designs for environmental monitoring. 
+Stochastic Environmental Research and Risk Assessment 28: 1869-1887
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{

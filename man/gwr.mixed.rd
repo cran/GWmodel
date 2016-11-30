@@ -6,7 +6,7 @@
 \alias{gwr.q}
 \title{Mixed GWR}
 \description{
-This function implements mixed GWR
+This function implements mixed (semiparametric) GWR
 }
 \usage{
 gwr.mixed(formula, data, regression.points, fixed.vars,
@@ -62,6 +62,15 @@ model. Journal of regional science 44(1):143-157
 Mei L-M, Wang N, Zhang W-X (2006) Testing the importance of the explanatory variables 
 in a mixed geographically weighted regression model. Environment and Planning A 38:587-598
 
+Nakaya T, Fotheringham AS, Brunsdon C, Charlton M (2005) Geographically Weighted Poisson Regression for Disease Association Mapping,
+Statistics in Medicine 24: 2695-2717
+
+Nakaya T et al. (2011) GWR4.0, \url{http://gwr.nuim.ie/}.
+
+}
+\note{
+For an alternative formulation of mixed GWR, please refer to GWR 4, which provides useful tools for automatic bandwidth selection.
+This windows-based software also implements generalised mixed GWR.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{mixed, GWR}

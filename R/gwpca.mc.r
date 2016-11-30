@@ -2,7 +2,7 @@
 # Note - could make this more general to all other eigenvalues...
 # Arguments as before, but nsims controls number of simulations
 
-montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -39,7 +39,7 @@ montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
 # As above but instead of simulating using a given bandwidth this one runs the automatic choice each simulation
 # More computationally demanding, but more realistic, as it allows for the fact that using cross-validation
 # 'mines' for the bandwidth for a given sample data set.
-montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+gwpca.montecarlo.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -90,3 +90,74 @@ plot.mcsims <- function(x,sname="SD of local eigenvalues from randomisations",..
 	text(x$actual,max(dist.info$density)/2,
 		paste("Observed SD of local eigenvalues: Estimated p=",
 		sprintf("%6.3f\n",sum(x$actual < x$sims)/length(x$sims)),sep=''),srt=90,cex=0.7)}
+   
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)   
+montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+                  adaptive = FALSE,  p = 2, theta = 0, longlat = F,
+                  dMat)
+{
+  if (is(data, "Spatial"))
+  {
+    p4s <- proj4string(data)
+    dp.locat<-coordinates(data)
+  }
+  else if (is(data, "data.frame")&&(!missing(dMat)))
+     data<-data
+  else
+     stop("Given data must be a Spatial*DataFrame or data.frame object")
+  if (missing(dMat))
+  {
+    dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
+  }
+  if(missing(bw)||bw<=0)
+    stop("Bandwidth is not specified incorrectly")
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
+  n<-nrow(dp.locat)
+	res <- numeric(nsims)
+	for (i in 1:nsims) {
+    mcs <- sample(n)
+		dMat[mcs,]<-dMat[1:n,]
+		dMat[,mcs]<-dMat[,1:n]
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
+	simres <- list(actual=actual,sims=res)
+	class(simres) <- "mcsims"
+	simres}
+
+
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)
+montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+                  adaptive = FALSE,  p = 2, theta = 0, longlat = F,
+                  dMat)
+{
+  if (is(data, "Spatial"))
+  {
+    p4s <- proj4string(data)
+    dp.locat<-coordinates(data)
+  }
+  else if (is(data, "data.frame")&&(!missing(dMat)))
+     data<-data
+  else
+     stop("Given data must be a Spatial*DataFrame or data.frame object")
+  if (missing(dMat))
+  {
+    dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
+  }
+  bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, dMat=dMat)
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
+  n<-nrow(dp.locat)
+	res <- numeric(nsims)
+	for (i in 1:nsims) {
+		mcs <- sample(n)
+		dMat[mcs,]<-dMat[1:n,]
+		dMat[,mcs]<-dMat[,1:n]
+		bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, dMat=dMat)
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+                  adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
+	simres <- list(actual=actual,sims=res)
+	class(simres) <- "mcsims"
+	simres}

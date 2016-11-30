@@ -2,8 +2,8 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="bisquare",
                     adaptive=FALSE, tol=0.0001,maxiter=50,verbose=T,
                     p=2, theta=0, longlat=F,dMat)
 {
-  gwr.fitted <- function(x,b) apply(x*b,1,sum)
-  gwr.resids <- function(x,y,b) y - gwr.fitted(x,b)
+  #gwr.fitted <- function(x,b) apply(x*b,1,sum)
+  #gwr.resids <- function(x,y,b) y - gwr.fitted(x,b)
    normalise  <- function(z) z/sum(z)
     ##Record the start time
   timings <- list()
@@ -98,7 +98,7 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="bisquare",
       else
          this.reg <-gwr.q(x,y, loc=dp.locat,  adaptive=adaptive, bw=bw, kernel=kernel,
                         p=p, theta=theta, longlat=longlat, wt2=this.w)
-       res <- as.vector(gwr.resids(x,y,this.reg)^2)
+       res <- as.vector(ehat(y,x,this.reg)^2)
        
        if(DM.given) 
          res.reg <-gwr.q(ones,res, loc=dp.locat,  adaptive=adaptive, bw=bw, kernel=kernel,
@@ -130,7 +130,7 @@ gwr.hetero <- function(formula, data, regression.points, bw, kernel="bisquare",
              #SpatialPolygons(regression.points)
              #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                                 #  function(i) slot(i, "ID"))
-             SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df)
+             SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=reg.df, match.ID=F)
           }
           else
           {

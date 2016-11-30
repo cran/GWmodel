@@ -142,7 +142,7 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
           dist.vi<-gw.dist(dp.locat, rp.locat, focus=i, p, theta, longlat)
         else
           dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat)
-      }
+      } 
       W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
       # CV=TRUE: apply crossvalidation the weight for the focus point is zero
       #
@@ -155,10 +155,10 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
       x1w <- as.matrix(sweep(x,1,W.i,"*"))                    # Weight it
       svd.x <- svd(sweep(x1w, 2,sqrt(colSums(x1w^2)), "/"))$d  # SVD
       local.cn[i] <- svd.x[1] / svd.x[var.n]
-
+      
       # this is the currently set global value of lambda
       local.lambda[i] <- lambda
-
+       
        # Lambda adjustment for the locally compensated model
        if (lambda.adjust)
        {
@@ -170,6 +170,7 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
       # Now, fit the ridge regression, and save the coefficients for this run
       ridge.fit <- ridge.lm(y,x,W.i,local.lambda[i],add.int=F)      # Compute the coefficients
       betas[i,] <- ridge.fit$coef                     # store adjusted coefficients for focus
+      
       if (!rp.given)
       {
          xm <- x                                 # unweighted design matrix
@@ -180,10 +181,10 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
          trsts <- trsts + sum(hatrow^2)                      # running sum for tr(S'S)
       }
    }
+  
    #################################
    ####### End of main loop ########
    #################################
-
    if (!rp.given)
    {
       # Fitted values, residuals, and rss
@@ -228,7 +229,7 @@ gwr.lcr <-function(formula, data, regression.points, bw, kernel="bisquare",
            #SpatialPolygons(regression.points)
            #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                               #  function(i) slot(i, "ID"))
-           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df, match.ID=F)
         }
         else
         {

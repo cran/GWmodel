@@ -3,11 +3,11 @@
 \docType{data}
 \title{Georgia counties data (SpatialPolygonsDataFrame)}
 \description{
-  The Georgia counties data used for Georgia census data.
+  The Georgia census data with boundaries for mapping
 }
 \usage{data(GeorgiaCounties)}
 \details{
-Variables are from GWR3 file GData_utm.csv.
+This data set can also be found in GWR 3 and in spgwr.
 }
 \examples{
 data(GeorgiaCounties)

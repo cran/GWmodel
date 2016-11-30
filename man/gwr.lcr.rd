@@ -1,6 +1,7 @@
 \name{gwr.lcr}
 \alias{gwr.lcr}
 \alias{ridge.lm}
+\alias{print.gwrlcr}
 \title{GWR with a locally-compensated ridge term}
 \description{
 To address possible local collinearity problems in basic GWR, GWR-LCR finds local ridge parameters at affected
@@ -10,6 +11,7 @@ locations (set by a user-specified threshold for the design matrix condition num
 gwr.lcr(formula, data, regression.points, bw, kernel="bisquare",
                     lambda=0,lambda.adjust=FALSE,cn.thresh=NA,
                     adaptive=FALSE, p=2, theta=0, longlat=F,cv=T,dMat)
+\method{print}{gwrlcr}(x, \dots)
 }
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
@@ -43,6 +45,9 @@ above this user-specified threshold, a local ridge parameter is found}
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{cv}{if TRUE, 'cross-validation data will be calculated and returned in the output Spatial*DataFrame}
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
+  \item{x}{an object of class \dQuote{gwrlcr}, returned by the function \link{gwr.lcr}}
+  \item{...}{arguments passed through (unused)}
+  
 }
 \value{
 A list of class \dQuote{rgwr}:

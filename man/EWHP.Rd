@@ -4,7 +4,7 @@
 \docType{data}
 \title{House price data set (DataFrame) in England and Wales}
 \description{
-A house price data set over the England and Wales with 9 hedonic variables from 1999.
+A house price data set for England and Wales from 2001 with 9 hedonic (explanatory) variables.
 }
 \usage{data(EWHP)}
 \format{

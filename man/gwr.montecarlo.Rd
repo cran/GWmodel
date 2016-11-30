@@ -1,11 +1,12 @@
-\name{montecarlo.gwr}
+\name{gwr.montecarlo}
+\alias{gwr.montecarlo}
 \alias{montecarlo.gwr}
 \title{Monte Carlo (randomisation) test for significance of GWR parameter variability}
 \description{
 This function implements a Monte Carlo (randomisation) test to test for significant 
 (spatial) variability of a GWR model's parameters or coefficients.}
 \usage{
-montecarlo.gwr(formula, data = list(),nsims=99, kernel="bisquare",adaptive=F, bw,
+gwr.montecarlo(formula, data = list(),nsims=99, kernel="bisquare",adaptive=F, bw,
                          p=2, theta=0, longlat=F,dMat)
 }
 \arguments{
@@ -33,10 +34,17 @@ montecarlo.gwr(formula, data = list(),nsims=99, kernel="bisquare",adaptive=F, bw
 \value{
   \item{pmat}{A vector containing p-values for all the GWR parameters}
 }
+\note{
+  The function \dQuote{montecarlo.gwr} (in the early versions of GWmodel) has been renamed as
+ \dQuote{gwr.montecarlo}, while the old name is still kept valid.
+}
+
 \references{
 Brunsdon C, Fotheringham AS, Charlton ME (1998) Geographically weighted regression - modelling spatial non-stationarity. 
 Journal of the Royal Statistical Society, Series D-The Statistician 47(3):431-443
 
+Fotheringham S, Brunsdon, C, and Charlton, M (2002),
+Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
 
 Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0.
 }
@@ -47,9 +55,9 @@ data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))
 bw<-bw.gwr(PURCHASE~FLOORSZ,data=londonhp,dMat=DM, kernel="gaussian")
 #See any difference in the next two commands and why?
-res.mont1<-montecarlo.gwr(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
+res.mont1<-gwr.montecarlo(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
 nsim=99, kernel="gaussian", adaptive=FALSE, bw=3000)
-res.mont2<-montecarlo.gwr(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
+res.mont2<-gwr.montecarlo(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
 nsim=99, kernel="gaussian", adaptive=FALSE, bw=300000000000)
 }
 }

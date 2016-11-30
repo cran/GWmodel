@@ -1,18 +1,24 @@
-\name{gwr.generalised}
+\name{ggwr.basic}
+\alias{ggwr.basic}
 \alias{gwr.generalised}
 \alias{gwr.binomial}
 \alias{gwr.binomial.wt}
 \alias{gwr.poisson}
 \alias{gwr.poisson.wt}
 \alias{gwr.fitted}
-\title{Generalised GWR models, including Poisson and Binomial options}
+\alias{print.ggwrm}
+\title{Generalised GWR models with Poisson and Binomial options}
 \description{
 This function implements generalised GWR
 }
 \usage{
-gwr.generalised(formula, data, regression.points, bw, family ="poisson",
- kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F, dMat, cv=T,tol=1.0e-5, 
- maxiter=20)}
+ggwr.basic(formula, data, regression.points, bw, family =
+                 "poisson", kernel = "bisquare", adaptive = FALSE, cv =
+                 T, tol = 1e-05, maxiter = 20, p = 2, theta = 0,
+                 longlat = F, dMat, dMat1)
+
+ \method{print}{ggwrm}(x, \dots)
+ }
 
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
@@ -32,14 +38,17 @@ gwr.generalised(formula, data, regression.points, bw, family ="poisson",
                 tricube:  wgt = (1-(vdist/bw)^3)^3 if vdist < bw, wgt=0 otherwise; 
                 
                 boxcar:   wgt=1 if dist < bw, wgt=0 otherwise}
-  \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth (bw) corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
-  \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
-  \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
-  \item{longlat}{if TRUE, great circle distances will be calculated}
-  \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
+  \item{adaptive}{if TRUE calculate an adaptive kernel where the bandwidth corresponds to the number of nearest neighbours (i.e. adaptive distance); default is FALSE, where a fixed kernel is found (bandwidth is a fixed distance)}
   \item{cv}{if TRUE, cross-validation data will be calculated}
   \item{tol}{the threshold that determines the convergence of the IRLS procedure}
   \item{maxiter}{the maximum number of times to try the IRLS procedure}
+  \item{p}{the power of the Minkowski distance, default is 2, i.e. the Euclidean distance}
+  \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
+  \item{longlat}{if TRUE, great circle distances will be calculated}
+  \item{dMat}{a pre-specified distance matrix between regression points and observations, it can be calculated by the function \code{\link{gw.dist}}}
+  \item{dMat1}{a square distance matrix between each pair of observations, it can be calculated by the function \code{\link{gw.dist}}}
+  \item{x}{an object of class \dQuote{ggwrm}, returned by the function \link{gwr.generalised}}
+  \item{...}{arguments passed through (unused)}
 }
 \value{
 A list of class \dQuote{ggwrm}:
@@ -62,9 +71,9 @@ data(LondonHP)
 \dontrun{
 DM<-gw.dist(dp.locat=coordinates(londonhp))
 bw.f1 <- bw.ggwr(BATH2~FLOORSZ,data=londonhp, dMat=DM)
-res.poisson<-gwr.generalised(BATH2~FLOORSZ, bw=bw.f1,data=londonhp, dMat=DM)
+res.poisson<-ggwr.basic(BATH2~FLOORSZ, bw=bw.f1,data=londonhp, dMat=DM)
 bw.f2 <- bw.ggwr(BATH2~FLOORSZ,data=londonhp, dMat=DM,family ="binomial")
-res.binomial<-gwr.generalised(BATH2~FLOORSZ, bw=bw.f2,data=londonhp, dMat=DM,
+res.binomial<-ggwr.basic(BATH2~FLOORSZ, bw=bw.f2,data=londonhp, dMat=DM,
               family ="binomial")
 }
 }

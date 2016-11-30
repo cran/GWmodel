@@ -47,6 +47,10 @@ Geographical Systems 7:161-187
 
 Wheeler D (2007) Diagnostic tools and a remedial method for collinearity in 
 geographically weighted regression. Environment and Planning A 39:2464-2481
+
+Gollini I, Lu B, Charlton M, Brunsdon C, Harris P (2015) GWmodel: an R Package 
+for exploring Spatial Heterogeneity using Geographically Weighted Models. Journal 
+of Statistical Software, 63(17):1-50
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{collinearity,diagnostic, GWR}

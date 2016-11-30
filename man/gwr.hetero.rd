@@ -2,9 +2,7 @@
 \alias{gwr.hetero}
 \title{Heteroskedastic GWR }
 \description{
-This function implements a heteroskedastic GWR model as described in 
-Fotheringham et al. (2002, p.80-82).  Related heteroskedastic GWR 
-models can be found in Harris et al. (2010; 2011).
+This function implements a heteroskedastic GWR model
 }
 \usage{
 gwr.hetero(formula, data, regression.points, bw, kernel="bisquare",

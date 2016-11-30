@@ -1,20 +1,20 @@
-\name{montecarlo.gwpca.1}
-\alias{montecarlo.gwpca.1}
-\title{Monte Carlo (randomisation) test for significance of GW PCA eigenvalue variability
-for the first component only - option 1}
+\name{gwpca.montecarlo.2}
+\alias{gwpca.montecarlo.2}
+\alias{montecarlo.gwpca.2}
+\title{Monte Carlo (randomisation) test for significance of GWPCA eigenvalue variability
+for the first component only - option 2}
 \description{
-This function implements a Monte Carlo (randomisation) test for a basic or robust 
-GW PCA with the bandwidth pre-specified  and constant. The test evaluates whether 
-the GW eigenvalues vary significantly across space for the first component only.
+This function implements a Monte Carlo (randomisation) test for a basic or robust GW PCA with the bandwidth
+automatically re-selected via the cross-validation approach. The test evaluates whether the GW eigenvalues 
+vary significantly across space for the first component only.
 }
 \usage{
-montecarlo.gwpca.1(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+gwpca.montecarlo.2(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
                    adaptive = FALSE,  p = 2, theta = 0, longlat = F, dMat)
 }
 
 \arguments{
   \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
-  \item{bw}{bandwidth used in the weighting function, possibly calculated by \link{bw.gwpca};fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{vars}{a vector of variable names to be evaluated}
   \item{k}{the number of retained components; k must be less than the number of variables}
   \item{nsims}{the number of simulations for MontCarlo test}
@@ -41,15 +41,24 @@ A list of components:
   \item{actual}{the observed standard deviations (SD) of eigenvalues}
   \item{sims}{a vector of the simulated SDs of eigenvalues}
 }
+\note{
+The function \dQuote{montecarlo.gwpca.2} (in the early versions of GWmodel) has been renamed as
+ \dQuote{gwpca.montecarlo.2}, while the old name is still kept valid.
+}
+\references{
+Harris P, Brunsdon C, Charlton M (2011)
+Geographically weighted principal components analysis.
+International Journal of Geographical Information Science 25:1717-1736
+}
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
 \dontrun{
 data(DubVoter)
 DM<-gw.dist(dp.locat=coordinates(Dub.voter))
-gmc.res<-montecarlo.gwpca.1(data=Dub.voter, vars=c("DiffAdd", "LARent",
-"SC1", "Unempl", "LowEduc"), bw=20,dMat=DM,adaptive=TRUE)
-gmc.res
-plot(gmc.res)
+gmc.res.autow<-gwpca.montecarlo.2(data=Dub.voter, vars=c("DiffAdd", "LARent",
+"SC1", "Unempl", "LowEduc"), dMat=DM,adaptive=TRUE)
+gmc.res.autow
+plot.mcsims(gmc.res.autow)
 }
 }
 \keyword{Monte Carlo, GWPCA}

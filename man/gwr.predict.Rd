@@ -1,14 +1,17 @@
 \name{gwr.predict}
 \alias{gwr.predict}
 \alias{gw.reg1}
+\alias{print.gwrm.pred}
 \title{GWR used as a spatial predictor}
 \description{
 This function implements basic GWR as a spatial predictor. The GWR prediction function is able to do leave-out-one predictions (when the observation locations are used for prediction) and
-predictions at a set-aside data set(when the new locations are used for prediction). It is also able to reproduce the global OLS regression prediction results.
+predictions at a set-aside data set (when unobserved locations are used for prediction).
 }
 \usage{
 gwr.predict(formula, data, predictdata, bw, kernel="bisquare",adaptive=FALSE, p=2,
-           theta=0, longlat=F,dMat1, dMat2)}
+           theta=0, longlat=F,dMat1, dMat2)
+\method{print}{gwrm.pred}(x, \dots)
+           }
 
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
@@ -32,6 +35,8 @@ gwr.predict(formula, data, predictdata, bw, kernel="bisquare",adaptive=FALSE, p=
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{dMat1}{a pre-specified distance matrix between data points and prediction locations; if not given, it will be calculated by the given parameters}
   \item{dMat2}{a pre-specified sysmetric distance matrix between data points; if not given, it will be calculated by the given parameters}
+  \item{x}{an object of class \dQuote{gwrm.pred}, returned by the function \link{gwr.predict}}
+  \item{...}{arguments passed through (unused)}
 }
 \value{
 A list of class \dQuote{gwrm.pred}:
@@ -49,6 +54,9 @@ using space-varying relationship models. Mathematical Geosciences 43: 265-292
 Harris P, Brunsdon C, Fotheringham AS (2011) Links, comparisons and extensions of the geographically 
 weighted regression model when used as a spatial predictor.  Stochastic Environmental Research and Risk Assessment 25:123-138
 
+Gollini I, Lu B, Charlton M, Brunsdon C, Harris P (2015) GWmodel: an R Package 
+for exploring Spatial Heterogeneity using Geographically Weighted Models. Journal 
+of Statistical Software, 63(17):1-50
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
@@ -56,7 +64,7 @@ weighted regression model when used as a spatial predictor.  Stochastic Environm
 data(LondonHP)
 gwr.pred<-gwr.predict(PURCHASE~FLOORSZ, data=londonhp, bw=2000,kernel = "gaussian")
 gwr.pred
-#########Global regression  Compare with gstat
+#########Global OLS regression results and comparison with gstat functions
 if(require("gstat"))
 {
   mlr.g <- gstat(id = "xx1", formula = PURCHASE~FLOORSZ,data=londonhp)

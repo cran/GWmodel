@@ -1,23 +1,19 @@
 \name{gwr.basic}
 \alias{gwr.basic}
-\alias{gw.reg}
-\alias{gw.weight}
-\alias{gw.weight.bis}
-\alias{gw.weight.bis.ad}
-\alias{gw.weight.box}
-\alias{gw.weight.box.ad}
-\alias{gw.weight.gau}
-\alias{gw.weight.gau.ad}
-\alias{gw.weight.tri}
-\alias{gw.weight.tri.ad}
+\alias{gw_reg}
+\alias{gwr_diag}
+\alias{Ci_mat}
 \alias{F1234.test}
+\alias{print.gwrm}
 \title{Basic GWR model}
 \description{
 This function implements basic GWR
 }
 \usage{
 gwr.basic(formula, data, regression.points, bw, kernel="bisquare",
-adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T, W.vect=NULL)}
+adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T, W.vect=NULL)
+\method{print}{gwrm}(x, \dots)
+}
 
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
@@ -43,6 +39,8 @@ adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T, W.vect=NULL)}
   \item{F123.test}{If TRUE, conduct three seperate F-tests according to Leung et al. (2000).}
   \item{cv}{if TRUE, cross-validation data will be calculated and returned in the output Spatial*DataFrame}
   \item{W.vect}{default NULL, if given it will be used to weight the distance weighting matrix}
+  \item{x}{an object of class \dQuote{gwrm}, returned by the function \code{\link{gwr.basic}}}
+  \item{...}{arguments passed through (unused)}
 }
 \value{
 A list of class \dQuote{gwrm}:
@@ -54,13 +52,6 @@ A list of class \dQuote{gwrm}:
   \item{timings}{starting and ending time.}
   \item{this.call}{the function call used.}
   \item{Ftest.res}{results of Leung's F tests when F123.test is TRUE.}
-}
-\note{
-The gaussian and exponential kernel functions are continuous and valued in the interval (0,1]; while bisquare, tricube and 
-boxcar kernel functions are discontinuous and valued in the interval [0,1]. Notably, the upper limit of the bandwidth is exactly
-the number of observations when adaptive kernel is used. In this function, the adaptive bandwidth will be specified as the number
-of observations even though a larger number is assigned. In particular, the function will be the same as a global application function when 
-the adaptive bandwidth is equal to or larger than the number of observations for boxcar kernel function.
 }
 \references{
 Brunsdon, C, Fotheringham, S, Charlton, M (1996), Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity. 
@@ -89,12 +80,12 @@ system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000,
 system.time(DM<-gw.dist(dp.locat=coordinates(londonhp)))
 system.time(gwr.res<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=1000,
             kernel = "gaussian", dMat=DM))
-}
+
 ## specify an optimum bandwidth by cross-validation appraoch
 bw1<-bw.gwr(PURCHASE~FLOORSZ, data=londonhp, kernel = "gaussian",dMat=DM)
 gwr.res1<-gwr.basic(PURCHASE~FLOORSZ, data=londonhp, bw=bw1,kernel = "gaussian", 
                    dMat=DM)
-gwr.res1
+gwr.res1 }
 data(LondonBorough)
 
 nsa = list("SpatialPolygonsRescale", layout.north.arrow(), offset = c(561900,200900), 

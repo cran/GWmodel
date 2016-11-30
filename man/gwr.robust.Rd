@@ -2,10 +2,10 @@
 \alias{gwr.robust}
 \title{Robust GWR model}
 \description{
-This function implements the two robust GWR models, as proposed in Fotheringham et al. (2002, p.73-80).
+This function implements two robust GWR models.
 }
 \usage{
-gwr.robust(formula, data, regression.points, bw,filtered=FALSE, 
+gwr.robust(formula, data, bw,filtered=FALSE, 
            kernel = "bisquare",adaptive = FALSE, p = 2, 
            theta = 0, longlat = F, dMat, F123.test = F,
            maxiter=20,cut.filter= 3, cut1=2,cut2=3,delta=1.0e-5) }
@@ -13,7 +13,6 @@ gwr.robust(formula, data, regression.points, bw,filtered=FALSE,
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
   \item{data}{a Spatial*DataFrame, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
-  \item{regression.points}{a Spatial*DataFrame object, i.e. SpatialPointsDataFrame or SpatialPolygonsDataFrame as defined in package \pkg{sp}}
   \item{bw}{bandwidth used in the weighting function, possibly calculated by \link{bw.gwr};fixed (distance) or adaptive bandwidth(number of nearest neighbours)}
   \item{filtered}{default FALSE, the automatic approach is used, if TRUE the filtered data approach is employed, as that described in Fotheringham et al. (2002 p.73-80)}
   \item{kernel}{function chosen as follows:

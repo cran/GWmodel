@@ -4,7 +4,7 @@
 \alias{gold}
 \title{Bandwidth selection for basic GWR}
 \description{
-  A function for bandwidth selection to calibrate a basic GWR model
+  A function for automatic bandwidth selection to calibrate a basic GWR model
 }
 \usage{
 bw.gwr(formula, data, approach="CV",kernel="bisquare",
@@ -38,7 +38,7 @@ a bandwidth can be specified either as a fixed distance or as a 'fixed quantity 
 (i.e. still an 'adaptive' distance but the actual local sample size will be the sample size as functions are continuous).  
 In practise a fixed bandwidth suits fairly regular sample configurations whilst an adaptive bandwidth suits highly irregular 
 sample configurations. Adaptive bandwidths ensure sufficient (and constant) local information for each local calibration. 
-This note is applicable to GW regression and all other GW models
+This note is applicable to all GW models
 }
 
 \value{

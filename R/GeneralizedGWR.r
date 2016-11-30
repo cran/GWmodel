@@ -1,10 +1,10 @@
 ##Generalized GWR functions
 #Author: Binbin Lu
 #Referenced to Chris' R code
-gwr.fitted <- function(x,b) apply(x*b,1,sum)
+#gwr.fitted <- function(x,b) apply(x*b,1,sum)
 
-gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson", kernel="bisquare",
-              adaptive=FALSE, p=2, theta=0, longlat=F, dMat, cv=T,tol=1.0e-5, maxiter=20)
+ggwr.basic<-function(formula, data, regression.points, bw, family ="poisson", kernel="bisquare",
+              adaptive=FALSE, cv=T, tol=1.0e-5, maxiter=20, p=2, theta=0, longlat=F, dMat,dMat1)
 {
   ##Record the start time
   timings <- list()
@@ -51,19 +51,27 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
     ############################################
-    ##Generalized linear regression
-    glm.res<-glm.fit(x, y, family = poisson())  
-    ############################################
 	  var.n<-ncol(x)
-	  rp.locat<-coordinates(regression.points)
+    if(is(regression.points, "Spatial"))
+    	 rp.locat<-coordinates(regression.points)
+    else if(is.numeric(regression.points)&&dim(regression.points)[2]==2)
+    {
+       rp.locat <- regression.points
+    }
+    else
+       stop("Please use the correct regression points for model calibration!")
+       
 	  rp.n<-nrow(rp.locat)
     dp.n<-nrow(data)
     betas <-matrix(nrow=rp.n, ncol=var.n)
     betas1<- betas
-    betas.SE <-matrix(nrow=rp.n, ncol=var.n)
-    betas.TV <-matrix(nrow=rp.n, ncol=var.n)
-    ##S: hatmatrix
-    S<-matrix(nrow=dp.n,ncol=dp.n)
+    if(hatmatrix)
+    {
+      betas.SE <-matrix(nrow=rp.n, ncol=var.n)
+      betas.TV <-matrix(nrow=rp.n, ncol=var.n)
+      ##S: hatmatrix
+      S<-matrix(nrow=dp.n,ncol=dp.n)
+    }
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
     idx1 <- match("(Intercept)", colnames(x))
     if(!is.na(idx1))
@@ -75,30 +83,52 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
 
     if (missing(dMat))
     {
-      DM1.given<-F
       DM.given<-F
       if(dp.n + rp.n <= 10000)
       {
         dMat <- gw.dist(dp.locat=dp.locat, rp.locat=rp.locat, p=p, theta=theta, longlat=longlat)
         DM.given<-T
-      }
+      }      
     }
     else
     {
       DM.given<-T
-      DM1.given<-T
       dim.dMat<-dim(dMat)
       if (dim.dMat[1]!=dp.n||dim.dMat[2]!=rp.n)
          stop("Dimensions of dMat are not correct")
     }
+    if(missing(dMat1))
+    {
+       DM1.given<-F
+       if(hatmatrix&&DM.given)
+       {
+          dMat1 <- dMat
+          DM1.given<-T
+       }
+       else
+       {
+          if(dp.n < 8000)
+          {
+            dMat1 <- gw.dist(dp.locat=dp.locat, rp.locat=dp.locat, p=p, theta=theta, longlat=longlat) 
+            DM1.given<-T
+          } 
+       }
+    }
+    else
+    {
+       DM1.given<-T
+       dim.dMat1<-dim(dMat1)
+       if (dim.dMat1[1]!=dp.n||dim.dMat1[2]!=dp.n)
+         stop("Dimensions of dMat are not correct")
+    }  
     ####Generate the weighting matrix
      #############Calibration the model
      W1.mat<-matrix(numeric(dp.n*dp.n),ncol=dp.n)
      W2.mat<-matrix(numeric(dp.n*rp.n),ncol=rp.n)
     for (i in 1:dp.n)
     {
-      if (DM.given)
-         dist.vi<-dMat[,i]
+      if (DM1.given)
+         dist.vi<-dMat1[,i]
       else
       {
           dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat) 
@@ -108,7 +138,7 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
     }
     if (rp.given)
     {
-      for (i in 1:dp.n)
+      for (i in 1:rp.n)
       {
         if (DM.given)
            dist.vi<-dMat[,i]
@@ -141,7 +171,181 @@ gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson
     
     timings[["stop"]] <- Sys.time()
    ##############
-    res<-list(GW.arguments=GW.arguments,GW.diagnostic=res1$GW.diagnostic,glm.res=res1$glm.res,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
+    res<-list(GW.arguments=GW.arguments,GW.diagnostic=res1$GW.diagnostic,glms=res1$glms,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
+    class(res) <-"ggwrm"
+    invisible(res) 
+}
+
+# This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)
+gwr.generalised<-function(formula, data, regression.points, bw, family ="poisson", kernel="bisquare",
+              adaptive=FALSE, cv=T, tol=1.0e-5, maxiter=20, p=2, theta=0, longlat=F, dMat,dMat1)
+{
+  ##Record the start time
+  timings <- list()
+  timings[["start"]] <- Sys.time()
+  ###################################macth the variables
+  this.call <- match.call()
+  p4s <- as.character(NA)
+  #####Check the given data frame and regression points
+  #####Regression points
+  if (missing(regression.points))
+  {
+  	rp.given <- FALSE
+    regression.points <- data
+    hatmatrix<-T
+  }
+  else 
+  {
+    rp.given <- TRUE
+    hatmatrix<-F
+  }
+  ##Data points{
+  if (is(data, "Spatial"))
+  {
+    p4s <- proj4string(data)
+    dp.locat<-coordinates(data)
+    data <- as(data, "data.frame")
+  }
+  else
+  {
+       stop("Given regression data must be Spatial*DataFrame")
+  }
+ 
+  ####################
+  ######Extract the data frame
+  ####Refer to the function lm
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data"), names(mf), 0L)
+
+    mf <- mf[c(1L, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    mt <- attr(mf, "terms")
+    y <- model.extract(mf, "response")
+    x <- model.matrix(mt, mf)
+    ############################################
+	  var.n<-ncol(x)
+    if(is(regression.points, "Spatial"))
+    	 rp.locat<-coordinates(regression.points)
+    else if(is.numeric(regression.points)&&dim(regression.points)[2]==2)
+    {
+       rp.locat <- regression.points
+    }
+    else
+       stop("Please use the correct regression points for model calibration!")
+       
+	  rp.n<-nrow(rp.locat)
+    dp.n<-nrow(data)
+    betas <-matrix(nrow=rp.n, ncol=var.n)
+    betas1<- betas
+    if(hatmatrix)
+    {
+      betas.SE <-matrix(nrow=rp.n, ncol=var.n)
+      betas.TV <-matrix(nrow=rp.n, ncol=var.n)
+      ##S: hatmatrix
+      S<-matrix(nrow=dp.n,ncol=dp.n)
+    }
+    #C.M<-matrix(nrow=dp.n,ncol=dp.n)
+    idx1 <- match("(Intercept)", colnames(x))
+    if(!is.na(idx1))
+      colnames(x)[idx1]<-"Intercept" 
+    colnames(betas) <- colnames(x)
+    #colnames(betas)[1]<-"Intercept"
+    ####################################################GWR
+	  #########Distance matrix is given or not
+
+    if (missing(dMat))
+    {
+      DM.given<-F
+      if(dp.n + rp.n <= 10000)
+      {
+        dMat <- gw.dist(dp.locat=dp.locat, rp.locat=rp.locat, p=p, theta=theta, longlat=longlat)
+        DM.given<-T
+      }      
+    }
+    else
+    {
+      DM.given<-T
+      dim.dMat<-dim(dMat)
+      if (dim.dMat[1]!=dp.n||dim.dMat[2]!=rp.n)
+         stop("Dimensions of dMat are not correct")
+    }
+    if(missing(dMat1))
+    {
+       DM1.given<-F
+       if(hatmatrix&&DM.given)
+       {
+          dMat1 <- dMat
+          DM1.given<-T
+       }
+       else
+       {
+          if(dp.n < 8000)
+          {
+            dMat1 <- gw.dist(dp.locat=dp.locat, rp.locat=dp.locat, p=p, theta=theta, longlat=longlat) 
+            DM1.given<-T
+          } 
+       }
+    }
+    else
+    {
+       DM1.given<-T
+       dim.dMat1<-dim(dMat1)
+       if (dim.dMat1[1]!=dp.n||dim.dMat1[2]!=dp.n)
+         stop("Dimensions of dMat are not correct")
+    }  
+    ####Generate the weighting matrix
+     #############Calibration the model
+     W1.mat<-matrix(numeric(dp.n*dp.n),ncol=dp.n)
+     W2.mat<-matrix(numeric(dp.n*rp.n),ncol=rp.n)
+    for (i in 1:dp.n)
+    {
+      if (DM1.given)
+         dist.vi<-dMat1[,i]
+      else
+      {
+          dist.vi<-gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat) 
+      }
+      W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
+      W1.mat[,i]<-W.i
+    }
+    if (rp.given)
+    {
+      for (i in 1:rp.n)
+      {
+        if (DM.given)
+           dist.vi<-dMat[,i]
+        else
+        {
+            dist.vi<-gw.dist(dp.locat, rp.locat, focus=i, p, theta, longlat) 
+        }
+        W.i<-gw.weight(dist.vi,bw,kernel,adaptive)
+        W2.mat[,i]<-W.i
+      }
+    }
+    else
+        W2.mat<-W1.mat
+    
+    ##model calibration
+    if(family=="poisson")
+      res1<-gwr.poisson(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
+    if(family=="binomial")  
+      res1<-gwr.binomial(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
+    ####################################
+    CV <- numeric(dp.n)
+    if(hatmatrix && cv)
+    {
+       CV <- ggwr.cv.contrib(bw, x, y,family, kernel,adaptive, dp.locat, p, theta, longlat,dMat)
+    }
+      ####encapsulate the GWR results
+      GW.arguments<-list()
+     GW.arguments<-list(formula=formula,rp.given=rp.given,hatmatrix=hatmatrix,bw=bw, family=family,
+                       kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat,DM.given=DM1.given)    
+    
+    timings[["stop"]] <- Sys.time()
+   ##############
+    res<-list(GW.arguments=GW.arguments,GW.diagnostic=res1$GW.diagnostic,glms=res1$glms,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
     class(res) <-"ggwrm"
     invisible(res) 
 }
@@ -158,14 +362,17 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
     }
     ############################################
     ##Generalized linear regression
-    glm.res<-glm.fit(x, y, family = poisson())  
+    glms<-glm.fit(x, y, family = poisson())  
     ############################################
 	  var.n<-ncol(x)
-	  rp.locat<-coordinates(regression.points)
-	  rp.n<-nrow(rp.locat)
+    if(is(regression.points, "Spatial"))
+    	 rp.locat<-coordinates(regression.points)
+    else
+       rp.locat <- regression.points
+    rp.n<-nrow(rp.locat)
     dp.n<-nrow(x)
-    betas <-matrix(nrow=rp.n, ncol=var.n)
-    betas1<- betas
+    betas <- matrix(nrow=rp.n, ncol=var.n)
+    betas1<- matrix(nrow=dp.n, ncol=var.n)
     betas.SE <-matrix(nrow=rp.n, ncol=var.n)
     betas.TV <-matrix(nrow=rp.n, ncol=var.n)
     ##S: hatmatrix
@@ -186,10 +393,10 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
      for (i in 1:dp.n)
      {
         W.i<-W1.mat[,i]
-        gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
-        betas1[i,]<-gw.resi[[1]]
+        gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
+        betas1[i,]<-gwsi[[1]]
      }
-     nu <- gwr.fitted(x,betas1)
+     nu <- gw.fitted(x,betas1)
      mu <- exp(nu)
      old.llik <- llik
      llik <- sum(y*nu - mu - log(gamma(y+1)))
@@ -198,24 +405,25 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
      wt2 <- mu
      it.count <- it.count+1
      if (it.count == maxiter) break}
+     GW.diagnostic <- NULL
      if(hatmatrix)
      {
         for (i in 1:rp.n)
         { 
           W.i<-W2.mat[,i]
-          gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix,i)
-          betas[i,]<-gw.resi[[1]] ######See function by IG
-          S[i,]<-gw.resi[[2]]
-          Ci<-gw.resi[[3]]
+          gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix,i)
+          betas[i,]<-gwsi[[1]]
+          S[i,]<-gwsi[[2]]
+          Ci<-gwsi[[3]]      
           #betas.SE[i,]<-diag(Ci%*%t(Ci)) 
-          invwt2 <- 1.0 /wt2
-          betas.SE[i,] <- diag((Ci*invwt2) %*% t(Ci))# diag(Ci/wt2%*%t(Ci))  #see Nakaya et al. (2005) 
+          invwt2 <- 1.0 /as.numeric(wt2)
+          betas.SE[i,] <- diag((Ci*invwt2) %*% t(Ci))# diag(Ci/wt2%*%t(Ci))  #see Nakaya et al. (2005)
         }
         tr.S<-sum(diag(S))
         tr.StS<-sum(S^2)
         ###edf is different from the definition in Chris' code
         edf<-dp.n-2*tr.S+tr.StS
-        yhat<-gwr.fitted(x, betas)
+        yhat<-gw.fitted(x, betas)
         residual<-y-exp(yhat)
         ########rss <- sum((y - gwr.fitted(x,b))^2)
         rss <- sum((y-exp(yhat))^2)
@@ -238,8 +446,8 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
         for (i in 1:rp.n)
         { 
           W.i<-W2.mat[,i]
-          gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix,i)
-          betas[i,]<-gw.resi[[1]] ######See function by IG
+          gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix,i)
+          betas[i,]<-gwsi[[1]] ######See function by IG
         }
      }
     if (hatmatrix)                                         
@@ -261,7 +469,7 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
            #SpatialPolygons(regression.points)
            #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                               #  function(i) slot(i, "ID"))
-           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df, match.ID=F)
         }
         else
         {
@@ -273,7 +481,7 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
     else
         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
-    res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
+    res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF) 
 }
 
 ############ Binomial GWGLM
@@ -287,7 +495,7 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     
     ############################################
     ##Generalized linear regression
-    glm.res<-glm.fit(x, y, family = binomial())  
+    glms<-glm.fit(x, y, family = binomial())  
     ############################################
 	  var.n<-ncol(x)
 	  rp.locat<-coordinates(regression.points)
@@ -316,10 +524,10 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
      for (i in 1:dp.n)
      {
         W.i<-W1.mat[,i]
-        gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
-        betas1[i,]<-gw.resi[[1]]
+        gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
+        betas1[i,]<-gwsi[[1]]
      }
-     nu <- gwr.fitted(x,betas1)
+     nu <- gw.fitted(x,betas1)
      mu <- exp(nu)/(1 + exp(nu))  
      old.llik <- llik
      llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/dp.n) + y*log(mu/n))
@@ -335,19 +543,19 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
         for (i in 1:rp.n)
         { 
           W.i<-W1.mat[,i]
-          gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix,i)
-          betas[i,]<-gw.resi[[1]] ######See function by IG
-          S[i,]<-gw.resi[[2]]
-          Ci<-gw.resi[[3]]
+          gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix,i)
+          betas[i,]<-gwsi[[1]] ######See function by IG
+          S[i,]<-gwsi[[2]]
+          Ci<-gwsi[[3]]
           #betas.SE[i,]<-diag(Ci%*%t(Ci))
-          invwt2 <- 1.0 /wt2
+          invwt2 <- 1.0 /as.numeric(wt2)
           betas.SE[i,] <- diag((Ci*invwt2) %*% t(Ci))   #see Nakaya et al. (2005)
         }
         tr.S<-sum(diag(S))
         tr.StS<-sum(S^2)
         ###edf is different from the definition in Chris' code
         edf<-dp.n-2*tr.S+tr.StS
-        yhat<-gwr.fitted(x, betas)
+        yhat<-gw.fitted(x, betas)
         residual<-y-exp(yhat)/(1+exp(yhat))
         ########rss <- sum((y - gwr.fitted(x,b))^2)
         rss <- sum(residual^2)
@@ -370,8 +578,8 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
         for (i in 1:rp.n)
         { 
           W.i<-W2.mat[,i]
-          gw.resi<-gw.reg(x,y.adj,W.i*wt2,hatmatrix,i)
-          betas[i,]<-gw.resi[[1]]
+          gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix,i)
+          betas[i,]<-gwsi[[1]]
         }
      }
     if (hatmatrix)                                         
@@ -406,7 +614,7 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     else
         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
-    res<-list(GW.diagnostic=GW.diagnostic,glm.res=glm.res,SDF=SDF) 
+    res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF) 
 }
 
 
@@ -423,17 +631,17 @@ print.ggwrm<-function(x, ...)
   cat("   ")
   print(x$this.call)
   vars<-all.vars(x$GW.arguments$formula)
-  var.n<-length(x$glm.res$coefficients)
+  var.n<-length(x$glms$coefficients)
 	cat("\n   Dependent (y) variable: ",vars[1])
 	cat("\n   Independent variables: ",vars[-1])
-	dp.n<-length(x$glm.res$residuals)
+	dp.n<-length(x$glms$residuals)
 	cat("\n   Number of data points:",dp.n)
 	cat("\n   Used family:",x$GW.arguments$family)
 	################################################################ Print Linear
  	cat("\n   ***********************************************************************\n")
 	  cat("   *              Results of Generalized linear Regression               *\n")
 	  cat("   ***********************************************************************\n")
-	print(summary.glm(x$glm.res))	
+	print(summary.glm(x$glms))	
 	#########################################################################
 	cat("\n   ***********************************************************************\n")
 	  cat("   *          Results of Geographically Weighted Regression              *\n")

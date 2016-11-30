@@ -1,11 +1,12 @@
-\name{glyph.plot}
+\name{gwpca.glyph.plot}
+\alias{gwpca.glyph.plot}
 \alias{glyph.plot}
 \title{Multivariate glyph plots of GWPCA loadings}
 \description{
 This function provides a multivariate glyph plot of GWPCA loadings at each output location.
 }
 \usage{
-glyph.plot(ld,loc, r1=50, add=FALSE,alpha=1,sep.contrasts=FALSE)
+gwpca.glyph.plot(ld,loc, r1=50, add=FALSE,alpha=1,sep.contrasts=FALSE)
 }
 
 \arguments{
@@ -15,6 +16,10 @@ glyph.plot(ld,loc, r1=50, add=FALSE,alpha=1,sep.contrasts=FALSE)
   \item{add}{if TRUE, add the plot to the existing window.}
   \item{alpha}{the level of transparency of glyph from function rgb() and ranges from 0 to max (fully transparent to opaque)}
   \item{sep.contrasts}{allows different types of glyphs and relates to whether absolute loadings are used (TRUE) or not}
+}
+\note{
+The function \dQuote{glyph.plot} (in the early versions of GWmodel) has been renamed as
+ \dQuote{gwpca.glyph.plot}, while the old name is still kept valid.
 }
 \references{
 Harris P, Brunsdon C, Charlton M (2011)

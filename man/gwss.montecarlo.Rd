@@ -1,4 +1,5 @@
-\name{montecarlo.gwss}
+\name{gwss.montecarlo}
+\alias{gwss.montecarlo}
 \alias{montecarlo.gwss}
 \title{Monte Carlo (randomisation) test for \link{gwss}}
 \description{
@@ -6,7 +7,7 @@ This function implements Monte Carlo (randomisation) tests for the GW summary
 statistics found in \link{gwss}.
 }
 \usage{
-montecarlo.gwss(data, vars, kernel = "bisquare", 
+gwss.montecarlo(data, vars, kernel = "bisquare", 
                 adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, 
                 dMat, quantile=FALSE,nsim=99) 
 }
@@ -39,6 +40,10 @@ montecarlo.gwss(data, vars, kernel = "bisquare",
   if p<0.025 or if p>0.975 then the true local summary statistics can be said to 
   be significantly different (at the 0.95 level) to such a local summary statistics found by chance.}         
 }
+\note{
+  The function \dQuote{montecarlo.gwss} (in the early versions of GWmodel) has been renamed as
+ \dQuote{gwss.montecarlo}, while the old name is still kept valid.
+}
 \references{
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
@@ -52,7 +57,7 @@ Harris P, Brunsdon C (2010) Exploring spatial variation and spatial relationship
 \dontrun{
 data(LondonHP)
 DM<-gw.dist(dp.locat=coordinates(londonhp))
-test.lss<-montecarlo.gwss(data=londonhp, vars=c("PURCHASE","FLOORSZ"), bw=5000,
+test.lss<-gwss.montecarlo(data=londonhp, vars=c("PURCHASE","FLOORSZ"), bw=5000,
           kernel ="gaussian", dMat=DM,nsim=99)
 test.lss
 }

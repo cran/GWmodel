@@ -1,13 +1,19 @@
-\name{model.selection.gwr}
+\name{gwr.model.selection}
+\alias{gwr.model.selection}
 \alias{model.selection.gwr}
 \alias{Generate.formula}
 \alias{extract.mat}
+\alias{AICc_rss}
+\alias{AICc}
+\alias{gw.fitted} 
+\alias{ehat}
+\alias{rss}
 \title{Model selection for GWR with a given set of independent variables}
 \description{
 This function selects one GWR model from many alternatives based on the AICc values.
 }
 \usage{
-model.selection.gwr(DeVar=NULL,InDeVars=NULL, data=list(),bw=NULL,approach="CV",
+gwr.model.selection(DeVar=NULL,InDeVars=NULL, data=list(),bw=NULL,approach="CV",
                adaptive=F,kernel="bisquare",dMat=NULL,p=2, theta=0, longlat=F)
 }
 \arguments{
@@ -68,8 +74,8 @@ Lu, B, Charlton, M, Harris, P, Fotheringham, AS (2014) Geographically weighted r
 with a non-Euclidean distance metric: a case study using hedonic house price data. 
 International Journal of Geographical Information Science 28(4): 660-681
 }
-\seealso{\code{\link{model.view.gwr}}, \code{\link{model.sort.gwr}}}
+\seealso{\code{\link{gwr.model.view}}, \code{\link{gwr.model.sort}}}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{model, gwr}
+\keyword{model specification, variable selection, gwr}
 
