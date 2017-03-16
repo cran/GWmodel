@@ -22,7 +22,7 @@ mk_dist_mat <- function(in_locs, out_locs, p) {
 }
 
 mk_dist_smat <- function(in_locs, p) {
-    .Call('GWmodel_md_dist_smat', PACKAGE = 'GWmodel', in_locs, p)
+    .Call('GWmodel_mk_dist_smat', PACKAGE = 'GWmodel', in_locs, p)
 }
 
 mk_dist_vec <- function(in_locs, out_loc, p) {
