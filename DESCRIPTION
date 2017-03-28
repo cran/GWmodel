@@ -1,7 +1,7 @@
 Package: GWmodel
 Type: Package
-Version: 2.0-2
-Date: 2017-03-11
+Version: 2.0-3
+Date: 2017-03-28
 Title: Geographically-Weighted Models
 Depends: R (>= 3.0.0),maptools (>= 0.5-2), robustbase,sp,Rcpp
 Imports: methods, grDevices, stats,graphics
@@ -14,5 +14,5 @@ License: GPL (>= 2)
 Repository: CRAN
 URL: http://gwr.nuim.ie/
 NeedsCompilation: yes
-Packaged: 2017-03-16 04:52:43 UTC; Administrator
-Date/Publication: 2017-03-16 08:43:55
+Packaged: 2017-03-28 06:00:34 UTC; Administrator
+Date/Publication: 2017-03-28 10:34:03 UTC

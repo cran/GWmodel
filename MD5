@@ -1,4 +1,4 @@
-4a83d116ba5983d0f82c6c1d202c0dea *DESCRIPTION
+58d2031df1eda24502cdc07a65fe28ab *DESCRIPTION
 ce2ec4ca57e69a339df43720f5af2bdc *NAMESPACE
 60a9d266e14608203a118ca20f689031 *R/GeneralizedGWR.r
 3fd3f0989506ff3ef84f47625d70511f *R/LocalsummaryStatistics.r
@@ -18,17 +18,17 @@ c7164a0420a7048989c4b68054d959b1 *R/gwda.r
 471653da52fb69a729304a69a4f270f4 *R/gwpca.mc.r
 2d4c2f34e9960afcec970bd5275e5b14 *R/gwpca.r
 00e10c70029450190940e5135b9fdd44 *R/gwpca.visualization.r
-68b279f64675041a27660aa1d1138fee *R/gwr.basic.r
+49373c654a2609122ee82ff755f236fe *R/gwr.basic.r
 2ae5a49620f889171a01c365d7e2d3b7 *R/gwr.collin.diagno.r
 b18d4a3be6493172f23bcda6ffa33b86 *R/gwr.hetero.r
 29c61f202da325fa24b55ee0f946e236 *R/gwr.mixed.r
 c914f6c04c98e7bae6aefdd54805e8ac *R/gwr.predict.r
 02cde533e8048350326fefcd2be7eab4 *R/gwr.robust.r
 5a38e3c4e3f52c4ad83fc3704462b3f9 *R/gwr.t.adjust.r
-16087f5366518cde14eb74019e00312d *R/mink.pvals.R
+1e8b099e4a6cde1abf9bd27304e187c2 *R/mink.pvals.R
 0057233f47b968074bcd9fa542ac6361 *R/minkovski.approach.r
 108a75ceb499b83f1d46e4ca8c26acaf *R/writeGWR.r
-a0b0522441adbd020d5145b08154653f *R/zzz.r
+43c52eded972f99a7e0cc0e51bee4118 *R/zzz.r
 fad011ea3383c650e1e0174e39c7de99 *data/DubVoter.rda
 995fa662c41ffd3afd86fdcd55cdfeaa *data/EWHP.rda
 81a3e0fc73a8ecf7ff7de5eae43b42f0 *data/EWOutline.rda
@@ -90,7 +90,7 @@ de34f0600c440b1a601267234a66734e *man/gwr.t.adjust.rd
 0ea641b2d77c3278135e68dad990b9a4 *man/gwr.write.Rd
 899d00be4d2f4d0be5992f9232d861b9 *man/gwss.montecarlo.Rd
 2b37bdd02ea02c86b1b3d6328d06c79a *man/gwss.rd
-8bd354ac5e4ecbdd5edcf153474a5518 *src/GWmodel.cpp
+255c49d94210a85d923de4a64cf5dba4 *src/GWmodel.cpp
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars
 8d46d69896a1f1d31ed76035a0e49d67 *src/Makevars.win
 5adca6c061502a91859321a7c05fa457 *src/RcppExports.cpp

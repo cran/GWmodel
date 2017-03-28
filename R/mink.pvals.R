@@ -92,6 +92,8 @@ gwr.mink.pval <- function(formula, data, criterion="AIC", bw, bw.sel.approach = 
     cat("  ==========  Try MinkoWski distance with p: ", p.right)
     cat("  ==========\n")
     dMat <- gw.dist(dp.locat=dp.locat, p=p.right, theta=theta0, longlat=longlat)
+    print(dMat[1,2])
+    print(p.right)
     if(!bw.given)
         bw<-bw.gwr1(x, y, dp.locat,approach=bw.sel.approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower)
     if(criterion=="AIC" || criterion=="AICc")

@@ -239,7 +239,7 @@ gwr.basic <-function(formula, data, regression.points, bw, kernel="bisquare",
       if(F123.test)
       {
         F.test.parameters<-list(dp.n=dp.n,var.n=var.n,dMat=dMat,x=x,bw=bw,adaptive=adaptive,kernel=kernel,betas=betas,
-        RSS.lm=sum(lms$residuals^2),DF.lm =lms$dfsidual,RSS.gw=RSS.gw,tr.S=tr.S,tr.StS=tr.StS,Q=Q) 
+        RSS.lm=sum(lms$residuals^2),DF.lm =df.residual,RSS.gw=RSS.gw,tr.S=tr.S,tr.StS=tr.StS,Q=Q) 
         Ftests<-F1234.test(F.test.parameters)
       }
     }

@@ -148,7 +148,7 @@ mat mk_dist_mat(mat in_locs, mat out_locs,double p){
 	}
 	return mk_dist;
 }
-
+//sqrt(sum(pow(in_locs.row(i) - trans(out_loc),2)))
 //symmetrical distance matrix
 // [[Rcpp::export]]
 mat mk_dist_smat(mat in_locs,double p){
