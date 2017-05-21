@@ -152,7 +152,6 @@ ggwr.basic<-function(formula, data, regression.points, bw, family ="poisson", ke
     }
     else
         W2.mat<-W1.mat
-    
     ##model calibration
     if(family=="poisson")
       res1<-gwr.poisson(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol, maxiter)
@@ -171,7 +170,10 @@ ggwr.basic<-function(formula, data, regression.points, bw, family ="poisson", ke
     
     timings[["stop"]] <- Sys.time()
    ##############
-    res<-list(GW.arguments=GW.arguments,GW.diagnostic=res1$GW.diagnostic,glms=res1$glms,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
+    if(hatmatrix)
+       res<-list(GW.arguments=GW.arguments,GW.diagnostic=res1$GW.diagnostic,glms=res1$glms,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
+    else
+      res<-list(GW.arguments=GW.arguments,glms=res1$glms,SDF=res1$SDF,CV=CV,timings=timings,this.call=this.call)
     class(res) <-"ggwrm"
     invisible(res) 
 }
@@ -373,8 +375,8 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
     dp.n<-nrow(x)
     betas <- matrix(nrow=rp.n, ncol=var.n)
     betas1<- matrix(nrow=dp.n, ncol=var.n)
-    betas.SE <-matrix(nrow=rp.n, ncol=var.n)
-    betas.TV <-matrix(nrow=rp.n, ncol=var.n)
+    betas.SE <-matrix(nrow=dp.n, ncol=var.n)
+    betas.TV <-matrix(nrow=dp.n, ncol=var.n)
     ##S: hatmatrix
     S<-matrix(nrow=dp.n,ncol=dp.n)
     #C.M<-matrix(nrow=dp.n,ncol=dp.n)
@@ -481,7 +483,10 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
     else
         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
-    res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF) 
+    if(hatmatrix)
+      res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF)
+    else
+      res <- list(glms=glms,SDF=SDF)
 }
 
 ############ Binomial GWGLM
@@ -502,7 +507,7 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
 	  rp.n<-nrow(rp.locat)
     dp.n<-nrow(x)
     betas <-matrix(nrow=rp.n, ncol=var.n)
-    betas1<- betas
+    betas1<- matrix(nrow=dp.n, ncol=var.n)
     betas.SE <-matrix(nrow=rp.n, ncol=var.n)
     betas.TV <-matrix(nrow=rp.n, ncol=var.n)
     ##S: hatmatrix
@@ -602,7 +607,7 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
            #SpatialPolygons(regression.points)
            #rownames(gwres.df) <- sapply(slot(polygons, "polygons"),
                               #  function(i) slot(i, "ID"))
-           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df)
+           SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=gwres.df,match.ID =F)
         }
         else
         {
@@ -614,7 +619,10 @@ gwr.binomial<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5,
     else
         SDF <- SpatialPointsDataFrame(coords=rp.locat, data=gwres.df, proj4string=CRS(p4s), match.ID=F)
    ##############
-    res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF) 
+    if(hatmatrix)
+       res<-list(GW.diagnostic=GW.diagnostic,glms=glms,SDF=SDF)
+    else
+       res <- list(glms=glms,SDF=SDF)
 }
 
 

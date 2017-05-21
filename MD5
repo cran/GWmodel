@@ -1,6 +1,6 @@
-58d2031df1eda24502cdc07a65fe28ab *DESCRIPTION
+0fe9ee4987b9b5f12583a9c5d9164569 *DESCRIPTION
 ce2ec4ca57e69a339df43720f5af2bdc *NAMESPACE
-60a9d266e14608203a118ca20f689031 *R/GeneralizedGWR.r
+81260340a2cc43067e3d43f60bef8e23 *R/GeneralizedGWR.r
 3fd3f0989506ff3ef84f47625d70511f *R/LocalsummaryStatistics.r
 7c2d819ce1c5d4139594424e85dcce78 *R/Model.selection.r
 7e42616f04f1449c53847e49f2693405 *R/MontCarlo.r
@@ -18,7 +18,7 @@ c7164a0420a7048989c4b68054d959b1 *R/gwda.r
 471653da52fb69a729304a69a4f270f4 *R/gwpca.mc.r
 2d4c2f34e9960afcec970bd5275e5b14 *R/gwpca.r
 00e10c70029450190940e5135b9fdd44 *R/gwpca.visualization.r
-49373c654a2609122ee82ff755f236fe *R/gwr.basic.r
+f34b340a79ec91a8060ef5c75db74ab4 *R/gwr.basic.r
 2ae5a49620f889171a01c365d7e2d3b7 *R/gwr.collin.diagno.r
 b18d4a3be6493172f23bcda6ffa33b86 *R/gwr.hetero.r
 29c61f202da325fa24b55ee0f946e236 *R/gwr.mixed.r
@@ -28,7 +28,7 @@ c914f6c04c98e7bae6aefdd54805e8ac *R/gwr.predict.r
 1e8b099e4a6cde1abf9bd27304e187c2 *R/mink.pvals.R
 0057233f47b968074bcd9fa542ac6361 *R/minkovski.approach.r
 108a75ceb499b83f1d46e4ca8c26acaf *R/writeGWR.r
-43c52eded972f99a7e0cc0e51bee4118 *R/zzz.r
+85c10ff45b701f5c5dcdf5b40777157b *R/zzz.r
 fad011ea3383c650e1e0174e39c7de99 *data/DubVoter.rda
 995fa662c41ffd3afd86fdcd55cdfeaa *data/EWHP.rda
 81a3e0fc73a8ecf7ff7de5eae43b42f0 *data/EWOutline.rda
