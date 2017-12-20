@@ -17,8 +17,8 @@ and various forms of GW regression; some of which are provided in basic and robu
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 2.0-1\cr
-Date: \tab 2016-09-30\cr
+Version: \tab 2.0-5\cr
+Date: \tab 2017-12-20\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }

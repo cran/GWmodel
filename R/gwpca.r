@@ -172,13 +172,13 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
 	CV<-numeric(dp.n)
   if(cv)
      CV<-gwpca.cv.contrib(x,dp.locat,bw,k,robust,kernel,adaptive, p, theta, longlat,dMat)
-	GW.agruments<-list(bw=bw, kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat, dp.n=dp.n, DM.given=DM.given)
+	GW.arguments<-list(bw=bw, kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat, dp.n=dp.n, DM.given=DM.given)
 	# And add and change this bit please #################################################
   if(robust==FALSE)
     d1 <- (d/(sum(wt)^0.5))^2
   else
     d1 <- d^2
-  res <- list(loadings = w, var=d1,  bw = bw, GW.agruments = GW.agruments, CV = CV)
+  res <- list(loadings = w, var=d1,  bw = bw, GW.arguments = GW.arguments, CV = CV)
   res
 ##################################################################################
  }

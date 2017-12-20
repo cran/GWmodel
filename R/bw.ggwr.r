@@ -410,7 +410,7 @@ gwr.binomial.wt<-function(y,x,bw,W.mat, verbose=T)
      nu <- gw.fitted(x,betas1)
      mu <- exp(nu)/(1 + exp(nu))
      old.llik <- llik
-     llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/dp.n) + y*log(mu/n))
+     llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/n) + y*log(mu/n))
      if(is.na(llik)) llik <-old.llik
      if(verbose)
         cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))

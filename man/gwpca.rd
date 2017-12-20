@@ -56,7 +56,8 @@ Harris P, Brunsdon C, Charlton M (2011)
 Geographically weighted principal components analysis.
 International Journal of Geographical Information Science 25:1717-1736
 
-Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2014) Multivariate spatial outlier detection using robust geographically weighted methods.  Mathematical 
+Harris P, Brunsdon C, Charlton M, Juggins S, Clarke A (2014) Multivariate spatial 
+outlier detection using robust geographically weighted methods.  Mathematical 
  Geosciences 46(1) 1-31
 
 Harris P, Clarke A, Juggins S, Brunsdon C, Charlton M (2014) Geographically 

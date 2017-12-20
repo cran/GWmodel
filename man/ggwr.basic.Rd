@@ -59,8 +59,18 @@ A list of class \dQuote{ggwrm}:
              SpatialPolygonsDataFrame object (see package \dQuote{sp}) integrated with fit.points,GWR coefficient estimates, y value,predicted values, coefficient standard errors and t-values in its "data" slot.}
   \item{CV}{a data vector consisting of the cross-validation data}
 }
+\note{
+Note that this function calibrates a Generalised GWR model via an approximating 
+algorithm, which is different from the back-fitting algorithm used in the GWR4 software
+by  Tomoki Nakaya.
+}
 \references{
-Charlton, M, Fotheringham, S, and Brunsdon, C (2007), GWR3.0, \url{http://gwr.nuim.ie/}.
+Nakaya, T., A. S. Fotheringham, C. Brunsdon & M. Charlton (2005) Geographically 
+weighted Poisson regression for disease association mapping. Statistics in Medicine, 
+24, 2695-2717.
+
+Nakaya, T., M. Charlton, S. Fotheringham & C. Brunsdon. 2009. How to use SGWRWIN (GWR4.0). 
+Maynooth, Ireland: National Centre for Geocomputation.
 
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),
 Geographically Weighted Regression: The Analysis of Spatially Varying Relationships, Chichester: Wiley.
