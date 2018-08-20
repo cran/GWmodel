@@ -4,14 +4,16 @@
 \alias{rwpca}
 \alias{wpca}
 \alias{wt.median}
+\alias{print.gwpca}
 \title{GWPCA}
 \description{
 This function implements basic or robust GWPCA.
 }
 \usage{
 gwpca(data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
-                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T,
+                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T, scores=F,
                   dMat)
+\method{print}{gwpca}(x, \dots)
 }
 
 \arguments{
@@ -39,14 +41,23 @@ gwpca(data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
   \item{theta}{an angle in radians to rotate the coordinate system, default is 0}
   \item{longlat}{if TRUE, great circle distances will be calculated}
   \item{cv}{If TRUE, cross-validation data will be found that are used to calculate the cross-validation score for the specified bandwidth.}
+  \item{scores}{if scores = TRUE, the scores of the supplied data on the principal components will be calculated.}
   \item{dMat}{a pre-specified distance matrix, it can be calculated by the function \code{\link{gw.dist}}}
+  \item{x}{an object of class \dQuote{gwpca}, returned by the function \code{\link{gwpca}}}
+  \item{...}{arguments passed through (unused)}
 }
 \value{
-A list of components:
-  \item{loadings}{The localised loadings}
+A list of class \dQuote{gwpca}:
+  \item{GW.arguments}{a list class object including the model fitting parameters for generating the report file}
+  \item{pca}{an object of class inheriting from \dQuote{princomp}, see \link{princomp}. }
+  \item{loadings}{the localised loadings}
+  \item{SDF}{a SpatialPointsDataFrame (may be gridded) or 
+             SpatialPolygonsDataFrame object (see package \dQuote{sp}) integrated with local proportions of variance for each 
+             principle components, cumulative proportion and winning variable for the 1st principle component in its "data" slot.}
+  \item{gwpca.scores}{the localised scores of the supplied data on the principal components }
   \item{var}{The local amount of variance accounted for by each component}
-  \item{GW.arguments}{A list of geographically weighted arguments supplied to the function call}
   \item{CV}{Vector of cross-validation data}
+  \item{timings}{starting and ending time.}
 }
 \references{
 Fotheringham S, Brunsdon, C, and Charlton, M (2002),

@@ -1,19 +1,22 @@
-\name{gwr.psdm}
+\name{gwr.multiscale}
+\alias{gwr.multiscale}
 \alias{gwr.psdm}
-\alias{print.psdmgwr}
+\alias{print.multiscalegwr}
 \alias{gwr.backfit}
 \alias{bw.gwr2}
-\title{GWR with parameter-specific distance metrics}
+\title{Multiscale GWR}
 \description{
-This function implements GWR with parameter-specific distance metrics to detect variations in
-regression relationships across different spatial scales.
+This function implements multiscale GWR to detect variations in regression relationships across
+different spatial scales. This function can not only find a different bandwidth for each 
+relationship but also (and simultaneously) find a different distance metric for 
+each relationship (if required to do so).
 }
 \usage{
-gwr.psdm(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR", 
+gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR", 
           max.iterations=1000,threshold=0.000001, dMats,p.vals, theta.vals,
           longlat=FALSE, bws0, bw.seled=rep(F, length(bws0)), approach = "AIC", 
           bws.thresholds=rep(1, length(dMats)), verbose=F, nlower = 10)
-\method{print}{psdmgwr}(x, \dots)
+\method{print}{multiscalegwr}(x, \dots)
 }
 
 \arguments{
@@ -60,31 +63,55 @@ A list of class \dQuote{psdmgwr}:
   \item{this.call}{the function call used.}
 }
 \note{
-This function calibrates a GWR model with parameter-specific distance metrics, 
-which by construction also implements a GWR model with parameter-specific bandwidths.
-Thus, GWR with flexible bandwidths (FBGWR) and mixed GWR are both special cases 
-of PSDM GWR (as are basic GWR and the global regression). Specifically, an FBGWR 
-model will be calibrated if no \dQuote{dMats} and \dQuote{p.vals} are specified; a mixed GWR model
-will be calibrated if an infinite bandwidth and another regular bandwidth are used for estimating
-the global and local parameters (again when no  \dQuote{dMats} and  \dQuote{p.vals} are specified).  
-In other words, the \link{gwr.psdm} function is specified with Euclidean distances in both cases.
-Note that the results from this function for a mixed GWR model and \link{gwr.mixed} 
-might be different, as a back-fitting algorithm is used in \link{gwr.psdm}, while an approximating algorithm is
-applied in \link{gwr.mixed}. The gwr.mixed performs better in computational efficiency, 
-but poorer in prediction accuracy.
+This function implements multiscale GWR to detect variations in regression 
+relationships across different spatial scales. This function can not only find 
+a different bandwidth for each relationship, but also (and simultaneously), find
+ a different distance metric for each relationship (i.e. Parameter-Specific Distance 
+ Metric GWR - aka PSDM-GWR).  Note that multiscale GWR (MGWR) has also been referred 
+ to as flexible bandwidth GWR (FBGWR) and conditional GWR (CGWR) in the literature. 
+ All are one and the same model, but where PSDM-GWR additionally provides a different 
+ distance metric option for each relationship.  An MGWR model is calibrated if no \dQuote{dMats} 
+ and \dQuote{p.vals} are specified; a mixed GWR model will be calibrated if an 
+ infinite bandwidth and another regular bandwidth are used for estimating the global and local 
+ parameters (again when no \dQuote{dMats} and \dQuote{p.vals} are specified). 
+ In other words, the gwr.multiscale function is specified with Euclidean distances 
+ in both cases. Note that the results from this function for a mixed GWR model 
+ and gwr.mixed might be different, as a back-fitting algorithm is used in
+\link{gwr.multiscale}, while an approximating algorithm is applied in gwr.mixed. 
+The \link{gwr.mixed} function performs better in computational efficiency, but 
+poorer in prediction accuracy.
 }
 
 \references{
 
-Yang, W. (2014). An Extension of Geographically Weighted Regression with Flexible Bandwidths. 
-St Andrews, St Andrews, UK.
+Yang, W. (2014). An Extension of Geographically Weighted Regression with 
+Flexible Bandwidths. St Andrews, St Andrews, UK.
 
-Lu, B., Harris, P., Charlton, M., & Brunsdon, C. (2015). Calibrating a Geographically 
-Weighted Regression Model with Parameter-specific Distance Metrics. Procedia Environmental Sciences, 26, 109-114.
+Lu, B., Harris, P., Charlton, M., & Brunsdon, C. (2015). Calibrating a 
+Geographically Weighted Regression Model with Parameter-specific Distance 
+Metrics. Procedia Environmental Sciences, 26, 109-114.
 
 Lu, B., Brunsdon, C., Charlton, M., & Harris, P. (2017). Geographically weighted 
-regression with parameter-specific distance metrics. International Journal of Geographical Information Science, 31, 982-998.
+regression with parameter-specific distance metrics. International Journal of 
+Geographical Information Science, 31, 982-998.
 
+Fotheringham, A. S., Yang, W. & Kang, W. (2017). Multiscale Geographically 
+Weighted Regression (MGWR). Annals of the American Association of Geographers, 
+107, 1247-1265.
+
+Leong, Y.Y., & Yue, J.C. (2017). A modification to geographically weighted 
+regression. International Journal of Health Geographics, 16 (1), 11.
+
+Lu, B., Yang, W. Ge, Y. & Harris, P. (2018). Improvements to the calibration of 
+a geographically weighted regression with parameter-specific distance metrics 
+and bandwidths. Forthcoming Computers, Environment and Urban Systems.
+
+Wolf, L.J, Oshan, T.M, Fotheringham, A.S. (2018). Single and multiscale models of 
+process spatial heterogeneity. Geographical Analysis, 50(3): 223-246.
+
+Murakami, D., Lu, B., Harris, P., Brunsdon, C., Charlton, M., Nakaya, T., & Griffith, D. (2019) 
+The importance of scale in spatially varying coefficient modelling. 
+Forthcoming Annals of the Association of American Geographers.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \examples{
@@ -92,16 +119,16 @@ data(LondonHP)
 EUDM <- gw.dist(coordinates(londonhp))
 #No bandwidth is selected, and bws0 values are used
 \dontrun{
-res1<- gwr.psdm(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="CVR",kernel="gaussian", 
+res1<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="CVR",kernel="gaussian", 
 adaptive=T, bws0=c(100, 100, 100),bw.seled=rep(T, 3), dMats=list(EUDM,EUDM,EUDM))
 #FBGWR
-res1<- gwr.psdm(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="dCVR",kernel="gaussian")
+res1<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="dCVR",kernel="gaussian")
 #Mixed GWR
-res3<- gwr.psdm(PURCHASE~FLOORSZ+PROF, data=londonhp, bws0=c(Inf, 100, 100, Inf),
+res3<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, bws0=c(Inf, 100, 100, Inf),
                bw.seled=rep(T, 3),kernel="gaussian", dMats=list(EUDM,EUDM,EUDM))
 #PSDM GWR
-res4<- gwr.psdm(PURCHASE~FLOORSZ+PROF, data=londonhp, kernel="gaussian", p.vals=c(1,2,3))
+res4<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, kernel="gaussian", p.vals=c(1,2,3))
 }
 }
-\keyword{multi-scale, flexible bandwidth, parameter-specific distance metrics, GWR}
+\keyword{multiscale, flexible bandwidth, parameter-specific distance metrics, GWR}
 

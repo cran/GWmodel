@@ -63,16 +63,20 @@ rwpca <- function(x,wt,nu=0,nv=2) {
 # This returns a list with <loadings> for each eloc; d for each eloc; and the bandwidth used	
 #gwpca <- function(x,loc,bw,k=2,eloc=loc,pcafun=wpca,...) 
 gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
-                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T,
+                  adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T, scores=F,
                   dMat)
 {
+  ##Record the start time
+  timings <- list()
+  timings[["start"]] <- Sys.time()
   if (is(data, "Spatial"))
   {
     p4s <- proj4string(data)
     dp.locat<-coordinates(data)
+    polygons <- NULL
+    if(is(data, "SpatialPolygonsDataFrame"))
+       polygons <- polygons(data)
   }
-  else if (is(data, "data.frame")&&(!missing(dMat)))
-     data<-data
   else
      stop("Given data must be a Spatial*DataFrame or data.frame object")
   
@@ -133,9 +137,18 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
   var.n<-ncol(x)
   if(len.var > var.n)
      warning("Invalid variables have been specified, please check them again!")
+  #####PCA
+  pca.res <- princomp(x, cor=T, scores=scores)
   ############################# WPCA
-	w <- array(0,c(ep.n,var.n,k))
-	d <- matrix(0,ep.n,k)
+	#The local loading for the principle components
+  w <- array(0,c(ep.n,var.n,k))
+  #Return the local scores
+  if(scores)
+    gwpca.scores <- list()
+  else
+    gwpca.scores <- NULL
+  #
+	d <- matrix(0,ep.n,var.n)
 	# Add this bit please ############################################################
   if(robust==FALSE)
     pcafun=wpca
@@ -164,7 +177,19 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
     }
 		temp <- pcafun(x[use,],wt,nu=0,nv=k)
 		w[i,,] <- temp$v
-		d[i,] <- temp$d[1:k]
+		d[i,] <- temp$d
+    #Calculate the local scores
+    if(scores)
+    {
+      scores.i <- c()
+      for(j in 1:k)
+      {
+        score <- t(x[use,])*temp$v[,j]
+        scores.i <- cbind(scores.i, apply(score,2,sum))
+      }
+      gwpca.scores[[i]] <- scores.i
+    }
+    
   }
 	if (!is.null(rownames(x))) dimnames(w)[[1]] <- rownames(x)
 	if (!is.null(colnames(x))) dimnames(w)[[2]] <- colnames(x)
@@ -172,17 +197,117 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
 	CV<-numeric(dp.n)
   if(cv)
      CV<-gwpca.cv.contrib(x,dp.locat,bw,k,robust,kernel,adaptive, p, theta, longlat,dMat)
-	GW.arguments<-list(bw=bw, kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat, dp.n=dp.n, DM.given=DM.given)
+	GW.arguments<-list(vars=vars,k=k, bw=bw, kernel=kernel,adaptive=adaptive, p=p, theta=theta, longlat=longlat, dp.n=dp.n, DM.given=DM.given,scores=scores)
 	# And add and change this bit please #################################################
   if(robust==FALSE)
     d1 <- (d/(sum(wt)^0.5))^2
   else
-    d1 <- d^2
-  res <- list(loadings = w, var=d1,  bw = bw, GW.arguments = GW.arguments, CV = CV)
-  res
-##################################################################################
+    d1 <- d^2                     
+  local.PV <- d1[, 1:k]/rowSums(d1) * 100
+  var.names <- c()
+  for(i in 1:k)
+     var.names <- c(var.names, paste(paste("Comp", i, sep="."), "PV", sep="_"))
+  win.var.pc1 <- max.col(abs(w[,,1]))
+  res.df <- data.frame(local.PV, rowSums(local.PV), vars[win.var.pc1])
+  names(res.df) <- c(var.names, "local_CP", "win_var_PC1")
+  if (!is.null(polygons))
+  {
+    rownames(res.df) <- sapply(slot(polygons, "polygons"),
+                                  function(i) slot(i, "ID"))
+    SDF <-SpatialPolygonsDataFrame(Sr=polygons, data=res.df,match.ID=F)
+  }
+  else
+  {
+    SDF <- SpatialPointsDataFrame(coords=elocat, data=res.df, proj4string=CRS(p4s), match.ID=F)
+  }
+  ################################################
+  timings[["stop"]] <- Sys.time()
+  res <- list(pca=pca.res,loadings = w, SDF=SDF,gwpca.scores=gwpca.scores, var=d1,  local.PV=local.PV, GW.arguments = GW.arguments, CV = CV, timings=timings)
+  class(res) <-"gwpca"
+  invisible(res) 
+  ##################################################################################
  }
-
+############################Layout function for outputing the GWPCA results
+##Author: BL
+print.gwpca<-function(x, ...)
+{
+  if(class(x) != "gwpca") stop("It's not a gwpca object")
+  cat("   ***********************************************************************\n")
+  cat("   *                       Package   GWmodel                             *\n")
+  cat("   ***********************************************************************\n")
+  cat("   Program starts at:", as.character(x$timings$start), "\n")
+  cat("   Call:\n")
+  cat("   ")
+  vars <- x$GW.arguments$vars
+  cat("\n   Variables concerned: ",vars)
+  cat("\n   The number of retained components: ",x$GW.arguments$k)
+  dp.n<- dim(x$loadings)[1]
+  cat("\n   Number of data points:",dp.n)
+  ################################################################ Print Linear
+  cat("\n   ***********************************************************************\n")
+  cat("   *                Results of Principal Components Analysis               *\n")
+  cat("   ***********************************************************************\n")
+  print(summary(x$pca,  loadings = TRUE, cutoff=0))
+  
+  #########################################################################
+  cat("\n   ***********************************************************************\n")
+    cat("   *   Results of Geographically Weighted Principal Components Analysis  *\n")
+  cat("   ***********************************************************************\n")
+  cat("\n   *********************Model calibration information*********************\n")
+  cat("   Kernel function for geographically weighting:", x$GW.arguments$kernel, "\n")
+  if(x$GW.arguments$adaptive)
+    cat("   Adaptive bandwidth for geographically and temporally  weighting: ", x$GW.arguments$bw, " (number of nearest neighbours)\n", sep="")
+  else
+    cat("   Fixed bandwidth for geographically and temporally weighting: ", x$GW.arguments$bw, "\n")
+  if (x$GW.arguments$DM.given)
+    cat("   Distance metric for geographically weighting: A distance matrix is specified for this model calibration.\n")
+  else
+  {
+    if (x$GW.arguments$longlat)
+      cat("   Distance metric for geographically weighting: Great Circle distance metric is used.\n")
+    else if (x$GW.arguments$p==2)
+      cat("   Distance metric for geographically weighting: Euclidean distance metric is used.\n")
+    else if (x$GW.arguments$p==1)
+      cat("   Distance metric for geographically weighting: Manhattan distance metric is used.\n") 
+    else if (is.infinite(x$GW.arguments$p))
+      cat("   Distance metric for geographically weighting: Chebyshev distance metric is used.\n")
+    else 
+      cat("   Distance metric for geographically weighting: A generalized Minkowski distance metric is used with p=",x$GW.arguments$p,".\n")
+    if (x$GW.arguments$theta!=0&&x$GW.arguments$p!=2&&!x$GW.arguments$longlat)
+      cat("   Coordinate rotation: The coordinate system is rotated by an angle", x$GW.arguments$theta, "in radian.\n")   
+  } 
+  
+  cat("\n   ****************     Summary of GWPCA information:    *****************\n")       
+  var.names <- c()
+  for(i in 1:x$GW.arguments$k)
+     var.names <- c(var.names, paste("Comp", i, sep="."))
+  cat("   Local variance: \n")
+  local.SD <- t(apply(x$var[,1:x$GW.arguments$k], 2, summary))[,c(1:3,5,6)]
+  rownames(local.SD) <- var.names
+  if(x$GW.arguments$k==1) 
+  { 
+    local.SD <- matrix(local.SD, nrow=1)
+    colnames(local.SD) <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
+    rownames(local.SD) <- var.names
+  }
+  rnames<-rownames(local.SD)
+  for (i in 1:length(rnames))
+    rnames[i]<-paste("   ",rnames[i],sep="")
+  rownames(local.SD) <-rnames 
+  printCoefmat(local.SD)
+  cat("   Local Proportion of Variance: \n")
+  local.PV <-  t(apply(as(x$SDF, "data.frame")[,1:(x$GW.arguments$k+1), drop=FALSE], 2, summary))[,c(1:3,5,6)]
+  if(x$GW.arguments$k==1) 
+  { 
+    local.PV <- matrix(local.SD, nrow=1)
+    colnames(local.PV) <- c("Min.", "1st Qu.", "Median", "3rd Qu.", "Max.")
+  }
+  rownames(local.PV) <-c(rnames, paste("   ","Cumulative",sep=""))
+  printCoefmat(local.PV)
+  cat("\n   ***********************************************************************\n")
+  cat("   Program stops at:", as.character(x$timings$stop), "\n")
+  invisible(x)
+}
 #######################################Bandwidth selection
 # Function to find a fixed or adaptive bandwidth 
 bw.gwpca<-function(data,vars,k=2, robust = FALSE,kernel="bisquare",adaptive=FALSE,p=2, theta=0, longlat=F,dMat)
