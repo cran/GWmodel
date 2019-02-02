@@ -284,6 +284,8 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
   }
   else
     AICc<-Inf
+  if(is.nan(AICc))
+      AICc <- Inf
   if(verbose)
   {     
     if(adaptive)

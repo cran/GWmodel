@@ -32,11 +32,11 @@ citEntry(entry = "Article",
   volume       = "17",
   number       = "2",
   pages        = "85--101",
-  url          = "http://dx.doi.org/10.1080/10095020.2014.917453",
+  url          = "https://www.tandfonline.com/doi/abs/10.1080/10095020.2014.917453",
 
   textVersion  =
   paste("Binbin Lu, Paul Harris, Martin Charlton, Christopher Brunsdon (2014).",
         "The GWmodel R package: further topics for exploring spatial heterogeneity using geographically weighted models.",
         "Geo-spatial Information Science, 17(2), 85-101.",
-        "URL http://dx.doi.org/10.1080/10095020.2014.917453")
+        "URL https://www.tandfonline.com/doi/abs/10.1080/10095020.2014.917453")
 )

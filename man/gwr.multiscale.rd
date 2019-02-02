@@ -1,6 +1,6 @@
 \name{gwr.multiscale}
 \alias{gwr.multiscale}
-\alias{gwr.psdm}
+\alias{gwr.q2}
 \alias{print.multiscalegwr}
 \alias{gwr.backfit}
 \alias{bw.gwr2}
@@ -12,10 +12,11 @@ relationship but also (and simultaneously) find a different distance metric for
 each relationship (if required to do so).
 }
 \usage{
-gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR", 
-          max.iterations=1000,threshold=0.000001, dMats,p.vals, theta.vals,
-          longlat=FALSE, bws0, bw.seled=rep(F, length(bws0)), approach = "AIC", 
-          bws.thresholds=rep(1, length(dMats)), verbose=F, nlower = 10)
+gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR",
+               max.iterations=2000,threshold=0.00001, dMats, p.vals, theta.vals,
+               longlat=FALSE, bws0, bw.seled=rep(F, length(bws0)), approach = "AIC",
+               bws.thresholds=rep(0.1, length(dMats)), bws.reOpts=5,verbose=F, 
+               hatmatrix=T, nlower = 10)
 \method{print}{multiscalegwr}(x, \dots)
 }
 
@@ -45,9 +46,11 @@ gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR
   \item{bw.seled}{a \link{vector} of boolean variables to determine whether the corresponding bandwidth should be re-selected or not: if TRUE, the corresponding bandwiths for the specific parameters are                      supposed to be given in bws0; otherwise, the bandwidths for the specific parameters will be selected within the back-fitting iterations.}
   \item{approach}{specified by CV for cross-validation approach or by AIC corrected (AICc) approach}
   \item{bws.thresholds}{threshold values to define whether the bandwidth for a specific parameter has converged or not}
+  \item{bws.reOpts}{the number times of continually optimizing each parameter-specific bandwidth even though it meets the criterion of convergence, for avoiding  sub-optimal choice due to illusion of                           convergence;}
   \item{verbose}{if TRUE and bandwidth selection is undertaken, the bandwidth searches are reported}
+  \item{hatmatrix}{if TRUE the hatmatrix for the whole model will be calculated, and AICc, adjusted-R2 values will be returned accordingly.}
   \item{nlower}{the minmum number of nearest neighbours if an adaptive kernel is used}
-  \item{x}{an object of class \dQuote{psdmgwr}, returned by the function \link{gwr.psdm}}
+  \item{x}{an object of class \dQuote{psdmgwr}, returned by the function \link{gwr.multiscale}}
   \item{...}{arguments passed through (unused)}
 }
 \value{
@@ -58,7 +61,6 @@ A list of class \dQuote{psdmgwr}:
   \item{GW.diagnostic}{a list class object including the diagnostic information of the model fitting}
   \item{lm}{an object of class inheriting from \dQuote{lm}, see \link{lm}. }
   \item{bws.vars}{bandwidths used for all the parameters within the back-fitting procedure}
-  \item{AICc.vals}{AICc values calculated within the back-fitting procedure}
   \item{timings}{starting and ending time.}
   \item{this.call}{the function call used.}
 }
@@ -67,7 +69,7 @@ This function implements multiscale GWR to detect variations in regression
 relationships across different spatial scales. This function can not only find 
 a different bandwidth for each relationship, but also (and simultaneously), find
  a different distance metric for each relationship (i.e. Parameter-Specific Distance 
- Metric GWR - aka PSDM-GWR).  Note that multiscale GWR (MGWR) has also been referred 
+ Metric GWR, i.e. PSDM GWR).  Note that multiscale GWR (MGWR) has also been referred 
  to as flexible bandwidth GWR (FBGWR) and conditional GWR (CGWR) in the literature. 
  All are one and the same model, but where PSDM-GWR additionally provides a different 
  distance metric option for each relationship.  An MGWR model is calibrated if no \dQuote{dMats} 
@@ -98,6 +100,9 @@ Geographical Information Science, 31, 982-998.
 Fotheringham, A. S., Yang, W. & Kang, W. (2017). Multiscale Geographically 
 Weighted Regression (MGWR). Annals of the American Association of Geographers, 
 107, 1247-1265.
+
+Yu, H., A. S. Fotheringham, Z. Li, T. Oshan, W. Kang & L. J. Wolf. 2019. Inference 
+in multiscale geographically weighted regression. Geographical Analysis(In press).
 
 Leong, Y.Y., & Yue, J.C. (2017). A modification to geographically weighted 
 regression. International Journal of Health Geographics, 16 (1), 11.

@@ -14,7 +14,7 @@
 
 ###########################################
 #Calibrate the GTWR model
-gtwr <- function(formula, data, regression.points, obs.tv, reg.tv, st.bw, kernel="bisquare",
+gtwr<- function(formula, data, regression.points, obs.tv, reg.tv, st.bw, kernel="bisquare",
                  adaptive=FALSE, p=2, theta=0, longlat=F,lamda=0.05,t.units = "auto",ksi=0, st.dMat)
 {
   ##Record the start time
@@ -302,9 +302,9 @@ print.gtwrm<-function(x, ...)
   cat("\n   *********************Model calibration information*********************\n")
   cat("   Kernel function for geographically and temporally weighting:", x$GTW.arguments$kernel, "\n")
   if(x$GTW.arguments$adaptive)
-    cat("   Adaptive bandwidth for geographically and temporally  weighting: ", x$GW.arguments$st.bw, " (number of nearest neighbours)\n", sep="")
+    cat("   Adaptive bandwidth for geographically and temporally  weighting: ", x$GTW.arguments$st.bw, " (number of nearest neighbours)\n", sep="")
   else
-    cat("   Fixed bandwidth for geographically and temporally weighting: ", x$GW.arguments$st.bw, "\n")
+    cat("   Fixed bandwidth for geographically and temporally weighting: ", x$GTW.arguments$st.bw, "\n")
   if(x$GTW.arguments$rp.given) 
     cat("   Regression points: A seperate set of regression points is used.\n")
   else
@@ -322,7 +322,7 @@ print.gtwrm<-function(x, ...)
     else if (is.infinite(x$GTW.arguments$p))
       cat("   Distance metric for geographically weighting: Chebyshev distance metric is used.\n")
     else 
-      cat("   Distance metric for geographically weighting: A generalized Minkowski distance metric is used with p=",x$GW.arguments$p,".\n")
+      cat("   Distance metric for geographically weighting: A generalized Minkowski distance metric is used with p=",x$GTW.arguments$p,".\n")
     if (x$GTW.arguments$theta!=0&&x$GTW.arguments$p!=2&&!x$GTW.arguments$longlat)
       cat("   Coordinate rotation: The coordinate system is rotated by an angle", x$GTW.arguments$theta, "in radian.\n")
     cat("   The temporal distance is calculated in ", x$GTW.arguments$units, ".\n")
@@ -401,7 +401,7 @@ ti.distm <- function(obs.tv,reg.tv, units="auto")
 #    for(i in 1:n)
 #      for(j in 1:i)
 #      {
-#        dist.tm[i,j] <- t.dist(obs.tv[i],obs.tv[j],units = units)
+#        dist.tm[i,j] <- ti.dist(obs.tv[i],obs.tv[j],units = units)
 #        dist.tm[j,i] <- dist.tm[i,j]
 #      }
 #  }
@@ -410,7 +410,7 @@ ti.distm <- function(obs.tv,reg.tv, units="auto")
 #    for (i in 1:m) 
 #      for (j in 1:n) 
 #      {
-#        dist.tm[i,j] <- t.dist(obs.tv[i],obs.tv[j],units = units)
+#        dist.tm[i,j] <- ti.dist(obs.tv[i],obs.tv[j],units = units)
 #      }
 #  }
   for(i in 1:m)
@@ -427,6 +427,7 @@ ti.dist <- function(t1,t2,units="auto")
          POSIXlt = as.numeric(difftime(t1,t2,units = units)),
          POSIXct = as.numeric(difftime(t1,t2,units = units)),
          numeric = t2-t1,
+         integer = t2-t1,
          yearmon = (t2-t1)*12,
          yearqtr = (t2-t1)*4
          )
