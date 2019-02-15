@@ -20,7 +20,8 @@
 }
 \references{
   Robinson, A. C. (2013). Geovisualization of the 2004 Presidential Election. 
-  In: NATIONAL INSTITUTES OF HEALTH, P. S. U. (ed.). Penn State.
+  In: NATIONAL INSTITUTES OF HEALTH, P. S. U. (ed.). Penn State: 
+  \url{http://www.personal.psu.edu/users/a/c/acr181/election.html}.
   
   Foley, P. & Demsar, U. (2012). Using geovisual analytics to compare the 
   performance of geographically weighted discriminant analysis versus its global 

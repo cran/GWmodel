@@ -367,7 +367,8 @@ gwr.poisson.wt<-function(y,x,bw,W.mat, verbose=T)
      nu <- gw.fitted(x,betas1)
      mu <- exp(nu)
      old.llik <- llik
-     llik <- sum(y*nu - mu - log(gamma(y+1)))
+     #llik <- sum(y*nu - mu - log(gamma(y+1)))
+	 llik <- sum(dpois(y, mu, log = TRUE))
      if(verbose)
         cat(paste("   ",formatC(it.count,digits=4,width=4),"    ",formatC(llik,digits=4,width=7),"\n"))
      if (abs((old.llik - llik)/llik) < tol) break

@@ -3,7 +3,6 @@
 \alias{gwr.q2}
 \alias{print.multiscalegwr}
 \alias{gwr.backfit}
-\alias{bw.gwr2}
 \title{Multiscale GWR}
 \description{
 This function implements multiscale GWR to detect variations in regression relationships across
@@ -16,7 +15,7 @@ gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR
                max.iterations=2000,threshold=0.00001, dMats, p.vals, theta.vals,
                longlat=FALSE, bws0, bw.seled=rep(F, length(bws0)), approach = "AIC",
                bws.thresholds=rep(0.1, length(dMats)), bws.reOpts=5,verbose=F, 
-               hatmatrix=T, nlower = 10)
+                hatmatrix=T, predictor.centered=rep(T, length(bws0)-1), nlower = 10)
 \method{print}{multiscalegwr}(x, \dots)
 }
 
@@ -48,6 +47,7 @@ gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR
   \item{bws.thresholds}{threshold values to define whether the bandwidth for a specific parameter has converged or not}
   \item{bws.reOpts}{the number times of continually optimizing each parameter-specific bandwidth even though it meets the criterion of convergence, for avoiding  sub-optimal choice due to illusion of                           convergence;}
   \item{verbose}{if TRUE and bandwidth selection is undertaken, the bandwidth searches are reported}
+  \item{predictor.centered}{a logical vector of length equalling to the number of predictors, and note intercept is not included; if the element is TRUE, the corresponding predictor will be centered.}
   \item{hatmatrix}{if TRUE the hatmatrix for the whole model will be calculated, and AICc, adjusted-R2 values will be returned accordingly.}
   \item{nlower}{the minmum number of nearest neighbours if an adaptive kernel is used}
   \item{x}{an object of class \dQuote{psdmgwr}, returned by the function \link{gwr.multiscale}}
@@ -124,15 +124,17 @@ data(LondonHP)
 EUDM <- gw.dist(coordinates(londonhp))
 #No bandwidth is selected, and bws0 values are used
 \dontrun{
-res1<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="CVR",kernel="gaussian", 
+###Similar as the basic GWR
+res1<-gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="dCVR",kernel="gaussian", 
 adaptive=T, bws0=c(100, 100, 100),bw.seled=rep(T, 3), dMats=list(EUDM,EUDM,EUDM))
 #FBGWR
-res1<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="dCVR",kernel="gaussian")
+res2<-gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, criterion="dCVR",kernel="gaussian",
+adaptive=T, bws0=c(100, 100, 100), dMats=list(EUDM,EUDM,EUDM))
 #Mixed GWR
-res3<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, bws0=c(Inf, 100, 100, Inf),
+res3<-gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, bws0=c(Inf, 100, 100, Inf),
                bw.seled=rep(T, 3),kernel="gaussian", dMats=list(EUDM,EUDM,EUDM))
 #PSDM GWR
-res4<- gwr.mutiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, kernel="gaussian", p.vals=c(1,2,3))
+res4<- gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, kernel="gaussian", p.vals=c(1,2,3))
 }
 }
 \keyword{multiscale, flexible bandwidth, parameter-specific distance metrics, GWR}
