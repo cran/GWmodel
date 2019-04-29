@@ -190,7 +190,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
   cat("------   Calculate the initial beta0 from the above bandwidths    ------\n")
   #dMat <- gw.dist(dp.locat=dp.locat, p=2, theta=0, longlat=longlat)
   dMat <- dMats[[1]]
-  bw.int0 <- bw.gwr1(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=F, nlower = nlower)
+  bw.int0 <- bw.gwr1(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower)
   #betas <- gwr.q(x, y, dp.locat, adaptive=adaptive, bw=bw.int0, kernel=kernel,dMat=dMat)
   #######Re-initialize the betas by a simple back-fitting process
   #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,threshold*100)
@@ -244,7 +244,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
       else
       {
         cat("Now select an optimum bandwidth for the variable: ", InDevars[i], "\n")
-        bw.i <- bw.gwr1(matrix(x1[, i], ncol = 1), y.i, dp.locat, approach = approach, kernel = kernel, adaptive = adaptive, dMat, verbose = T, nlower = nlower)
+        bw.i <- bw.gwr1(matrix(x1[, i], ncol = 1), y.i, dp.locat, approach = approach, kernel = kernel, adaptive = adaptive, dMat, verbose = verbose, nlower = nlower)
         cat("The newly selected bandwidth for variable ", InDevars[i])
         cat(" is: ", bw.i, "\n")
         cat("The bandwidth used in the last ieration is: ", bws0[i])
@@ -499,6 +499,29 @@ gwr.backfit <- function(x, y, betas,dp.locat,rp.locat,hatmatrix, criterion="CVR"
    }
    #calculate the hatmatrix
    betas
+}
+###For bandwidth selection
+bw.gwr2<-function(x, y, dp.locat,approach="AIC",kernel="gaussian",adaptive=FALSE,dMat, verbose=F, nlower = 10)
+{
+  dp.n <-  nrow(dp.locat)
+  if(adaptive)
+  {
+    upper <- dp.n
+    lower <- nlower
+  }
+  else
+  {
+      upper<-range(dMat)[2]
+      lower<-upper/5000
+  }
+  ########################## Now the problem for the golden selection is too computationally heavy
+    #Select the bandwidth by golden selection
+    bw<-NA
+    if(approach=="cv"||approach=="CV")
+       bw <- gold(gwr.cv,lower,upper,adapt.bw=adaptive,x,y,kernel,adaptive, dp.locat,dMat=dMat,verbose=verbose)
+    else if(approach=="aic"||approach=="AIC"||approach=="AICc")
+       bw <- gold(gwr.aic1,lower,upper,adapt.bw=adaptive,x,y,kernel,adaptive, dp.locat,dMat=dMat,verbose=verbose)
+    bw
 }
 gwr.cv2 <- function(bw, X, Y, kernel,adaptive, dp.locat,dMat)
 {

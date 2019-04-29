@@ -162,7 +162,7 @@ gtwr<- function(formula, data, regression.points, obs.tv, reg.tv, st.bw, kernel=
   {
     DM.given<-T
     dim.stdMat<-dim(st.dMat)
-    if (st.dMat[1]!=dp.n||st.dMat[2]!=rp.n)
+    if (dim.stdMat[1]!=dp.n||dim.stdMat[2]!=rp.n)
       stop("Dimensions of spatio-temporal distance matrix sdMat are not correct")
   }
   #############Calibration the model
@@ -599,14 +599,28 @@ st.dist <- function(dp.locat, rp.locat, obs.tv, reg.tv,focus=0, p=2, theta=0, lo
      {
        for(i in 1:n.dp)
        {
+       if(is.infinite(t.dMat[uts.obv.idx[i], uts.reg.idx[focus]]))
+            {
+               dists[i] <- Inf
+            }
+       else
+       {
          dists[i] <- lamda*s.dMat[coord.dp.idx[i],coord.rp.idx[focus]]+(1-lamda)*t.dMat[uts.obv.idx[i], uts.reg.idx[focus]]+2*sqrt(lamda*(1-lamda)*s.dMat[coord.dp.idx[i],coord.rp.idx[focus]]*t.dMat[uts.obv.idx[i], uts.reg.idx[focus]])*cos(ksi)
+         }
        }
      }
      else
      {
        for(i in 1:n.dp)
        {
+          if(is.infinite(t.dMat[uts.obv.idx[i], uts.obv.idx[focus]]))
+            {
+               dists[i] <- Inf
+            }
+            else
+            {
          dists[i] <- lamda*s.dMat[coord.dp.idx[i],coord.dp.idx[focus]]+(1-lamda)*t.dMat[uts.obv.idx[i], uts.obv.idx[focus]]+2*sqrt(lamda*(1-lamda)*s.dMat[coord.dp.idx[i],coord.dp.idx[focus]]*t.dMat[uts.obv.idx[i], uts.obv.idx[focus]])*cos(ksi)
+         }
        }
      }
    }
@@ -617,7 +631,14 @@ st.dist <- function(dp.locat, rp.locat, obs.tv, reg.tv,focus=0, p=2, theta=0, lo
         for(j in 1:n.rp)
           for(i in 1:n.dp)
           {
+            if(is.infinite(t.dMat[uts.obv.idx[i], uts.reg.idx[j]]))
+            {
+               dists[i,j] <- Inf
+            }
+            else
+            {
             dists[i,j] <- lamda*s.dMat[coord.dp.idx[i],coord.rp.idx[j]]+(1-lamda)*t.dMat[uts.obv.idx[i], uts.reg.idx[j]]+2*sqrt(lamda*(1-lamda)*s.dMat[coord.dp.idx[i],coord.rp.idx[j]]*t.dMat[uts.obv.idx[i], uts.reg.idx[j]])*cos(ksi)
+            }
           }
       }
      else
@@ -625,7 +646,14 @@ st.dist <- function(dp.locat, rp.locat, obs.tv, reg.tv,focus=0, p=2, theta=0, lo
        for(j in 1:n.dp)
          for(i in 1:j)
          {
+           if(is.infinite(t.dMat[uts.obv.idx[i], uts.obv.idx[j]]))
+            {
+               dists[i,j] <- Inf
+            }
+            else
+            {
            dists[i,j] <- lamda*s.dMat[coord.dp.idx[i],coord.dp.idx[j]]+(1-lamda)*t.dMat[uts.obv.idx[i], uts.obv.idx[j]]+2*sqrt(lamda*(1-lamda)*s.dMat[coord.dp.idx[i],coord.dp.idx[j]]*t.dMat[uts.obv.idx[i], uts.obv.idx[j]])*cos(ksi)
+            }
            dists[j,i] <- dists[i,j]
          }
      }

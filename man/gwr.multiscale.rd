@@ -50,7 +50,7 @@ gwr.multiscale(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR
   \item{predictor.centered}{a logical vector of length equalling to the number of predictors, and note intercept is not included; if the element is TRUE, the corresponding predictor will be centered.}
   \item{hatmatrix}{if TRUE the hatmatrix for the whole model will be calculated, and AICc, adjusted-R2 values will be returned accordingly.}
   \item{nlower}{the minmum number of nearest neighbours if an adaptive kernel is used}
-  \item{x}{an object of class \dQuote{psdmgwr}, returned by the function \link{gwr.multiscale}}
+  \item{x}{an object of class \dQuote{multiscalegwr}, returned by the function \link{gwr.multiscale}}
   \item{...}{arguments passed through (unused)}
 }
 \value{

@@ -53,7 +53,7 @@ bw.gtwr<-function(formula, data, obs.tv, approach="CV",kernel="bisquare",adaptiv
   if (missing(st.dMat))
   {
       DM.given<-F
-      if(dp.n + dp.n <= 10000)
+      if(dp.n + dp.n <= 20000)
       {
         st.dMat <- st.dist(dp.locat, obs.tv=obs.tv, p=p, theta=theta, longlat=longlat,lamda=lamda,t.units = t.units,ksi=ksi)
         DM.given<-T
@@ -76,14 +76,14 @@ bw.gtwr<-function(formula, data, obs.tv, approach="CV",kernel="bisquare",adaptiv
   {
     if(DM.given)
     {
-      upper<-range(st.dMat)[2]
+      upper<-range(st.dMat[which(!is.infinite(st.dMat))])[2]
       lower<-upper/5000
     }
     else
     {
       st.dMat <- NULL
-	  b.box<-bbox(dp.locat)
-	  t.intev <- range(obs.tv)
+	    b.box<-bbox(dp.locat)
+	    t.intev <- range(obs.tv)
       upper <- max(st.dist(b.box, obs.tv=t.intev, p=p, theta=theta, longlat=longlat,lamda=lamda,t.units = t.units,ksi=ksi))
       lower<-upper/5000
     }
