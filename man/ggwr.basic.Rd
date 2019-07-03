@@ -87,4 +87,4 @@ res.binomial<-ggwr.basic(BATH2~FLOORSZ, bw=bw.f2,data=londonhp, dMat=DM,
               family ="binomial")
 }
 }
-\keyword{generalised, GWR}
+\keyword{generalised GWR}

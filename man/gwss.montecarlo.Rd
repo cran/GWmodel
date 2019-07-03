@@ -62,5 +62,6 @@ test.lss<-gwss.montecarlo(data=londonhp, vars=c("PURCHASE","FLOORSZ"), bw=5000,
 test.lss
 }
 }
-\keyword{test, summary stastics}
+\keyword{GWSS}
+\concept{Monte Carlo}
 

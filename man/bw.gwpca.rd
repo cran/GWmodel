@@ -49,5 +49,6 @@ Enhancements to a geographically weighted principal components analysis in the c
 Geographical Analysis 47: 146-172
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{robust, GWPCA, bandwidth}
+\keyword{GWPCA}
+\concept{bandwidth selection}
 

@@ -104,5 +104,5 @@ if(require("RColorBrewer"))
 }
 }
 }
-\keyword{local, summary stastics}
+\keyword{GWSS}
 

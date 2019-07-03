@@ -38,5 +38,5 @@ ggwr.cv.contrib(bw, X, Y,family="poisson", kernel="bisquare",adaptive=F,
   \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth}
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{cv, GWR}
-
+\keyword{generalised GWR}
+\concept{point-wise cross-validation score}

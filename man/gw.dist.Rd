@@ -62,4 +62,5 @@ dist.m2<-gw.dist(dp.locat=dp, p=1, theta=0.5)
 #The coordinate system is rotated by an angle 0.8 in radian.
 dist.m4<-gw.dist(dp.locat=dp,rp.locat=rp, p=0.75,theta=0.8)
 }
-\keyword{distance, matrix}
+\keyword{GW tools}
+\concept{distance}

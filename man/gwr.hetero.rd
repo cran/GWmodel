@@ -52,5 +52,5 @@ and Risk Assessment 25:123-138
 
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{Heteroskedastic, GWR}
+\keyword{Heteroskedastic GWR}
 

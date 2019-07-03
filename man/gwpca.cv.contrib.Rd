@@ -37,5 +37,6 @@ gwpca.cv.contrib(x,loc,bw, k=2,robust=FALSE,kernel="bisquare",adaptive=FALSE,
   \item{CV}{a data vector consisting of squared residuals, whose sum is the cross-validation score for the specified bandwidth (bw) and component (k).}
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{cv, GWPCA}
+\keyword{GWPCA}
+\concept{point-wise cross-validation scores}
 

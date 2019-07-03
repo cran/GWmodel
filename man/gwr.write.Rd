@@ -21,4 +21,5 @@ gwr.write.shp(x,fn="GWRresults")
   The functions \dQuote{writeGWR} and \dQuote{writeGWR.shp} (in the early versions of GWmodel) have been renamed respectively as
  \dQuote{gwr.write} and \dQuote{gwr.write.shp}, while the old names are still kept valid.
 }
-\keyword{gwr, write, shape files}
+\keyword{GWR}
+\concept{results writing}

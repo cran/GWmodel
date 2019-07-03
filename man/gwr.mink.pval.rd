@@ -3,7 +3,7 @@
 \alias{gwr.mink.pval.forward}
 \alias{gwr.mink.pval.backward}
 \alias{plot.pvlas}
-\title{Select the values of p for the Minkovski approach for GWR}
+\title{Select the values of p for the Minkowski approach for GWR}
 \description{
 These functions implement heuristics to select the values of p from two intervals: (0, 2] in a 'backward' direction and (2, Inf) in a 'forward' direction.
 }
@@ -55,11 +55,11 @@ gwr.mink.pval.backward(formula, data, bw, bw.sel.approach = "AIC",
 A list of:
   \item{p.vals}{a vector of tried values of p}
   \item{cretion.vals}{a vector of criterion values (AICc or CV) for tried values of p}
-  \item{p.dropped}{a vector of boolean to label whether a value of p to be dropped or not: TRUE means to be dropped and FALSE means to be used for the Minkovski approach}
+  \item{p.dropped}{a vector of boolean to label whether a value of p to be dropped or not: TRUE means to be dropped and FALSE means to be used for the Minkowski approach}
 }
 \references{
 Lu, B, Charlton, M, Brunsdon, C & Harris, P(2016). The Minkowski approach for choosing the distance metric in Geographically Weighted Regression. International Journal of Geographical Information Science, 30(2): 351-368.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{Minkovski approach, GWR, distance metric, selection}
-
+\keyword{GWR}
+\concept{Minkowski approach}

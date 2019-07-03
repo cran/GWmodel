@@ -8,4 +8,5 @@ Outline (SpatialPolygonsDataFrame) of London boroughs for the \link{LondonHP} da
 }
 \usage{data(LondonBorough)}
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{London, Boroughs}
+\keyword{data}
+\concept{London Boroughs}

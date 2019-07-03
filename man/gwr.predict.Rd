@@ -76,5 +76,6 @@ ols.pred<-gwr.predict(PURCHASE~FLOORSZ, data=londonhp, bw=1000000000000000000000
 ols.pred$SDF
 }
 }
-\keyword{GWR, prediction}
+\keyword{GWR}
+\concept{predictor}
 

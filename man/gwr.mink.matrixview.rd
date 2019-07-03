@@ -22,5 +22,6 @@ The function \dQuote{mink.matrixview} (in the early versions of GWmodel) has bee
 Lu, B, Charlton, M, Brunsdon, C & Harris, P(2016). The Minkowski approach for choosing the distance metric in Geographically Weighted Regression. International Journal of Geographical Information Science, 30(2): 351-368.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{Minkovski approach, GWR, result visualization}
+\keyword{GWR}
+\concept{Minkowski approach view}
 

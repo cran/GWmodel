@@ -41,4 +41,5 @@ ls()
 spplot(Dub.voter,names(Dub.voter)[4:12])
 }
 }
-\keyword{datasets}
+\keyword{data}
+\concept{Dublin Voter turnout}

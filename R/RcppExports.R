@@ -90,8 +90,6 @@ gw_reg <- function(x, y, w, hatmatrix,focus) {
     .Call('GWmodel_gw_reg', PACKAGE = 'GWmodel', x, y, w, hatmatrix,focus)
 }
 
-
-
 gw.fitted <- function(X, beta) {
     .Call('GWmodel_fitted', PACKAGE = 'GWmodel', X, beta)
 }
@@ -118,4 +116,25 @@ AICc_rss <- function(y,x, beta, S) {
 
 Ci_mat <- function(x, w) {
     .Call('GWmodel_Ci_mat', PACKAGE = 'GWmodel', x, w)
+}
+
+AICc1 <- function(y,x, beta, s_hat) {
+    .Call('GWmodel_AICc1', PACKAGE = 'GWmodel', y,x, beta, s_hat)
+}
+
+gwr_diag1 <- function(y,x, beta, S) {
+    .Call('GWmodel_gwr_diag1', PACKAGE = 'GWmodel', y,x, beta, S)
+}
+
+#scgwr_reg(mat x, vec y, int bw, int poly, mat G0, mat Mx0, mat My0, mat XtX, mat XtY, mat neighbour, vec parameters);
+scgwr_reg <- function( x, y, bw, poly, G0, Mx0, My0, XtX, XtY, neighbour, parameters) {
+    .Call('GWmodel_scgwr_reg', PACKAGE = 'GWmodel', x, y, bw, poly, G0, Mx0, My0, XtX, XtY, neighbour, parameters)
+}
+#scgwr_loocv(vec target, mat x, vec y, int bw, int poly, mat Mx0, mat My0, mat XtX, mat XtY)
+scgwr_loocv <- function(target, x, y, bw, poly, Mx0, My0, XtX, XtY) {
+    .Call('GWmodel_scgwr_loocv', PACKAGE = 'GWmodel', target, x, y, bw, poly, Mx0, My0, XtX, XtY)
+}
+#scgwr_pre(mat x, vec y, int bw, int poly, double b0, mat g0, mat neighbour)
+scgwr_pre <- function(x, y, bw, poly, b0, g0, neighbour) {
+    .Call('GWmodel_scgwr_pre', PACKAGE = 'GWmodel', x, y, bw, poly, b0, g0, neighbour)
 }

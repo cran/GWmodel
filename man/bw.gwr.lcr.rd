@@ -54,5 +54,6 @@ exploring Spatial Heterogeneity using Geographically Weighted Models.  Journal o
 Statistical Software 63(17): 1-50
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{ridge, bandwidth, GWR}
+\keyword{GWR-LCR}
+\concept{bandwidth selection}
 

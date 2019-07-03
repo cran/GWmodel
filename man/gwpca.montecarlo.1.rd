@@ -67,5 +67,6 @@ gmc.res
 plot(gmc.res)
 }
 }
-\keyword{Monte Carlo, GWPCA}
+\keyword{GWPCA}
+\concept{Monte Carlo}
 

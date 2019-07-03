@@ -77,5 +77,6 @@ International Journal of Geographical Information Science 28(4): 660-681
 \seealso{\code{\link{gwr.model.view}}, \code{\link{gwr.model.sort}}}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{model specification, variable selection, gwr}
+\keyword{GWR}
+\concept{model selection}
 

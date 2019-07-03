@@ -19,5 +19,5 @@ The function \dQuote{check.components} (in the early versions of GWmodel) has be
  \dQuote{gwpca.check.components}, while the old name is still kept valid.
 }
 \seealso{\link{gwpca.glyph.plot}}
-\keyword{glyph plot, GWPCA}
-
+\keyword{GWPCA}
+\concept{glyph plot interaction}

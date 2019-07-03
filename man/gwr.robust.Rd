@@ -94,5 +94,5 @@ if(require("RColorBrewer"))
 }
 }
 }
-\keyword{robust, GWR}
+\keyword{robust GWR}
 

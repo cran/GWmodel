@@ -37,5 +37,6 @@ gwr.cv(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, theta=0,
   \item{CV.score}{cross-validation score}
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{cv, GWR}
+\keyword{GWR}
+\concept{cross-validation score}
 

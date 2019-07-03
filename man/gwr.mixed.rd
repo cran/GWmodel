@@ -73,5 +73,6 @@ For an alternative formulation of mixed GWR, please refer to GWR 4, which provid
 This windows-based software also implements generalised mixed GWR.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{mixed, GWR}
+\keyword{multiscale GWR}
+\concept{mixed GWR}
 

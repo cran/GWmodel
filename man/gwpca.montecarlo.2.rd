@@ -61,5 +61,6 @@ gmc.res.autow
 plot.mcsims(gmc.res.autow)
 }
 }
-\keyword{Monte Carlo, GWPCA}
+\keyword{GWPCA}
+\concept{Monte Carlo}
 

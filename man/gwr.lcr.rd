@@ -107,5 +107,5 @@ if(require("RColorBrewer"))
   main="Local CN")
 }
 }
-\keyword{ridge, GWR}
+\keyword{GWR-LCR}
 

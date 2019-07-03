@@ -53,5 +53,5 @@ for exploring Spatial Heterogeneity using Geographically Weighted Models. Journa
 of Statistical Software, 63(17):1-50
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{collinearity,diagnostic, GWR}
-
+\keyword{GWR}
+\concept{collinearity diagnostics}

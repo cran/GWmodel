@@ -51,4 +51,5 @@ ls()
 plot(londonborough)
 plot(londonhp, add=TRUE)
 }
-\keyword{data,house price}
+\keyword{data}
+\concept{house price}

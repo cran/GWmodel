@@ -47,5 +47,6 @@ This note is applicable to all GW models
 
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
-\keyword{bandwidth}
+\keyword{GWR}
+\concept{bandwidth selection}
 

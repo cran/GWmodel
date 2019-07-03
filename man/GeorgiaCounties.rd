@@ -18,4 +18,5 @@ educ.spdf <- SpatialPointsDataFrame(coords, Gedu.df)
 plot(educ.spdf, add=TRUE)
 
 }
-\keyword{datasets}
+\keyword{data}
+\concept{Georgia counties}

@@ -137,5 +137,5 @@ res3<-gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, bws0=c(Inf, 100, 100,
 res4<- gwr.multiscale(PURCHASE~FLOORSZ+PROF, data=londonhp, kernel="gaussian", p.vals=c(1,2,3))
 }
 }
-\keyword{multiscale, flexible bandwidth, parameter-specific distance metrics, GWR}
-
+\keyword{multiscale GWR}
+\concept{PSDM GWR}

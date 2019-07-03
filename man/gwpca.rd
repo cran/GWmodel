@@ -147,5 +147,5 @@ if(require("mvoutlier") && require("RColorBrewer"))
 }
 }
 }
-\keyword{robust, GWPCA}
+\keyword{GWPCA}
 

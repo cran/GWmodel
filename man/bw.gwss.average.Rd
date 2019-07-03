@@ -40,5 +40,6 @@ bw.gwss.average(data, summary.locat, vars, kernel = "bisquare", adaptive = FALSE
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
-\keyword{bandwidth, GW mean, GW median, GW average}
+\keyword{GWSS}
+\concept{bandwidth selection}
 

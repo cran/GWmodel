@@ -7,7 +7,7 @@
 using namespace Rcpp;
 using namespace arma;
 
-// GWmodel_oordinate_rotate
+// GWmodel_coordinate_rotate
 arma::mat coordinate_rotate(arma::mat coords, double theta);
 RcppExport SEXP GWmodel_coordinate_rotate(SEXP coordsSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
@@ -312,9 +312,9 @@ END_RCPP
 arma::vec ehat(arma::vec y, arma::mat X, arma::mat beta);
 RcppExport SEXP GWmodel_ehat(SEXP ySEXP, SEXP XSEXP, SEXP betaSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject __result;
+  Rcpp::RObject __result;
 	Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
     __result = Rcpp::wrap(ehat(y, X, beta));
@@ -336,16 +336,16 @@ END_RCPP
 }
 
 //GWmodel_gwr_diag
-arma::vec gwr_diag(arma::vec y,arma::mat x, arma::mat beta, arma::mat S);
-RcppExport SEXP GWmodel_gwr_diag(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP SSEXP) {
+arma::vec gwr_diag(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
+RcppExport SEXP GWmodel_gwr_diag(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
 	Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
-	Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
-    __result = Rcpp::wrap(gwr_diag(y, x, beta, S));
+	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
+    __result = Rcpp::wrap(gwr_diag(y, x, beta, s_hat));
     return __result;
 END_RCPP
 }
@@ -389,6 +389,97 @@ BEGIN_RCPP
 	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
 	Rcpp::traits::input_parameter< arma::vec >::type w(wSEXP);
     __result = Rcpp::wrap(Ci_mat(x,w));
+    return __result;
+END_RCPP
+}
+
+//GWmodel_scgwr_pre
+Rcpp::List scgwr_pre(mat x, vec y, int bw, int poly, double b0, mat g0, mat neighbour);
+RcppExport SEXP GWmodel_scgwr_pre(SEXP xSEXP, SEXP ySEXP, SEXP bwSEXP, SEXP polySEXP, SEXP b0SEXP, SEXP g0SEXP, SEXP neighbourSEXP) {
+  BEGIN_RCPP
+  Rcpp::RObject __result;
+  Rcpp::RNGScope __rngScope;
+  Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+  Rcpp::traits::input_parameter< int >::type bw(bwSEXP);
+  Rcpp::traits::input_parameter< int >::type poly(polySEXP);
+  Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type g0(g0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type neighbour(neighbourSEXP);
+  __result = Rcpp::wrap(scgwr_pre(x, y, bw, poly, b0, g0, neighbour));
+  return __result;
+  END_RCPP
+}
+
+//GWmodel_scgwr_loocv
+double scgwr_loocv(vec target, mat x, vec y, int bw, int poly, mat Mx0, mat My0, mat XtX, mat XtY);
+RcppExport SEXP GWmodel_scgwr_loocv(SEXP targetSEXP, SEXP xSEXP, SEXP ySEXP, SEXP bwSEXP, SEXP polySEXP, SEXP Mx0SEXP, SEXP My0SEXP, SEXP XtXSEXP, SEXP XtYSEXP) {
+  BEGIN_RCPP
+  Rcpp::RObject __result;
+  Rcpp::RNGScope __rngScope;
+  Rcpp::traits::input_parameter< arma::vec >::type target(targetSEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+  Rcpp::traits::input_parameter< int >::type bw(bwSEXP);
+  Rcpp::traits::input_parameter< int >::type poly(polySEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type Mx0(Mx0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type My0(My0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type XtX(XtXSEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type XtY(XtYSEXP);
+  __result = Rcpp::wrap(scgwr_loocv(target, x, y, bw, poly, Mx0, My0, XtX, XtY));
+  return __result;
+  END_RCPP
+}
+
+//GWmodel_scgwr_reg
+Rcpp::List scgwr_reg(mat x, vec y, int bw, int poly, mat G0, mat Mx0, mat My0, mat XtX, mat XtY, mat neighbour, vec parameters);
+RcppExport SEXP GWmodel_scgwr_reg(SEXP xSEXP, SEXP ySEXP, SEXP bwSEXP, SEXP polySEXP, 
+                                  SEXP G0SEXP, SEXP Mx0SEXP, SEXP My0SEXP, SEXP XtXSEXP, SEXP XtYSEXP, 
+                                  SEXP neighbourSEXP, SEXP parametersSEXP) {
+  BEGIN_RCPP
+  Rcpp::RObject __result;
+  Rcpp::RNGScope __rngScope;
+  Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+  Rcpp::traits::input_parameter< int >::type bw(bwSEXP);
+  Rcpp::traits::input_parameter< int >::type poly(polySEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type G0(G0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type Mx0(Mx0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type My0(My0SEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type XtX(XtXSEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type XtY(XtYSEXP);
+  Rcpp::traits::input_parameter< arma::mat >::type neighbour(neighbourSEXP);
+  Rcpp::traits::input_parameter< arma::vec >::type parameters(parametersSEXP);
+  __result = Rcpp::wrap(scgwr_reg(x, y, bw, poly, G0, Mx0, My0, XtX, XtY, neighbour, parameters));
+  return __result;
+  END_RCPP
+}
+
+//GWmodel_AICc1
+double AICc1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
+RcppExport SEXP GWmodel_AICc1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+	Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
+	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
+    __result = Rcpp::wrap(AICc1(y, x, beta, s_hat));
+    return __result;
+END_RCPP
+}
+//GWmodel_gwr_diag1
+arma::vec gwr_diag1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
+RcppExport SEXP GWmodel_gwr_diag1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+	Rcpp::RNGScope __rngScope;
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
+	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
+    __result = Rcpp::wrap(gwr_diag1(y, x, beta, s_hat));
     return __result;
 END_RCPP
 }

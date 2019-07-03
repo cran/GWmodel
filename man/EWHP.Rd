@@ -39,4 +39,5 @@ data(EWOutline)
 plot(ewoutline)
 plot(houses.spdf, add = TRUE, pch = 16)
 }
-\keyword{data,house price}
+\keyword{data}
+\concept{house price}

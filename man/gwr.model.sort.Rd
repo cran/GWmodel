@@ -21,5 +21,6 @@ gwr.model.sort(Sorting.list , numVars, ruler.vector)
  \dQuote{gwr.model.sort}, while the old name is still kept valid.
 }
 \seealso{\code{\link{gwr.model.selection}}, \code{\link{gwr.model.view}}}
-\keyword{model, sort}
+\keyword{GWR}
+\concept{model selection}
 

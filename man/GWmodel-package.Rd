@@ -17,15 +17,15 @@ and various forms of GW regression; some of which are provided in basic and robu
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 2.0-5\cr
-Date: \tab 2017-12-20\cr
+Version: \tab 2.1-1\cr
+Date: \tab 2019-07-02\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }
 
 }
 \author{
-Binbin Lu, Paul Harris, Martin Charlton, Chris Brunsdon, Tomoki Nakaya, Isabella Gollini
+Binbin Lu, Paul Harris, Martin Charlton, Chris Brunsdon, Tomoki Nakaya, Daisuke Murakami,Isabella Gollini
 
 Maintainer: Binbin Lu <binbinlu@whu.edu.cn>
 }
@@ -50,4 +50,4 @@ topics for exploring Spatial Heterogeneity using Geographically Weighted Models.
 Geo-spatial Information Science 17(2): 85-101, 
 \url{http://www.tandfonline.com/doi/abs/10.1080/10095020.2014.917453}
 }
-\keyword{ package }
+\keyword{package}

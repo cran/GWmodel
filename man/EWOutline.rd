@@ -7,4 +7,5 @@ Outline (SpatialPolygonsDataFrame) of the England and Wales house price data \li
 }
 \usage{data(EWOutline)}
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{outline,England, Wales}
+\keyword{data}
+\concept{England-Wales outline}

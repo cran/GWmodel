@@ -51,4 +51,5 @@ Returns the adaptive or fixed distance bandwidth.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 \keyword{GWDA}
+\concept{bandwidth selection}
 

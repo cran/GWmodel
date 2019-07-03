@@ -82,5 +82,5 @@ Weighted Regression (GTWR). Geographical Analysis, 47, 431-452.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
 
-\keyword{GTWR, spatio-temporal heterogeneities}
+\keyword{GTWR}
 

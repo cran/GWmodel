@@ -158,5 +158,6 @@ main=expression(paste("Local p-values for each coefficient of the LAG model
                             null hypothesis")))
 }
 }
-\keyword{multi-scale, flexible bandwidth, parameter-specific distance metrics, GWR}
+\keyword{GWR}
+\concept{bootstrap method}
 

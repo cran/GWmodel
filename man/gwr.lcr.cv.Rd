@@ -44,5 +44,5 @@ above this user-specified threshold, a local ridge parameter is found}
   \item{CV.score}{cross-validation score}
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{cv, GWR}
-
+\keyword{GWR-LCR}
+\concept{cross-validation score}

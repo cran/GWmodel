@@ -53,4 +53,5 @@ of observations even though a larger number is assigned. The function will be th
 the adaptive bandwidth is equal to or larger than the number of observations when using the boxcar kernel function.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{weight, matrix}
+\keyword{GW tools}
+\concept{weight}

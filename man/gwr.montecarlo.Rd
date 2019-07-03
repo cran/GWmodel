@@ -61,4 +61,5 @@ res.mont2<-gwr.montecarlo(PURCHASE~PROF+FLOORSZ, data = londonhp,dMat=DM,
 nsim=99, kernel="gaussian", adaptive=FALSE, bw=300000000000)
 }
 }
-\keyword{MonteCarlo , test}
+\keyword{GWR}
+\concept{Monte Carlo test}

@@ -53,5 +53,6 @@ The function \dQuote{mink.approach} (in the early versions of GWmodel) has been 
 Lu, B, Charlton, M, Brunsdon, C & Harris, P(2016). The Minkowski approach for choosing the distance metric in Geographically Weighted Regression. International Journal of Geographical Information Science, 30(2): 351-368.
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{distance metric, selection}
+\keyword{GWR}
+\concept{Minkowski approach}
 

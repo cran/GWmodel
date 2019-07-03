@@ -33,4 +33,5 @@
 data(USelect)
 ls()
 }
-\keyword{datasets}
+\keyword{data}
+\concept{US presidential election}

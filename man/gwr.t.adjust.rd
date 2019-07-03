@@ -18,4 +18,5 @@ Byrne, G., Charlton, M. and Fotheringham, S., 2009. Multiple dependent hypothesi
 in geographically weighted regression. In: Lees, B. and Laffan, S. eds. 10th 
 International conference on geocomputation. Sydney.
 }
-\keyword{gwr, p-values, adjustment}
+\keyword{GWR}
+\keyword{p-values adjustment}

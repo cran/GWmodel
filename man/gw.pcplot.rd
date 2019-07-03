@@ -34,5 +34,6 @@ Harris P, Clarke A, Juggins S, Brunsdon C, Charlton M (2015) Enhancements to a
 geographically weighted principal components analysis in the context of an 
 application to an environmental data set.  Geographical Analysis 47: 146-172
 }
-\keyword{GW, PCP}
+\keyword{GW tools}
+\concept{GWPCP}
 

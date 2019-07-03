@@ -11,7 +11,7 @@ This function implements basic GWR
 }
 \usage{
 gwr.basic(formula, data, regression.points, bw, kernel="bisquare",
-adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=T, W.vect=NULL)
+adaptive=FALSE, p=2, theta=0, longlat=F,dMat,F123.test=F,cv=F, W.vect=NULL)
 \method{print}{gwrm}(x, \dots)
 }
 
@@ -115,5 +115,5 @@ if(require("RColorBrewer"))
   col.regions=mypalette, sp.layout=list(nsa,londonborough))}
 }
 }
-\keyword{basic, GWR}
+\keyword{GWR}
 

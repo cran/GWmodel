@@ -26,6 +26,6 @@ Harris P, Brunsdon C, Charlton M (2011)
 Geographically weighted principal components analysis.
 International Journal of Geographical Information Science 25:1717-1736
 }
-\author{Binbin Lu \email{binbinlu@whu.edu.cn}}
-\keyword{glyph plot, GWPCA}
+\keyword{GWPCA}
+\concept{glyph plot}
 

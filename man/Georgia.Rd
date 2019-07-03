@@ -39,4 +39,5 @@ coords <- cbind(Gedu.df$X, Gedu.df$Y)
 educ.spdf <- SpatialPointsDataFrame(coords, Gedu.df)
 spplot(educ.spdf, names(educ.spdf)[4:10])
 }
-\keyword{datasets}
+\keyword{data}
+\concept{Georgia census}

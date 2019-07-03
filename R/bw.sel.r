@@ -179,10 +179,18 @@ gwr.cv.contrib<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p
       DM.given<-F
   else
   {
-    DM.given<-T
-    dim.dMat<-dim(dMat)
-    if (dim.dMat[1]!=dp.n||dim.dMat[2]!=dp.n)
-    stop ("Dimensions of dMat are not correct")
+    if(dim(dMat)[1]==1)
+    {
+      DM.given <- F
+    }
+    else
+    {
+      DM.given<-T
+      dim.dMat<-dim(dMat)
+      if (dim.dMat[1]!=dp.n||dim.dMat[2]!=dp.n)
+         stop ("Dimensions of dMat are not correct")
+    }
+    
   }
   ############################################CV
   CV<-numeric(dp.n)
@@ -242,8 +250,9 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
   }
   ############################################AIC
   ###In this function, the whole hatmatrix is not fully calculated and only the diagonal elements are computed
-  S<-matrix(nrow=dp.n,ncol=dp.n)
-  betas <-matrix(nrow=dp.n, ncol=var.n)
+  # S<-matrix(nrow=dp.n,ncol=dp.n)
+  s_hat <- numeric(2)
+  betas <- matrix(nrow = dp.n, ncol = var.n)
   for (i in 1:dp.n)
   {
     if (DM.given)
@@ -264,23 +273,26 @@ gwr.aic<-function(bw, X, Y, kernel="bisquare",adaptive=FALSE, dp.locat, p=2, the
     #S[i,]<-gw.resi[[2]]
     if(!inherits(res, "try-error"))
     {
-      S[i,]<-res[[2]]   
+      si <- res[[2]]
+      s_hat[1] = s_hat[1] + si[i]
+      s_hat[2] = s_hat[2] + sum(tcrossprod(si))
       betas[i,] <- res[[1]]
     }
     else
     {
-      S[i,]<-Inf
+      s_hat[1] <- Inf
+      s_hat[2] <- Inf
       break
     }  
   }
   
-  if (!any(is.infinite(S)))
+  if (!any(is.infinite(s_hat)))
   {
     #tr.S<-sum(diag(S))
 #    RSS.gw<-t(Y)%*%t(diag(dp.n)-S)%*%(diag(dp.n)-S)%*%Y
 #    sigma.hat2 <- RSS.gw/dp.n
 #    AICc<-dp.n*log(sigma.hat2) + dp.n*log(2*pi) + dp.n *((dp.n + tr.S) / (dp.n - 2 - tr.S))
-     AICc<-AICc(Y,X,betas, S)
+     AICc<-AICc1(Y, X, betas, s_hat)
   }
   else
     AICc<-Inf

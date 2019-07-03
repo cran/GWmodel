@@ -34,5 +34,6 @@ model.list<-model.sel[[1]]
 gwr.model.view(DeVar, InDeVars, model.list=model.list)
 }
 }
-\keyword{model selection, view, visualization}
+\keyword{GWR}
+\concept{model selection}
 
