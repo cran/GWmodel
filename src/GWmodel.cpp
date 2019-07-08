@@ -484,7 +484,7 @@ List scgwr_pre(mat x, vec y, int bw, int poly, double b0, mat g0, mat neighbour)
   for (int i = 0; i < n; i++) {
     mat g(poly + 1, bw + 1, fill::ones);
     for (int p = 0; p < poly; p++) {
-      g.row(p + 1) = pow(g0s.row(i), pow(2, poly/2)/pow(2, p + 1));
+      g.row(p + 1) = pow(g0s.row(i), pow(2.0, poly/2.0)/pow(2.0, p + 1));
     }
     g = trans(g);
     g = g.rows(1, bw);

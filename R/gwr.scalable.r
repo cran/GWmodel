@@ -1,5 +1,5 @@
 ####Scalable GWR
-gwr.scalable <- function(formula, data, bw.adapt, kernel = "gaussian", polynomial = 4, p = 2, theta = 0, longlat = F, dMat) 
+gwr.scalable <- function(formula, data, bw.adapt=100, kernel = "gaussian", polynomial = 4, p = 2, theta = 0, longlat = F, dMat) 
 {
   timings <- list()
   timings[["start"]] <- Sys.time()

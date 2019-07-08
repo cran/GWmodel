@@ -12,7 +12,7 @@
 This function implements Scalable GWR for large dataset
 }
 \usage{
-gwr.scalable(formula, data, bw.adapt, kernel = "gaussian", polynomial = 4, 
+gwr.scalable(formula, data, bw.adapt=100, kernel = "gaussian", polynomial = 4, 
              p = 2, theta = 0, longlat = F, dMat)
 \method{print}{scgwrm}(x, \dots)
 }

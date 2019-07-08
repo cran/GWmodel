@@ -1,4 +1,4 @@
-12fe6f2f9b38915439bd097c729b325b *DESCRIPTION
+031385b5d82fdc2a6216b3e278cd7e9c *DESCRIPTION
 1d41deeea649be6582831104a33fbf26 *NAMESPACE
 50face6b49443b0cd32b079e5dd86938 *R/BootstrapGWR.r
 1d40f24ab6b41f79edf2cefb1e219129 *R/GeneralizedGWR.r
@@ -28,12 +28,12 @@ b18d4a3be6493172f23bcda6ffa33b86 *R/gwr.hetero.r
 49a74492de878db8dac8800d53311e80 *R/gwr.multiscale.R
 c914f6c04c98e7bae6aefdd54805e8ac *R/gwr.predict.r
 02cde533e8048350326fefcd2be7eab4 *R/gwr.robust.r
-c5e547509172847b6cff7ba4e8080a9d *R/gwr.scalable.r
+93fd4db3b465487f89f2129c18c5a44c *R/gwr.scalable.r
 5a38e3c4e3f52c4ad83fc3704462b3f9 *R/gwr.t.adjust.r
 1e8b099e4a6cde1abf9bd27304e187c2 *R/mink.pvals.R
 0057233f47b968074bcd9fa542ac6361 *R/minkovski.approach.r
 108a75ceb499b83f1d46e4ca8c26acaf *R/writeGWR.r
-ac9cb0ec4b6dcb92e41f51acf94b80f6 *R/zzz.r
+04023faf108bdd645236da01d3095d2a *R/zzz.r
 fad011ea3383c650e1e0174e39c7de99 *data/DubVoter.rda
 995fa662c41ffd3afd86fdcd55cdfeaa *data/EWHP.rda
 81a3e0fc73a8ecf7ff7de5eae43b42f0 *data/EWOutline.rda
@@ -47,7 +47,7 @@ d1841e224383498b2d3e701dbe2f0c08 *data/USelect.rda
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-5d69a3804ae9f299574208fdbcb53e06 *man/GWmodel-package.Rd
+814b4dff02de831e6936b2c48d68e408 *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
@@ -95,12 +95,12 @@ d4cb146b6f5b4456b2d1dcd5713a12f7 *man/gwr.model.view.rd
 6d91ddb77bb3cd446a67064236c1a0fc *man/gwr.multiscale.rd
 2a3ca7b361f465d92e753b0697074339 *man/gwr.predict.Rd
 c2e832af2f4e867fa0847a6d653702ad *man/gwr.robust.Rd
-7cb1088e7da6404447bb458c9728cc3f *man/gwr.scalable.rd
+320380b3bd96dbc8857a66ba1bb3cf8d *man/gwr.scalable.rd
 be977e2632d90c36bd41bb12254ce1ba *man/gwr.t.adjust.rd
 26756bd92f087062c7f53d6fcc618916 *man/gwr.write.Rd
 5a78e9cf707da86fc9fb0284e284ddfe *man/gwss.montecarlo.Rd
 e2397c697ac46c1f3ffb6c4cd38f444e *man/gwss.rd
-123d8aa95f78cbe85c2da7f4832bddd7 *src/GWmodel.cpp
+1a4b99e033adee5fe4db03233b19c13b *src/GWmodel.cpp
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars
 8d46d69896a1f1d31ed76035a0e49d67 *src/Makevars.win
 8d36b76e7af3a974b373d169f5f47407 *src/RcppExports.cpp
