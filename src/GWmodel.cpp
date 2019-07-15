@@ -1,8 +1,6 @@
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(openmp)]]
 #include <RcppArmadillo.h>
 #include <math.h>
-#include <omp.h>
 using namespace Rcpp;
 using namespace arma;
 
@@ -41,7 +39,7 @@ mat eu_dist_mat(mat in_locs, mat out_locs)
 		  eu_dist(i,j) = sum(pow(in_locs.row(i) - out_locs.row(j),2));
 		}
 	}
-	return eu_dist;
+	return sqrt(eu_dist);
 }
 //symmetrical distance matrix
 // [[Rcpp::export]]
@@ -49,28 +47,28 @@ mat eu_dist_smat(mat in_locs)
 {
 	int n = in_locs.n_rows;
 	mat eu_dist(n, n);
-	;
-// #pragma omp parallel for num_threads(omp_get_num_procs() - 1)
 	for (int k = 0; k < n * n; k++)
 	{
 		int i = k / n, j = k % n;
 		eu_dist(i, j) = sum(pow(in_locs.row(i) - in_locs.row(j), 2));
 		eu_dist(j, i) = eu_dist(i, j);
 	}
-	return eu_dist;
+	return sqrt(eu_dist);
 }
+
 // [[Rcpp::export]]
 vec eu_dist_vec(mat in_locs, vec out_loc)
 {
 	int n_in = in_locs.n_rows;
-	// vec eu_dist(n_in);
-	// for (int i = 0; i < n_in; i++)
-	// {
-	// 	eu_dist(i) = sum(pow(in_locs.row(i) - trans(out_loc), 2));
-	// }
-	mat v_span(n_in, 1, fill::ones);
-	mat m_diff = in_locs - v_span * trans(out_loc);
-	return sqrt(m_diff % m_diff * mSum);
+	vec eu_dist(n_in);
+	for (int i = 0; i < n_in; i++)
+	{
+		eu_dist(i) = sum(pow(in_locs.row(i) - trans(out_loc), 2));
+	}
+	return sqrt(eu_dist);
+	// mat v_span(n_in, 1, fill::ones);
+	// mat m_diff = in_locs - v_span * trans(out_loc);
+	// return sqrt(m_diff % m_diff * mSum);
 }
 
 //Manhattan distance matrix
@@ -253,7 +251,7 @@ vec gauss_wt_vec(vec distv, double bw)
 // #pragma omp parallel for num_threads(omp_get_num_procs() - 1)
 	for (int i = 0; i < n; i++)
 	{
-		wtv(i) = exp(distv(i) / ((-2) * bw));
+		wtv(i) = exp(pow(distv(i), 2) / ((-2) * pow(bw, 2)));
 	}
 	return wtv;
 }
@@ -268,7 +266,7 @@ mat gauss_wt_mat(mat distm, vec bw)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			wtm(j, i) = exp(distm(j, i) / ((-2) * bw(i)));
+			wtm(j, i) = exp(pow(distm(j, i), 2) / ((-2) * pow(bw(i), 2)));
 		}
 	}
 	return wtm;
@@ -404,7 +402,33 @@ double rss(vec y, mat X, mat beta)
 }
 
 // [[Rcpp::export]]
-vec gwr_diag(vec y, mat x, mat beta, vec s_hat)
+vec gwr_diag(vec y,mat x, mat beta, mat S) {
+  double ss = rss(y,x,beta);
+  vec s_hat = trhat2(S);
+  int n = S.n_rows;
+  vec result(9);
+  double AIC = n*log(ss/n)+n*log(2*datum::pi)+n+s_hat(0); //AIC
+  double AICc = n*log(ss/n)+n*log(2*datum::pi)+n*((n+s_hat(0))/(n-2-s_hat(0))); //AICc
+  double edf = n-2*s_hat(0) + s_hat(1); //edf
+  double enp = 2*s_hat(0) - s_hat(1); // enp
+  double yss = sum(pow(y-mean(y),2)); //yss.g
+  double r2 = 1 - ss/yss;
+  double r2_adj = 1-(1-r2)*(n-1)/(edf-1);
+  result(0) = AIC;
+  result(1) = AICc;
+  result(2) = edf;
+  result(3) = enp;
+  result(4) = ss;
+  result(5) = r2;
+  result(6) = r2_adj;
+  result(7) = s_hat(0);
+  result(8) = s_hat(1);
+  return result;
+  //return 2*enp + 2*n*log(ss/n) + 2*enp*(enp+1)/(n - enp - 1);
+}
+
+// [[Rcpp::export]]
+vec gwr_diag1(vec y, mat x, mat beta, vec s_hat)
 {
 	double ss = rss(y, x, beta);
 	// vec s_hat = trhat2(S);
@@ -441,6 +465,17 @@ double AICc(vec y, mat x, mat beta, mat S)
 	double AICc = n * log(ss / n) + n * log(2 * datum::pi) + n * ((n + s_hat(0)) / (n - 2 - s_hat(0))); //AICc
 	return AICc;
 	//return 2*enp + 2*n*log(ss/n) + 2*enp*(enp+1)/(n - enp - 1);
+}
+
+// [[Rcpp::export]]
+double AICc1(vec y, mat x, mat beta, vec s_hat)
+{
+  double ss = rss(y, x, beta);
+  // vec s_hat = trhat2(S);
+  int n = x.n_rows;
+  double AICc = n * log(ss / n) + n * log(2 * datum::pi) + n * ((n + s_hat(0)) / (n - 2 - s_hat(0))); //AICc
+  return AICc;
+  //return 2*enp + 2*n*log(ss/n) + 2*enp*(enp+1)/(n - enp - 1);
 }
 
 // return the AICc and RSS , used for function model.selection
@@ -594,7 +629,7 @@ List scgwr_reg(mat x, vec y, int bw, int poly, mat G0, mat Mx0, mat My0, mat XtX
   G0s = trans(G0s);
   mat G2(n, bw + 1, fill::zeros);
   for (int p = 0; p < poly; p++) {
-    G2 += pow(G0s, pow(2, poly/2.0)/pow(2, p + 1)) * R0(poly - 1);
+    G2 += pow(G0s, pow(2.0, poly/2.0)/pow(2.0, p + 1)) * R0(poly - 1);
   }
   /**
    * Calculate Mx, My.
@@ -630,7 +665,7 @@ List scgwr_reg(mat x, vec y, int bw, int poly, mat G0, mat Mx0, mat My0, mat XtX
      */
     mat G = mat(poly1, bw + 1, fill::ones) * R0(0);
     for (int p = 0; p < poly; p++) {
-      G.row(p + 1) = pow(G0s.row(i), pow(2, poly/2)/pow(2, p + 1)) * R0(p);
+      G.row(p + 1) = pow(G0s.row(i), pow(2.0, poly/2.0)/pow(2.0, p + 1)) * R0(p);
     }
     G = trans(G);
     mat g = G * rowsumG;
@@ -688,42 +723,4 @@ List scgwr_reg(mat x, vec y, int bw, int poly, mat G0, mat Mx0, mat My0, mat XtX
     Named("tr.StS") = trStS,
     Named("betas.SE") = betasSE
   );
-}
-// [[Rcpp::export]]
-double AICc1(vec y, mat x, mat beta, vec s_hat)
-{
-  double ss = rss(y, x, beta);
-  // vec s_hat = trhat2(S);
-  int n = x.n_rows;
-  double AICc = n * log(ss / n) + n * log(2 * datum::pi) + n * ((n + s_hat(0)) / (n - 2 - s_hat(0))); //AICc
-  return AICc;
-  //return 2*enp + 2*n*log(ss/n) + 2*enp*(enp+1)/(n - enp - 1);
-}
-
-// [[Rcpp::export]]
-vec gwr_diag1(vec y, mat x, mat beta, vec s_hat)
-{
-	double ss = rss(y, x, beta);
-	// vec s_hat = trhat2(S);
-	int n = x.n_rows;
-	// vec result(9);
-	vec result(7);
-	double AIC = n * log(ss / n) + n * log(2 * datum::pi) + n + s_hat(0);																//AIC
-	double AICc = n * log(ss / n) + n * log(2 * datum::pi) + n * ((n + s_hat(0)) / (n - 2 - s_hat(0))); //AICc
-	double edf = n - 2 * s_hat(0) + s_hat(1);																														//edf
-	double enp = 2 * s_hat(0) - s_hat(1);																																// enp
-	double yss = sum(pow(y - mean(y), 2));																															//yss.g
-	double r2 = 1 - ss / yss;
-	double r2_adj = 1 - (1 - r2) * (n - 1) / (edf - 1);
-	result(0) = AIC;
-	result(1) = AICc;
-	result(2) = edf;
-	result(3) = enp;
-	result(4) = ss;
-	result(5) = r2;
-	result(6) = r2_adj;
-	// result(7) = s_hat(0);
-	// result(8) = s_hat(1);
-	return result;
-	//return 2*enp + 2*n*log(ss/n) + 2*enp*(enp+1)/(n - enp - 1);
 }

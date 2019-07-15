@@ -1,4 +1,4 @@
-031385b5d82fdc2a6216b3e278cd7e9c *DESCRIPTION
+266f5f7b0beecdb8fad4ec64dcc0df18 *DESCRIPTION
 1d41deeea649be6582831104a33fbf26 *NAMESPACE
 50face6b49443b0cd32b079e5dd86938 *R/BootstrapGWR.r
 1d40f24ab6b41f79edf2cefb1e219129 *R/GeneralizedGWR.r
@@ -21,7 +21,7 @@ c7164a0420a7048989c4b68054d959b1 *R/gwda.r
 471653da52fb69a729304a69a4f270f4 *R/gwpca.mc.r
 4e3451b5025169df9dca2d4e4c107556 *R/gwpca.r
 00e10c70029450190940e5135b9fdd44 *R/gwpca.visualization.r
-589fb219f46fd21bf7841cce83bd90cd *R/gwr.basic.r
+6867d21a1aa4269a8f0dd6973d7741f4 *R/gwr.basic.r
 2ae5a49620f889171a01c365d7e2d3b7 *R/gwr.collin.diagno.r
 b18d4a3be6493172f23bcda6ffa33b86 *R/gwr.hetero.r
 7d65add787506c606c7d9adbe14b240e *R/gwr.mixed.r
@@ -33,7 +33,7 @@ c914f6c04c98e7bae6aefdd54805e8ac *R/gwr.predict.r
 1e8b099e4a6cde1abf9bd27304e187c2 *R/mink.pvals.R
 0057233f47b968074bcd9fa542ac6361 *R/minkovski.approach.r
 108a75ceb499b83f1d46e4ca8c26acaf *R/writeGWR.r
-04023faf108bdd645236da01d3095d2a *R/zzz.r
+afe69c78b4072d68bf46ff3482b809fa *R/zzz.r
 fad011ea3383c650e1e0174e39c7de99 *data/DubVoter.rda
 995fa662c41ffd3afd86fdcd55cdfeaa *data/EWHP.rda
 81a3e0fc73a8ecf7ff7de5eae43b42f0 *data/EWOutline.rda
@@ -47,7 +47,7 @@ d1841e224383498b2d3e701dbe2f0c08 *data/USelect.rda
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-814b4dff02de831e6936b2c48d68e408 *man/GWmodel-package.Rd
+a663c237a55d99d5e7a156b7df2cc08c *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
@@ -100,8 +100,8 @@ be977e2632d90c36bd41bb12254ce1ba *man/gwr.t.adjust.rd
 26756bd92f087062c7f53d6fcc618916 *man/gwr.write.Rd
 5a78e9cf707da86fc9fb0284e284ddfe *man/gwss.montecarlo.Rd
 e2397c697ac46c1f3ffb6c4cd38f444e *man/gwss.rd
-1a4b99e033adee5fe4db03233b19c13b *src/GWmodel.cpp
+9a7aeb70187da9342fae62750b7062c6 *src/GWmodel.cpp
 2a6f9e9e044a78154d3cfda5936d6f48 *src/Makevars
 8d46d69896a1f1d31ed76035a0e49d67 *src/Makevars.win
-8d36b76e7af3a974b373d169f5f47407 *src/RcppExports.cpp
+d734c2a39d59c45d0f7012884eca649b *src/RcppExports.cpp
 57e49de092cb8fc9d9e593efab60af41 *src/init.c

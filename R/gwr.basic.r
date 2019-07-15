@@ -155,7 +155,7 @@ gwr.basic <- function(formula, data, regression.points, bw, kernel="bisquare", a
       if (rp.given) dist.vi<- gw.dist(dp.locat, rp.locat, focus=i, p, theta, longlat)
       else dist.vi<- gw.dist(dp.locat=dp.locat, focus=i, p=p, theta=theta, longlat=longlat)
     }
-    W.i <- gw.weight(dist.vi, bw, kernel, adaptive)
+	W.i <- gw.weight(dist.vi, bw, kernel, adaptive)
     if (!is.null(W.vect)) W.i <- W.i * W.vect
     gwsi <- gw_reg(x, y, W.i, hatmatrix, i)
     betas[i,] <- gwsi[[1]] ######See function by IG

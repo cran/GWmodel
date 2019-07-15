@@ -322,7 +322,7 @@ BEGIN_RCPP
 END_RCPP
 }
 //GWmodel_rss
-arma::vec rss(arma::vec y, arma::mat X, arma::mat beta);
+double rss(arma::vec y, arma::mat X, arma::mat beta);
 RcppExport SEXP GWmodel_rss(SEXP ySEXP, SEXP XSEXP, SEXP betaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -336,8 +336,23 @@ END_RCPP
 }
 
 //GWmodel_gwr_diag
-arma::vec gwr_diag(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
-RcppExport SEXP GWmodel_gwr_diag(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
+arma::vec gwr_diag(arma::vec y,arma::mat x, arma::mat beta, arma::mat S);
+RcppExport SEXP GWmodel_gwr_diag(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+	Rcpp::RNGScope __rngScope;
+  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    __result = Rcpp::wrap(gwr_diag(y, x, beta, S));
+    return __result;
+END_RCPP
+}
+
+//GWmodel_gwr_diag1
+arma::vec gwr_diag1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
+RcppExport SEXP GWmodel_gwr_diag1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
 	Rcpp::RNGScope __rngScope;
@@ -345,10 +360,11 @@ BEGIN_RCPP
 	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
 	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
-    __result = Rcpp::wrap(gwr_diag(y, x, beta, s_hat));
+    __result = Rcpp::wrap(gwr_diag1(y, x, beta, s_hat));
     return __result;
 END_RCPP
 }
+
 
 //GWmodel_AICc
 double AICc(arma::vec y,arma::mat x, arma::mat beta, arma::mat S);
@@ -361,6 +377,21 @@ BEGIN_RCPP
 	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
 	Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
     __result = Rcpp::wrap(AICc(y, x, beta, S));
+    return __result;
+END_RCPP
+}
+
+//GWmodel_AICc1
+double AICc1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
+RcppExport SEXP GWmodel_AICc1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+	Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
+	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
+    __result = Rcpp::wrap(AICc1(y, x, beta, s_hat));
     return __result;
 END_RCPP
 }
@@ -453,33 +484,4 @@ RcppExport SEXP GWmodel_scgwr_reg(SEXP xSEXP, SEXP ySEXP, SEXP bwSEXP, SEXP poly
   __result = Rcpp::wrap(scgwr_reg(x, y, bw, poly, G0, Mx0, My0, XtX, XtY, neighbour, parameters));
   return __result;
   END_RCPP
-}
-
-//GWmodel_AICc1
-double AICc1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
-RcppExport SEXP GWmodel_AICc1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-	Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
-	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
-	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
-    __result = Rcpp::wrap(AICc1(y, x, beta, s_hat));
-    return __result;
-END_RCPP
-}
-//GWmodel_gwr_diag1
-arma::vec gwr_diag1(arma::vec y,arma::mat x, arma::mat beta, arma::vec s_hat);
-RcppExport SEXP GWmodel_gwr_diag1(SEXP ySEXP, SEXP xSEXP, SEXP betaSEXP, SEXP s_hatSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-	Rcpp::RNGScope __rngScope;
-  Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
-	Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-	Rcpp::traits::input_parameter< arma::mat >::type beta(betaSEXP);
-	Rcpp::traits::input_parameter< arma::vec >::type s_hat(s_hatSEXP);
-    __result = Rcpp::wrap(gwr_diag1(y, x, beta, s_hat));
-    return __result;
-END_RCPP
 }
