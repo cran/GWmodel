@@ -24,7 +24,7 @@ gwr.bootstrap <- function(formula, data, kernel="bisquare",approach="AIC", R=99,
   else if(is(data, "SpatialPointsDataFrame"))
   {
     dp.locat <- coordinates(data)
-	gnb <- knn2nb(knearneigh(dp.locat, k=k.nearneigh))
+	gnb <- knn2nb(knearneigh(dp.locat, k=k.nearneigh), sym = T)
 	glw <- nb2listw(gnb)
 	W.adj <- listw2mat(glw) 
 	#griddedObj <- gridded(dp.locat)
@@ -54,6 +54,7 @@ gwr.bootstrap <- function(formula, data, kernel="bisquare",approach="AIC", R=99,
     sma.model <- spautolm(formula,data,listw=glw,family='SMA')
     sma.model$model <- ols.model$model # As sma returns NULL otherwise
     lag.model <- lagsarlm(formula,data,listw=glw,method='spam')
+  
      ###Basic GWR model
    bw <- bw.gwr3(formula,data=sp.data,approach=approach,kernel=kernel, adaptive=adaptive,dMat=dMat,verbose=verbose)
 	 gwr.model <- gwr.basic(formula,data=sp.data,bw=bw,kernel=kernel, adaptive=adaptive,dMat=dMat) 
@@ -76,7 +77,7 @@ gwr.bootstrap <- function(formula, data, kernel="bisquare",approach="AIC", R=99,
 	mlr.bsm <- parametric.bs.local(ols.model,dep.var,dp.locat,W.adj,gwrt.mlr,R=R,report=n.sim.rep,formula=formula, approach=approach, kernel=kernel, adaptive=adaptive,dMat=dMat,verbose=verbose)
 	sma.bsm <- parametric.bs.local(sma.model,dep.var,dp.locat,W.adj,gwrt.sma,R=R,report=n.sim.rep,formula=formula, glw,approach=approach, kernel=kernel, adaptive=adaptive,dMat=dMat,verbose=verbose)
   lag.bsm <- parametric.bs.local(lag.model,dep.var,dp.locat,W.adj,gwrt.lag,R=R,report=n.sim.rep,formula=formula, glw,approach=approach, kernel=kernel, adaptive=adaptive,dMat=dMat,verbose=verbose)
-	actual.m.err <- gwrt.err(sp.data,formula,glw,approach, kernel, adaptive,dMat,verbose=verbose)
+  actual.m.err <- gwrt.err(sp.data,formula,glw,approach, kernel, adaptive,dMat,verbose=verbose)
 	actual.m.mlr <- gwrt.mlr(sp.data,formula,approach, kernel, adaptive,dMat,verbose=verbose)
 	actual.m.sma <- gwrt.sma(sp.data,formula,glw,approach, kernel, adaptive,dMat,verbose=verbose)
   actual.m.lag <- gwrt.lag(sp.data,formula,glw,approach, kernel, adaptive,dMat,verbose=verbose)

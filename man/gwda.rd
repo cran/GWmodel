@@ -11,7 +11,7 @@
 \alias{confusion.matrix}
 \title{GW Discriminant Analysis}
 \description{
-This function implements GW discriminant analysis.
+This function implements GW discriminant analysis, where location-wise probabilities and their associated entropy are also calculated.
 }
 \usage{
 gwda(formula, data, predict.data,validation = T, COV.gw=T, 
@@ -53,8 +53,11 @@ gwda(formula, data, predict.data,validation = T, COV.gw=T,
   \item{...}{arguments passed through (unused)}
 }
 \value{
-A class of object \dQuote{gwda}
+An object of class \dQuote{gwda}. This includes a SpatialPointsDataFrame (may be gridded) or 
+SpatialPolygonsDataFrame object, SDF, (see package \dQuote{sp}) with, following the use of new version of \link{gwda}, the probabilities for
+each level, the highest probabiliity and the entropy of the probabilities in its \dQuote{data} slot.
 }
+
 \references{
 Brunsdon, C, Fotheringham S,  and Charlton, M (2007),
 Geographically Weighted Discriminant Analysis, Geographical Analysis 39:376-396
@@ -64,5 +67,20 @@ topics for exploring Spatial Heterogeneity using Geographically Weighted Models.
 Geo-spatial Information Science 17(2): 85-101
 }
 \author{Binbin Lu \email{binbinlu@whu.edu.cn}}
+\examples{
+\dontrun{
+ require(tmap)
+ data(ge2015)
+ data(cty_eng)
+ ge2015 <- ge2015[ge2015$WINNER %in% c("Con","Lab","LD"),]
+ dMat <- gw.dist(coordinates(ge2015))
+ bw <- bw.gwda(WINNER~Age65over+OwnOcc+NoQual+Unemp+NonWhite+LoneParHH,data=ge2015,
+ adaptive=TRUE,dMat=dMat)
+ ge.gwda <- gwda(WINNER~Age65over+OwnOcc+NoQual+Unemp+NonWhite+LoneParHH,data=ge2015,
+ bw=bw,adaptive=TRUE,dMat=dMat)
+ table(ge2015$WINNER,ge.gwda$SDF$group.predicted)
+ tm_shape(ge.gwda$SDF)+tm_fill("entropy")+tm_shape(cty_eng)+tm_borders()
+ }
+}
 \keyword{GWDA}
 

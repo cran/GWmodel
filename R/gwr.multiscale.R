@@ -91,8 +91,10 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
   #n.scal <- length(which(predictor.centered))
   if(n.cent>1)
     predictors.centered.means <- colMeans(x1[,predictor.centered])
-  else 
+  else if (n.cent==1)
     predictors.centered.means <- mean(x1[,predictor.centered])
+  else
+    predictors.centered.means <- NA
   if(n.cent>=1)
   {
     #meancent <- partial(scale, scale=FALSE)

@@ -108,6 +108,31 @@ gwda <- function(formula, data, predict.data,validation = T, COV.gw=T,
   #####output in a spatial*dataframe#
     res.df <- data.frame(res.df)
     rownames(res.df) <- rownames(pr.locat)
+  #####Martin's update on GWDA with mappable outputs
+    NV <- dim(res.df)[2]
+    NP <- NV - 1
+    temp <- res.df
+    
+    for (icol in 1:NP) temp[,icol] <- as.numeric(levels(temp[,icol])[temp[,icol]])
+    for (icol in 1:NP) temp[,icol] <- exp(-temp[,icol])
+    probs <- sweep(temp[,1:NP],1,rowSums(temp[,1:NP]),"/")
+    pmax  <- apply(probs,1,max)
+    
+    shannon.entropy <- function(p) {
+      if (min(p) < 0 || sum(p) <= 0)
+        return(NA)
+      p.norm <- p[p>0]/sum(p)
+      -sum(log2(p.norm)*p.norm)
+    }
+    
+    ent.max <- shannon.entropy(rep(1/NP,NP))
+    entropy <- apply(probs,1,shannon.entropy)/ent.max
+    
+    colnames(probs) <- gsub("logp","p",colnames(res.df)[1:NP])
+    
+    res.df <- data.frame(res.df,data.frame(probs,pmax,entropy))
+    #######################################
+  
     griddedObj <- F
     if (is(predict.data, "Spatial"))
     { 

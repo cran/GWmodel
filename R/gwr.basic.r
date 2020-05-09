@@ -236,6 +236,7 @@ gwr.basic <- function(formula, data, regression.points, bw, kernel="bisquare", a
         dp.n = dp.n,
         var.n = var.n,
         dMat = dMat,
+        dp.locat = dp.locat,
         x = x,
         bw = bw,
         adaptive = adaptive,
@@ -247,7 +248,10 @@ gwr.basic <- function(formula, data, regression.points, bw, kernel="bisquare", a
         tr.S = tr.S,
         tr.StS = tr.StS,
         q.diag = q.diag,
-        W.vect = W.vect
+        W.vect = W.vect,
+        p = p,
+        theta = theta,
+        longlat = longlat
       )
       Ftests <- F1234.test(F.test.parameters)
     }
@@ -545,7 +549,18 @@ F1234.test<-function(F.test.parameters=list())
   RSSg <- F.test.parameters$RSS.gw
   RSSo <- F.test.parameters$RSS.lm
   DFo <- F.test.parameters$DF.lm
+  ######distance matrix calculaion bug by Jasdeep
   dMat <- F.test.parameters$dMat
+  if(dim(dMat)[1]==1)
+  {
+     DM.given <- F
+     dp.locat <- F.test.parameters$dp.locat
+     p <- F.test.parameters$p
+     theta <- F.test.parameters$theta
+     longlat <- F.test.parameters$longlat
+  }
+  else
+    DM.given <- T
   delta1 <- dp.n-2*v1+v2
   q.diag <- F.test.parameters$q.diag
   sigma2.delta1 <- RSSg/delta1
@@ -558,15 +573,6 @@ F1234.test<-function(F.test.parameters=list())
   adaptive <- F.test.parameters$adaptive
   kernel <- F.test.parameters$kernel
  	delta2 <- 0
- 	for (i in dp.n) {
- 	  for (j in dp.n) {
- 	    for (c in var.n) {
- 	      for (k in var.n) {
-
- 	      }
- 	    }
- 	  }
- 	}
   L.delta1 <- sum(q.diag)
   L.delta2 <- delta2
   #####F1 test
@@ -620,7 +626,15 @@ F1234.test<-function(F.test.parameters=list())
 	   B <- matrix (nrow = dp.n, ncol = dp.n)
 	   for (j in 1:dp.n)
       {
-        dist.vj<-dMat[,j]
+	     if(DM.given)
+	     {
+	       dist.vj<-dMat[,j]
+	     }
+	     else
+	     {
+	       dist.vj<- gw.dist(dp.locat,dp.locat, focus=j, p, theta, longlat)
+	     }
+        
 		    wj <- gw.weight(dist.vj,bw,kernel,adaptive)
 		    B[j,] <- ek[i,] %*% solve(t(x)%*%diag(wj)%*%x) %*%t(x) %*% diag(wj)
 	   }
