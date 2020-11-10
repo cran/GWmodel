@@ -2,7 +2,10 @@
 // [[Rcpp::plugins(openmp)]]
 #include <RcppArmadillo.h>
 #include <math.h>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
+
 using namespace Rcpp;
 using namespace arma;
 
@@ -225,7 +228,6 @@ vec bisq_wt_vec(vec distv, double bw)
 	int n = distv.n_elem;
 	vec wtv;
 	wtv.zeros(n);
-// #pragma omp parallel for num_threads(omp_get_num_procs() - 1)
 	for (int i = 0; i < n; i++)
 	{
 		if (distv(i) <= bw)
@@ -241,7 +243,7 @@ mat bisq_wt_mat(mat distm, vec bw)
 	int n = distm.n_rows;
 	mat wtm;
 	wtm.zeros(n, m);
-// #pragma omp parallel for num_threads(omp_get_num_procs() - 1)
+
 	for (int k = 0; k < m * n; k++)
 	{
 		int i = k / n, j = k % n;
@@ -258,7 +260,6 @@ vec gauss_wt_vec(vec distv, double bw)
 	int n = distv.n_elem;
 	vec wtv;
 	wtv.zeros(n);
-// #pragma omp parallel for num_threads(omp_get_num_procs() - 1)
 	for (int i = 0; i < n; i++)
 	{
 		wtv(i) = exp(pow(distv(i), 2) / ((-2) * pow(bw, 2)));
@@ -972,6 +973,7 @@ List gw_reg_all(mat x, vec y, mat dp, bool rp_given, mat rp, bool dm_given, mat 
 }
 
 // [[Rcpp::export]]
+#ifdef _OPENMP
 List gw_reg_all_omp(mat x, vec y, mat dp, bool rp_given, mat rp, bool dm_given, mat dmat, bool hatmatrix, 
                     double p, double theta, bool longlat, 
                     double bw, int kernel, bool adaptive,
@@ -1059,6 +1061,7 @@ List gw_reg_all_omp(mat x, vec y, mat dp, bool rp_given, mat rp, bool dm_given, 
     }
   }
 }
+#endif
 
 // [[Rcpp::export]]
 double gw_cv_all(mat x, vec y, mat dp, bool dm_given, mat dmat, 
@@ -1086,6 +1089,7 @@ double gw_cv_all(mat x, vec y, mat dp, bool dm_given, mat dmat,
 }
 
 // [[Rcpp::export]]
+#ifdef _OPENMP
 double gw_cv_all_omp(mat x, vec y, mat dp, bool dm_given, mat dmat, 
                      double p, double theta, bool longlat, 
                      double bw, int kernel, bool adaptive,
@@ -1122,6 +1126,7 @@ double gw_cv_all_omp(mat x, vec y, mat dp, bool dm_given, mat dmat,
   }
   return sum(cv);
 }
+#endif
 
 // [[Rcpp::export]]
 vec gw_local_r2(mat dp, vec dybar2, vec dyhat2, bool dm_given, mat dmat, double p, double theta, bool longlat, double bw, int kernel, bool adaptive) {
@@ -1143,7 +1148,7 @@ vec gw_local_r2(mat dp, vec dybar2, vec dyhat2, bool dm_given, mat dmat, double 
 double BIC(vec y, mat x, mat beta, vec s_hat)
 {
   double ss = rss(y, x, beta);
-  int n = x.n_rows;
+  double n = (double)x.n_rows;
   double BIC = n * log(ss / n) + n * log(2 * datum::pi) + log(n) * s_hat(0);
   return BIC;
 }
@@ -1158,16 +1163,16 @@ void printVec(vec v) {
   Rprintf("\n");
 }
 void printMat(mat m) {
-  int n = m.n_rows;
-  int p = m.n_cols;
+  uword n = m.n_rows;
+  uword p = m.n_cols;
   
   n = 10;
   if (m.n_rows < n) 
   {
      n = m.n_rows;
   } 
-  for (int i=0; i<n; i++) {
-    for (int j=0; j<p; j++) {
+  for (uword i=0; i<n; i++) {
+    for (uword j=0; j<p; j++) {
       Rprintf("%f ", m(i, j));
     }
     Rprintf("\n");
