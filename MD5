@@ -1,4 +1,4 @@
-926b7b1fca326d07b5fa39a82b05f1c2 *DESCRIPTION
+4142c354ea6718cc693e389e0fdfa9e7 *DESCRIPTION
 d411ad1f94d7f3649fe010f2dc08d41e *NAMESPACE
 bc55860c1f6cfd7c296d3f1b819c88c2 *R/BootstrapGWR.r
 bbc27867aa8d5f2b121499f5d1781f12 *R/GeneralizedGWR.r
@@ -17,7 +17,7 @@ a711dba7d06b0714171c885e691e909c *R/collinearity.r
 0a9409a1a77dfbb5d039b7555f348a68 *R/gw.average.cv.contrib.R
 dd8a85497bf641f5de7cabab203fb2d7 *R/gw.dist.r
 02abd14c3bca626135eb0a063d2a094b *R/gw.weight.r
-6f4ccbad523d2d68b78c42e57251eb20 *R/gwda.r
+5089defb376c4b89e50215c97a5a7cea *R/gwda.r
 fe673a5f6a017ec156811a25d63da58b *R/gwpca.mc.r
 a5d6bf22d5f3aa34644cedd5bf86f5c9 *R/gwpca.r
 b19fdcc40b8cffa9d1f75509242d77fa *R/gwpca.visualization.r
@@ -33,10 +33,10 @@ ca58d1605f7f70541fb3d9b220906aa9 *R/gwr.scalable.r
 a56b604a50b3f29a6cbe22d0e2a3f75a *R/mink.pvals.R
 b49f52564bcd6580f79a8100de528cb9 *R/minkovski.approach.r
 c2129a52ae8d50302c7a1a45d6a4b758 *R/writeGWR.r
-94a47d05581047d8206b17d133013d9b *R/zzz.r
+c386ce6f81ee2de0a399d46d5460e85d *R/zzz.r
 b33959749e71fb18bd292de23cdd4366 *cleanup
-0ab86de3f734dc44248b8c459a27be2a *configure
-a803db374a597923feebfa1793955016 *configure.ac
+05b58761a0404ceaa46ea6739f183bdf *configure
+342e07382f1fca43060e8f4b3153f813 *configure.ac
 fad011ea3383c650e1e0174e39c7de99 *data/DubVoter.rda
 995fa662c41ffd3afd86fdcd55cdfeaa *data/EWHP.rda
 81a3e0fc73a8ecf7ff7de5eae43b42f0 *data/EWOutline.rda
@@ -50,7 +50,7 @@ e60035c1a95f23148a1d24642f4cb644 *inst/CITATION
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-180b61d781dac64a2b924956529e4b27 *man/GWmodel-package.Rd
+33e14c8657cef92f6172f4a26399ebb4 *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
@@ -113,7 +113,7 @@ c1190e62d421c19ad364cfb46a6b987c *src/GWmodelCUDA/IGWmodelCUDA.cpp
 49e3bd0fbf1fe11325081ffb6756dae1 *src/GWmodelCUDA/IGWmodelCUDA.h
 d85547674b5aae04a975e19f6202ce85 *src/GWmodelCUDA/cmake/FindcuBLAS.cmake
 6485a1dbfd02d019f32c097cd6770af0 *src/GWmodelCUDA/helper.h
-d329b03884ba492e2aa66f44d1f26360 *src/Makevars.in
+6dfac6dd0bcf3848bcb8bacab76474f0 *src/Makevars.in
 1c0a70f94ad598754dbaaf51f6f4ebce *src/Makevars.win
 760b9b35685073e4d8abb885bf666b04 *src/RcppExports.cpp
 3c36789331d79d00b98e7dbe5af5bcc2 *src/download.ps1
