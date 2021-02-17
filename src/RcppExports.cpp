@@ -296,7 +296,7 @@ END_RCPP
 }
 
 // GWmodel_gw_reg_2
-arma::vec gw_reg_2(arma::mat x, arma::vec y, arma::vec w);
+arma::mat gw_reg_2(arma::mat x, arma::vec y, arma::vec w);
 RcppExport SEXP GWmodel_gw_reg_2(SEXP xSEXP, SEXP ySEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

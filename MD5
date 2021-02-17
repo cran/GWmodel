@@ -1,4 +1,4 @@
-2ac56e99e9c4aa75eb23eb013d8401a6 *DESCRIPTION
+73430cfcddc518d86eb874279274f578 *DESCRIPTION
 e23fce7b0abacd413959e598b67707ed *NAMESPACE
 0685e813207e5bed55dc48176682860f *R/BootstrapGWR.r
 bbc27867aa8d5f2b121499f5d1781f12 *R/GeneralizedGWR.r
@@ -33,7 +33,7 @@ ca58d1605f7f70541fb3d9b220906aa9 *R/gwr.scalable.r
 a56b604a50b3f29a6cbe22d0e2a3f75a *R/mink.pvals.R
 b49f52564bcd6580f79a8100de528cb9 *R/minkovski.approach.r
 c2129a52ae8d50302c7a1a45d6a4b758 *R/writeGWR.r
-37d676902c38d2cc59ddbf7a4c5aacdb *R/zzz.r
+d8f23c01dc9c70246c489f07f95b80fe *R/zzz.r
 b33959749e71fb18bd292de23cdd4366 *cleanup
 05b58761a0404ceaa46ea6739f183bdf *configure
 342e07382f1fca43060e8f4b3153f813 *configure.ac
@@ -50,7 +50,7 @@ e60035c1a95f23148a1d24642f4cb644 *inst/CITATION
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-735d636fee53120d7af864f5742bf3fc *man/GWmodel-package.Rd
+cbf80e261d791293757388a7a702ef90 *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
@@ -115,6 +115,6 @@ d85547674b5aae04a975e19f6202ce85 *src/GWmodelCUDA/cmake/FindcuBLAS.cmake
 6485a1dbfd02d019f32c097cd6770af0 *src/GWmodelCUDA/helper.h
 6dfac6dd0bcf3848bcb8bacab76474f0 *src/Makevars.in
 1c0a70f94ad598754dbaaf51f6f4ebce *src/Makevars.win
-fa0bd0933044b72bf1630f0f599685d4 *src/RcppExports.cpp
+6a8f542b99c346164f77560c314135cc *src/RcppExports.cpp
 3c36789331d79d00b98e7dbe5af5bcc2 *src/download.ps1
 9d5ca69ebfc9092df974ab5d695d9641 *src/init.c
