@@ -403,7 +403,7 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
         gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
         betas1[i,]<-gwsi[[1]]
      }
-     nu <- gw.fitted(x,betas1)
+     nu <- gw_fitted(x,betas1)
      mu <- exp(nu)
      old.llik <- llik
      #llik <- sum(y*nu - mu - log(gamma(y+1)))
@@ -448,7 +448,7 @@ gwr.poisson<-function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-5, 
         tr.StS<- sum(diag(S%*%diag(wt2)%*%t(S)%*% diag(1/wt2)))
         ###edf is different from the definition in Chris' code
         #edf<-dp.n-2*tr.S+tr.StS
-        yhat<-gw.fitted(x, betas)
+        yhat<-gw_fitted(x, betas)
         residual<-y-exp(yhat)
         ########rss <- sum((y - gwr.fitted(x,b))^2)
         #rss <- sum((y-exp(yhat))^2)
@@ -567,7 +567,7 @@ gwr.binomial <- function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-
             gwsi<-gw_reg(x,y.adj,W.i*wt2,hatmatrix=F,i)
             betas1[i,]<-gwsi[[1]]
         }
-        nu <- gw.fitted(x,betas1)
+        nu <- gw_fitted(x,betas1)
         mu <- exp(nu)/(1 + exp(nu))
         old.llik <- llik
         llik <- sum(lchoose(n,y) + (n-y)*log(1 - mu/n) + y*log(mu/n))
@@ -599,7 +599,7 @@ gwr.binomial <- function(y,x,regression.points,W1.mat,W2.mat,hatmatrix,tol=1.0e-
         #tr.StS<- sum(diag(S%*%diag(wt2)%*%t(S)%*% diag(1/wt2)))
         ###edf is different from the definition in Chris' code
         #edf<-dp.n-2*tr.S+tr.StS
-        yhat<-gw.fitted(x, betas)
+        yhat<-gw_fitted(x, betas)
         residual<-y-exp(yhat)/(1+exp(yhat))
         ########rss <- sum((y - gwr.fitted(x,b))^2)
         rss <- sum(residual^2)

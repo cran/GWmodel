@@ -43,7 +43,7 @@ trhat2<- function(S)
 {
     .Call('GWmodel_trhat2', PACKAGE = 'GWmodel', S)
 }
-fitted <- function(X, beta) {
+gw_fitted <- function(X, beta) {
     .Call('GWmodel_fitted', PACKAGE = 'GWmodel', X, beta)
 }
 ehat <- function(y, X, beta) {
@@ -90,7 +90,7 @@ gw_local_r2 <- function(dp, dybar2, dyhat2, dm_given, dmat, p, theta, longlat, b
                        boxcar   = 4)
   .Call('GWmodel_gw_local_r2', PACKAGE = 'GWmodel', dp, dybar2, dyhat2, dm_given, dmat, p, theta, longlat, bw, kernel.id, adaptive)
 }
-BIC <- function(y, x,beta, s_hat)
+gw_BIC <- function(y, x,beta, s_hat)
 {
     .Call('GWmodel_BIC', PACKAGE = 'GWmodel', y, x,beta, s_hat)
 }

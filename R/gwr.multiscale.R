@@ -243,7 +243,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
   criterion.val <- 10000000  
   #yhat.i <- betas*x
   #print(yhat.i)
-  resid.i <- y - fitted(x1, betas)
+  resid.i <- y - gw_fitted(x1, betas)
   RSS0 <- sum(resid.i^2)
   RSS1 <- 0
   RSS.vals <- c(RSS0, RSS1, criterion.val)
@@ -304,13 +304,13 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
       #AICcs[i] <- gwr.aic(bw.i, matrix(x[,i], ncol=1), y.i, kernel, adaptive, dp.locat, dMat=dMat, verbose=F)
       #yhat.i[,i] <- betai*x[,i]
       betas[,i] <- betai
-      resid.i <- y - fitted(x1, betas)
+      resid.i <- y - gw_fitted(x1, betas)
       #resid.i <- ehat(y.i, matrix(x[,i], ncol=1), matrix(betas[,i], ncol=1))
       #betas[,i] <- betai
     }
     bws.vars <- rbind(bws.vars, bws0)
     #AICc.vals <- rbind(AICc.vals, AICcs) 
-    RSS1 <- sum((y - fitted(x1, betas))^2)   
+    RSS1 <- sum((y - gw_fitted(x1, betas))^2)   
     if(criterion=="CVR")
     {
       criterion.val <- abs(RSS1-RSS0)
@@ -327,7 +327,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
     ieration <- ieration+1            
   }
   #####Output
-  yhat <- fitted(x1, betas)
+  yhat <- gw_fitted(x1, betas)
   residual <- y - yhat
   GW.diagnostic <- NA
   ###############
@@ -485,7 +485,7 @@ gwr.backfit <- function(x, y, betas,dp.locat,rp.locat,hatmatrix, criterion="CVR"
    dp.n <- nrow(x)
    rp.n <- nrow(rp.locat)
    criterion.val <- 10000000
-   resid.i <- y - fitted(x, betas)
+   resid.i <- y - gw_fitted(x, betas)
    #resid.i <- ehat(y, x, betas)
    RSS0 <- sum(resid.i^2)
    RSS1 <- 0
@@ -517,7 +517,7 @@ gwr.backfit <- function(x, y, betas,dp.locat,rp.locat,hatmatrix, criterion="CVR"
        betas[,i] <- betai
      }
      #RSS1 <- rss(y,x,betas)
-     RSS1 <- sum((y - fitted(x, betas))^2)   
+     RSS1 <- sum((y - gw_fitted(x, betas))^2)   
      if(criterion=="CVR")
      {
          #RSS1 <- sum((y - gwr.fitted(x, betas))^2)

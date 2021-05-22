@@ -252,7 +252,7 @@ gwr.basic <- function(formula, data, regression.points, bw, kernel="bisquare", a
     tr.S <- s_hat[1]
     tr.StS <- s_hat[2]
     RSS.gw <- diags[5]
-    yhat <- gw.fitted(x, betas)
+    yhat <- gw_fitted(x, betas)
     residual <- y - yhat
     CV <- numeric(dp.n)
     local.R2 <- numeric(dp.n)
@@ -697,8 +697,7 @@ F1234.test<-function(F.test.parameters=list())
 	     {
 	       dist.vj<- gw.dist(dp.locat,dp.locat, focus=j, p, theta, longlat)
 	     }
-        
-		    wj <- gw.weight(dist.vj,bw,kernel,adaptive)
+		    wj <- as.numeric(gw.weight(dist.vj,bw,kernel,adaptive))
 		    B[j,] <- ek[i,] %*% solve(t(x)%*%diag(wj)%*%x) %*%t(x) %*% diag(wj)
 	   }
 	   BJ<- (1/dp.n)*(t(B)%*%(iden-(1/dp.n)*J)%*%B)
