@@ -218,6 +218,9 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
     Shat <- matrix(nrow=dp.n, ncol=dp.n)
     S.arrays <- array(dim=c(var.n, dp.n, dp.n))
     C <- array(dim=c(dp.n,var.n,dp.n))
+    ####SEs and t-values
+    Beta_SE <- matrix(nrow=dp.n, ncol=var.n)
+    Beta_TV <- matrix(nrow=dp.n, ncol=var.n)
   }
   
   res <- gwr.q2(x1, y, dp.locat, adaptive=adaptive, hatmatrix = hatmatrix,bw=bw.int0, kernel=kernel,dMat=dMat)
@@ -357,6 +360,15 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
 	R2.val <- mgwr.diag[[6]]
 	R2adj <- mgwr.diag[[7]]
 	BIC <- mgwr.diag[[10]]
+  tr.Shat <- mgwr.diag[[8]]
+   ####Calculate the SEs and t-values
+    sigma.hat11 <- RSS.gw/(dp.n-tr.Shat)
+    for(i in 1:var.n)
+    {
+      Ci <- diag(1/x[,i])%*%S.arrays[i,,]
+      Beta_SE[,i] <- sqrt(diag(Ci%*%t(Ci)*sigma.hat11))
+      Beta_TV[,i] <- betas[,i]/Beta_SE[,i]
+    }
 	GW.diagnostic<-list(RSS.gw=RSS.gw,AICc=AICc,AIC=AIC,BIC=BIC,R2.val=R2.val, R2adj = R2adj, edf=edf, enp=enp)
   }
   #sigma.hat11<-RSS.gw/(dp.n-2*tr.Shat+tr.StShat)
@@ -372,9 +384,17 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
     betas[,idx1] <- beta0
   }
   ############################
-  vdgwr.df <- data.frame(betas, yhat, residual)
-  #colnames(vdgwr.df) <- c(colnames(x), "yhat", "residual",paste(colnames(betas), "SE", sep="_"), paste(colnames(betas), "TV", sep="_"))
-  colnames(vdgwr.df) <- c(colnames(x), "yhat", "residual")
+  if(hatmatrix)
+  {
+    vdgwr.df <- data.frame(betas, yhat, residual, Beta_SE, Beta_TV)
+    colnames(vdgwr.df) <- c(colnames(x), "yhat", "residual", paste(colnames(x), "SE", sep="_"),paste(colnames(x), "TV", sep="_"))
+  }
+  else
+  {
+    vdgwr.df <- data.frame(betas, yhat, residual)
+    #colnames(vdgwr.df) <- c(colnames(x), "yhat", "residual",paste(colnames(betas), "SE", sep="_"), paste(colnames(betas), "TV", sep="_"))
+    colnames(vdgwr.df) <- c(colnames(x), "yhat", "residual")
+  }
   griddedObj <- F
   if (is(regression.points, "Spatial"))
   { 

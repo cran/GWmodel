@@ -1,4 +1,4 @@
-1bd1cfcf3ff3f4cb7d1ed597c0465751 *DESCRIPTION
+945b92902f7f1ee23c112d446935211d *DESCRIPTION
 442919edd1e7074dfb4e15297c2ea6e1 *NAMESPACE
 4510d053f27fcec8f616bfb079a53f59 *R/BootstrapGWR.r
 313426dda0848a4b476a169c37798ca9 *R/GeneralizedGWR.r
@@ -25,7 +25,7 @@ b0c66d39c33b90ec0f8a7d5f62e22a0e *R/gwr.basic.r
 e5aaf08e2ad9ed288d24050d98c43efb *R/gwr.collin.diagno.r
 9e9bc424fc1a62d40f09f1ecee0383fa *R/gwr.hetero.r
 f419a59658f4590301bc64421ea4e474 *R/gwr.mixed.r
-7ff01d10aca036d69782d95bdd8d6fbb *R/gwr.multiscale.R
+2a53612d0658b2daead6da49fb951bd6 *R/gwr.multiscale.R
 431d9c795a9df78908902100af640f2c *R/gwr.predict.r
 f18e44148852b740b340152cb37492a3 *R/gwr.robust.r
 ca58d1605f7f70541fb3d9b220906aa9 *R/gwr.scalable.r
@@ -33,7 +33,7 @@ ca58d1605f7f70541fb3d9b220906aa9 *R/gwr.scalable.r
 a56b604a50b3f29a6cbe22d0e2a3f75a *R/mink.pvals.R
 b49f52564bcd6580f79a8100de528cb9 *R/minkovski.approach.r
 c2129a52ae8d50302c7a1a45d6a4b758 *R/writeGWR.r
-27d037523918dbdfdea61a2bc12c0120 *R/zzz.r
+4ae03f5022d479a2f5f7823fd3c3b4b7 *R/zzz.r
 b33959749e71fb18bd292de23cdd4366 *cleanup
 05b58761a0404ceaa46ea6739f183bdf *configure
 342e07382f1fca43060e8f4b3153f813 *configure.ac
@@ -50,7 +50,7 @@ e60035c1a95f23148a1d24642f4cb644 *inst/CITATION
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-3db13b7fb51b90f7075884efd280bb40 *man/GWmodel-package.Rd
+19e078c73d0c5d0fd123a2effd595fc5 *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
@@ -66,7 +66,7 @@ ba1fb37e85649e987acf2c74e76aa84f *man/bw.gwr.Rd
 40b115d7f014cbafb4a9871492de161c *man/ggwr.basic.Rd
 474607373025824715b927ce215fe28a *man/ggwr.cv.Rd
 62518615df78246391575b2999bfa3d9 *man/ggwr.cv.contrib.Rd
-2fa2aba28cde9c6cfbb3f3af57caed57 *man/gtwr.Rd
+a154a5d67fc3c6d0e24666fca550b4e9 *man/gtwr.Rd
 f76c3c5347c0d01ce220ea2c252ffc93 *man/gw.dist.Rd
 6cd0bec162e2b2bfb8e29224567ff8b5 *man/gw.pcplot.rd
 e733fa7afe2efbf81ae477e1a909bd1f *man/gw.weight.Rd
@@ -103,7 +103,8 @@ be977e2632d90c36bd41bb12254ce1ba *man/gwr.t.adjust.rd
 26756bd92f087062c7f53d6fcc618916 *man/gwr.write.Rd
 5a78e9cf707da86fc9fb0284e284ddfe *man/gwss.montecarlo.Rd
 e2397c697ac46c1f3ffb6c4cd38f444e *man/gwss.rd
-161b035c76c5c5f73885e260244cac18 *src/GWmodel.cpp
+611565528e6faab71640d7ac3e48dd9a *man/st.dist.Rd
+f5a9469fe5436d3f4537912b7002dc74 *src/GWmodel.cpp
 b35981ee522aae72b3663648521bdcbe *src/GWmodelCUDA/CGWmodelCUDA.cpp
 e5f9ee14c1656101d56e11d263298c35 *src/GWmodelCUDA/CGWmodelCUDA.h
 e00f5dee790a84460b6679b03a626aac *src/GWmodelCUDA/CMakeLists.txt

@@ -3,6 +3,8 @@
 #include <RcppArmadillo.h>
 #include <math.h>
 #include <Rmath.h>
+#define STRICT_R_HEADERS
+#include <float.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif
