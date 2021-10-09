@@ -249,11 +249,11 @@ double sp_gcdist(double lon1, double lon2, double lat1, double lat2) {
   a = 6378.137;              /* WGS-84 equatorial radius in km */
     f = 1.0/298.257223563;     /* WGS-84 ellipsoid flattening factor */
     
-    if (fabs(lat1 - lat2) < DOUBLE_EPS) {
-      if (fabs(lon1 - lon2) < DOUBLE_EPS) {
+    if (fabs(lat1 - lat2) < DBL_EPSILON) {
+      if (fabs(lon1 - lon2) < DBL_EPSILON) {
         return 0.0;
         /* Wouter Buytaert bug caught 100211 */
-      } else if (fabs((fabs(lon1) + fabs(lon2)) - 360.0) < DOUBLE_EPS) {
+      } else if (fabs((fabs(lon1) + fabs(lon2)) - 360.0) < DBL_EPSILON) {
         return 0.0;
       }
     }
