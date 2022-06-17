@@ -10,7 +10,7 @@ gw.fitted <- function(X, beta) {
 }
 
 gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR", max.iterations=2000,threshold=0.00001, dMats, var.dMat.indx, p.vals, theta.vals,longlat=FALSE,
-                           bws0, bw.seled, approach = "AIC", bws.thresholds, bws.reOpts=5, verbose=F, hatmatrix=T, 
+                           bws0=NULL, bw.seled, approach = "AIC", bws.thresholds, bws.reOpts=5, verbose=F, hatmatrix=T, 
                            predictor.centered=rep(T, length(bws0)-1),nlower = 10, parallel.method=F,parallel.arg=NULL)
 {
   ##Record the start time
@@ -175,7 +175,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
     stop("dMats are not correct")
   }  
   ############################### Intialize the bandwidth
-  if(missing(bws0))
+  if(is.null(bws0))
   {
     bws0 <- numeric(var.n)
     cat("------ Calculate the initial bandwidths for each independent variable ------\n")
@@ -430,7 +430,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
 ##Author: BL
 print.multiscalegwr<-function(x, ...)
 {
-  if(class(x) != "multiscalegwr") stop("It's not a multi-scale gwr object")
+  if(!inherits(x, "multiscalegwr")) stop("It's not a multi-scale gwr object")
   cat("   ***********************************************************************\n")
   cat("   *                       Package   GWmodel                             *\n")
   cat("   ***********************************************************************\n")

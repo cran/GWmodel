@@ -147,7 +147,7 @@ gwr.bootstrap <- function(formula, data, kernel="bisquare",approach="AIC", R=99,
 ######################
 print.gwrbsm <- function(x, ...)
 {
-  if(class(x) != "gwrbsm") stop("It's not a gwm object")
+  if(!inherits(x, "gwrbsm")) stop("It's not a gwm object")
   cat("   ***********************************************************************\n")
   cat("   *                       Package   GWmodel                             *\n")
   cat("   ***********************************************************************\n")
@@ -289,9 +289,9 @@ generate.lm.data <- function(obj,W,dep.var) {
 		x <- data.frame(x)}
 # What kind of model is it
 	model.type <- function(obj) {
-		if (class(obj) == "lm") return("lm")
-		if (class(obj) == "spautolm") return("spautolm")
-		if (class(obj) != "sarlm") stop("Unsupported regression type.")
+		if (inherits(obj, "lm")) return("lm")
+		if (inherits(obj, "spautolm")) return("spautolm")
+		if (!inherits(obj, "sarlm")) stop("Unsupported regression type.")
 		if (obj$type=="error") return("errorsarlm")
 		if (obj$type=="lag") return("lagsarlm") }
 # Do the simulation

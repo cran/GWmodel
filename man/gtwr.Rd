@@ -4,9 +4,6 @@
 \alias{ti.distv}
 \alias{ti.distm}
 \alias{ti.dist}
-\alias{get.before.ti}
-\alias{get.ts}
-\alias{get.uloat}
 \title{Geographically and Temporally Weighted Regression}
 \description{
   A function for calibrating a Geographically and Temporally Weighted Regression 

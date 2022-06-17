@@ -393,7 +393,7 @@ reg.combine <- function(before, item) {
 ##Author: BL
 print.gwrm<-function(x, ...)
 {
-  if(class(x) != "gwrm") stop("It's not a gwm object")
+  if(!inherits(x, "gwrm")) stop("It's not a gwm object")
   cat("   ***********************************************************************\n")
   cat("   *                       Package   GWmodel                             *\n")
   cat("   ***********************************************************************\n")

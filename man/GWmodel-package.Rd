@@ -19,8 +19,8 @@ to be adopted for efficient calibrations.
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 2.2-8\cr
-Date: \tab 2021-10-09\cr
+Version: \tab 2.2-9\cr
+Date: \tab 2022-06-14\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -49,7 +49,6 @@ of Statistical Software, 63(17):1-50, \doi{10.18637/jss.v063.i17}
 
 Lu B, Harris P, Charlton M, Brunsdon C (2014) The GWmodel R Package: further 
 topics for exploring Spatial Heterogeneity using Geographically Weighted Models.
-Geo-spatial Information Science 17(2): 85-101, 
-\doi{10.1080/10095020.2014.917453}
+Geo-spatial Information Science 17(2): 85-101, \doi{10.1080/10095020.2014.917453}
 }
 \keyword{package}

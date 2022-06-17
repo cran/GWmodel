@@ -219,7 +219,7 @@ gwr.predict<-function(formula, data, predictdata, bw, kernel="bisquare",adaptive
 ##Author: BL	
 print.gwrm.pred<-function(x, ...)
 {
-  if(class(x) != "gwrm.pred") stop("It's not a gwm object")
+  if(!inherits(x, "gwrm.pred")) stop("It's not a gwm object")
   cat("   ***********************************************************************\n")
   cat("   *                       Package   GWmodel                             *\n")
   cat("   ***********************************************************************\n")

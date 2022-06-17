@@ -1,7 +1,5 @@
 \name{st.dist}
 \alias{st.dist}
-\alias{sdist.mat}
-\alias{tdist.mat}
 \title{Spatio-temporal distance matrix calculation}
 \description{
   Calculate a distance vector(matrix) between any GW model calibration point(s) and the data points.

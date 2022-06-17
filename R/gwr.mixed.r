@@ -292,7 +292,7 @@ gwr.mixed.trace.fast <- function(x1, x2, y, adaptive=F, bw,
 
 print.mgwr <- function(x, ...)
 {
-  if(class(x) != "mgwr") stop("It's not a mgwr object")
+  if(!inherits(x, "mgwr")) stop("It's not a mgwr object")
   cat("   ***********************************************************************\n")
   cat("   *                       Package   GWmodel                             *\n")
   cat("   ***********************************************************************\n")
