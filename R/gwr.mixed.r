@@ -118,7 +118,7 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
                         kernel=kernel, dMat=dMat, dMat.rp=dMat.rp)                     
   res <- list()
    res$local <- model$local 
-   res$global <- as.matrix(apply(model$global,2,mean,na.rm=T), 1, length(idx.fixed))
+   res$global <- matrix(apply(model$global,2,mean,na.rm=T), 1, length(idx.fixed))
    colnames(res$local) <- colnames(x1)
    colnames(res$global) <- colnames(x2)
    mgwr.df <- data.frame(model$local, model$global)
