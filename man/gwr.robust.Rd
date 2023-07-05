@@ -5,10 +5,9 @@
 This function implements two robust GWR models.
 }
 \usage{
-gwr.robust(formula, data, bw,filtered=FALSE, 
-           kernel = "bisquare",adaptive = FALSE, p = 2, 
-           theta = 0, longlat = F, dMat, F123.test = F,
-           maxiter=20,cut.filter= 3, cut1=2,cut2=3,delta=1.0e-5) }
+gwr.robust(formula, data, bw,filtered=FALSE, kernel = "bisquare", adaptive = FALSE, p = 2, 
+          theta = 0, longlat = F, dMat, F123.test = F, maxiter=20,cut.filter= 3,cut1=2,
+          cut2=3,delta=1.0e-5, parallel.method = FALSE, parallel.arg = NULL)  }
 
 \arguments{
   \item{formula}{Regression model formula of a \link{formula} object }
@@ -37,6 +36,17 @@ gwr.robust(formula, data, bw,filtered=FALSE,
   \item{cut1}{default 2, first cutoff for the residual weighting function. wr(e)=1 if |e|<=cut1*sigma}
   \item{cut2}{default 3, second cutoff for the residual weighting function. wr(e)=(1-(|e|-2)^2)^2 if cut1*sigma<|e|<cut2*sigma, and wr(e)=0 if |e|>=cut2*sigma; cut 1 and cut2 refer to the automatic approach}
   \item{delta}{default 1.0e-5, tolerance of the iterative algorithm}
+  \item{parallel.method}{ FALSE as default, and the calibration will be conducted traditionally via the serial technique, 
+                         "omp": multi-thread technique with the OpenMP API, 
+                         "cluster": multi-process technique with the \pkg{parallel} package,
+                         "cuda": parallel computing technique with CUDA}
+  \item{parallel.arg}{ if parallel.method is not FALSE, then set the argument by following:
+                      if parallel.method is "omp", parallel.arg refers to the number of threads used, and its default value is 
+                       the number of cores - 1;
+                      if parallel.method is "cluster", parallel.arg refers to the number of R sessions used, and its default value is 
+                       the number of cores - 1;
+                      if parallel.method is "cuda",  parallel.arg refers to the number of calibrations  included in each group, 
+                      but note a too large value may cause the overflow of GPU memory. }
 }
 \value{
 A list of class \dQuote{gwrm}:

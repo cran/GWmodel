@@ -17,10 +17,7 @@ gwr.write.shp<-function(x,fn="GWRresults")
 {
    if(!inherits(x, "gwrm")) stop("It's not a gwm object")
    SDF<-x$SDF
-   if (is(SDF, "SpatialPointsDataFrame"))
-     writePointsShape(SDF,fn=fn, max_nchar= 256)
-   else if (is(SDF, "SpatialPolygonsDataFrame"))
-     writePolyShape(SDF, fn=fn,max_nchar= 256)
+   st_write(st_as_sf(SDF), paste(fn, ".shp",sep=""),driver = "ESRI Shapefile",delete_dsn =T)
    invisible(SDF)
 }
 
@@ -43,9 +40,6 @@ writeGWR.shp<-function(x,fn="GWRresults")
 {
    if(!inherits(x, "gwrm")) stop("It's not a gwm object")
    SDF<-x$SDF
-   if (is(SDF, "SpatialPointsDataFrame"))
-     writePointsShape(SDF,fn=fn, max_nchar= 256)
-   else if (is(SDF, "SpatialPolygonsDataFrame"))
-     writePolyShape(SDF, fn=fn,max_nchar= 256)
+   st_write(st_as_sf(SDF), paste(fn, ".shp",sep=""),driver = "ESRI Shapefile",delete_dsn =T)
    invisible(SDF)
 }

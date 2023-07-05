@@ -190,7 +190,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
       }
       cat("Now select an optimum bandwidth for the model: ", fml,"\n")
       part1<-paste("bws0[i]<-bw.gwr(",fml,sep="")
-      part2<-"data=regression.points,kernel=kernel,approach=approach,adaptive=adaptive,dMat=dMats[[var.dMat.indx[i]]], parallel.method=parallel.method,parallel.arg=parallel.method)"
+      part2<-"data=regression.points,kernel=kernel,approach=approach,adaptive=adaptive,dMat=dMats[[var.dMat.indx[i]]], parallel.method=parallel.method,parallel.arg=parallel.arg)"
       expression<-paste(part1,part2,sep=",")
       print(expression)
       eval(parse(text=expression))
@@ -208,7 +208,7 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
   cat("------   Calculate the initial beta0 from the above bandwidths    ------\n")
   #dMat <- gw.dist(dp.locat=dp.locat, p=2, theta=0, longlat=longlat)
   dMat <- dMats[[1]]
-  bw.int0 <- bw.gwr2(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower, parallel.method=parallel.method,parallel.arg=parallel.method)
+  bw.int0 <- bw.gwr2(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower, parallel.method=parallel.method,parallel.arg=parallel.arg)
   #betas <- gwr.q(x, y, dp.locat, adaptive=adaptive, bw=bw.int0, kernel=kernel,dMat=dMat)
   #######Re-initialize the betas by a simple back-fitting process
   #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,threshold*100)
