@@ -118,10 +118,13 @@ gwr.mixed <- function(formula, data, regression.points, fixed.vars,intercept.fix
                         kernel=kernel, dMat=dMat, dMat.rp=dMat.rp)                     
   res <- list()
    res$local <- model$local 
-   res$global <- as.matrix(apply(model$global,2,mean,na.rm=T), 1, length(idx.fixed))
+   res$global <- matrix(apply(model$global,2,mean,na.rm=T), nrow=1, ncol=length(idx.fixed))
    colnames(res$local) <- colnames(x1)
+   print(res$global)
    colnames(res$global) <- colnames(x2)
+   
    mgwr.df <- data.frame(model$local, model$global)
+   
    colnames(mgwr.df) <- c(paste(colnames(x1), "L", sep="_"), paste(colnames(x2), "F", sep="_"))
    rownames(rp.locat)<-rownames(mgwr.df)
   griddedObj <- F

@@ -1,4 +1,4 @@
-872ea682078cec4c91891ce2afbbd32c *DESCRIPTION
+574ba24929971195a259126a7525797f *DESCRIPTION
 344fdfa96f639d8db49b31ecd4d5e1fb *NAMESPACE
 6f8a9f6b612a789d19004f314faa63fd *R/BootstrapGWR.r
 c42403ee873bbc1ea7c3d33f7c1dead1 *R/GeneralizedGWR.r
@@ -12,7 +12,7 @@ c9fb22e37bb4cf20e5c6c1c1b3247229 *R/bw.gtwr.R
 0418a683ebfdb05150d372d805b3338d *R/bw.gwss.average.R
 e1a9b876d0e494efa7df4596d7bc3de7 *R/bw.sel.r
 31a2ef11b4457f2df01a87c4b8ae44b7 *R/collinearity.r
-6f63efba5d2bac5fe9949a9f5a7179ba *R/gtwr.R
+1eb787c3d27de42d0ba3b14c49e0dc8c *R/gtwr.R
 6fe93e3e5f89699fbcb03308cd04ac70 *R/gw.average.cv.R
 0a9409a1a77dfbb5d039b7555f348a68 *R/gw.average.cv.contrib.R
 ddc3df6c3e2cb04235180a02bc566b6c *R/gw.dist.r
@@ -24,7 +24,7 @@ b19fdcc40b8cffa9d1f75509242d77fa *R/gwpca.visualization.r
 a5c6d0d68b1182d930d3c1a4197624ad *R/gwr.basic.r
 e5aaf08e2ad9ed288d24050d98c43efb *R/gwr.collin.diagno.r
 9e9bc424fc1a62d40f09f1ecee0383fa *R/gwr.hetero.r
-543b55b56b223c702f7dc97ed84deb5b *R/gwr.mixed.r
+651bb6f21e885e35fa982fe3bcb34d1d *R/gwr.mixed.r
 85f4b3683b68d4b5fe160494d9530f88 *R/gwr.multiscale.R
 b2528117223b72ce345acec79c390e4b *R/gwr.predict.r
 25c19217c88e14a59699c2e94a1a1ed7 *R/gwr.robust.r
@@ -33,8 +33,8 @@ ce0fb48ccbfa29fe5df3745a0b0b88eb *R/gwr.scalable.r
 a56b604a50b3f29a6cbe22d0e2a3f75a *R/mink.pvals.R
 b49f52564bcd6580f79a8100de528cb9 *R/minkovski.approach.r
 8ac338eca2c2e7ac275139585bba9b9c *R/writeGWR.r
-66d3d42926bf0fca5fd7e8f11c8407bf *R/zzz.r
-ef7c5b1f6e584b35e9e9d9c737c05709 *build/partial.rdb
+7dc0fa1d49d802e698212e261aed12c2 *R/zzz.r
+d0d822a4bac45ae49c5772c324c34db1 *build/partial.rdb
 b33959749e71fb18bd292de23cdd4366 *cleanup
 3031667ebd88b3c0d3e880e8052ca03b *configure
 d48782cdb1a2cc00aefb86336f8c46bb *configure.ac
@@ -51,12 +51,12 @@ d1841e224383498b2d3e701dbe2f0c08 *data/USelect.rda
 c88bf1ad118dcadb0e804e246196ae22 *man/DubVoter.rd
 153427d2d7c2c0f819150ff3e223a29a *man/EWHP.Rd
 dbbef722403d8acd64fe7973d29a861b *man/EWOutline.rd
-bc529cd109dd431cf5a938d98ab87cbd *man/GWmodel-package.Rd
+b74cdc086f0f9473ccbd54e68950627a *man/GWmodel-package.Rd
 9dc5b8a9a66126e3b506832b7eac69a9 *man/Georgia.Rd
 ff8b836ed2d644536b21e44fdf7b9c28 *man/GeorgiaCounties.rd
 c41673fda549370c0907d47e1bed65ed *man/LondonBorough.rd
 a775b26ac81b5991dd442c4c59713a15 *man/LondonHP.Rd
-9b5d1a64515c236f797e666919d83f17 *man/USelect.rd
+797dfb4fdc6ac972c7c2999c020887c5 *man/USelect.rd
 6ae30428b0aadec2043950f22cbbb001 *man/bw.ggwr.Rd
 6c906bb1d760d5a92a15bc9a16616a43 *man/bw.gtwr.Rd
 1c69454519c9838faae9fe5d8b4dee80 *man/bw.gwda.rd

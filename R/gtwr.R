@@ -178,7 +178,7 @@ gtwr<- function(formula, data, regression.points, obs.tv, reg.tv, st.bw, kernel=
     if(DM.given)
       st.disti <- st.dMat[,i]
     else
-      st.disti <- st.dist(dp.locat, rp.locat, obs.tv, reg.tv, focus=i,p=p, theta=theta, longlat=F,lamda=longlat,t.units = t.units,ksi=ksi)
+      st.disti <- st.dist(dp.locat, rp.locat, obs.tv, reg.tv, focus=i,p=p, theta=theta, longlat=F,lamda=lamda,t.units = t.units,ksi=ksi)
     W.i<-gw.weight(st.disti,st.bw,kernel,adaptive)
     gw.resi<-gw_reg(x,y,W.i,hatmatrix,i)
     betas[i,]<-gw.resi[[1]] ######See function by IG
