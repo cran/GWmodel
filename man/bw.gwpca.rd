@@ -5,7 +5,7 @@
 A function for automatic bandwidth selection to calibrate a basic or robust GWPCA via a cross-validation approach only
 }
 \usage{
-bw.gwpca(data,vars,k=2, robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2, 
+bw.gwpca(data,vars,k=2, robust=FALSE, scaling=T, kernel="bisquare",adaptive=FALSE,p=2, 
          theta=0, longlat=F,dMat)
 }
 
@@ -14,6 +14,8 @@ bw.gwpca(data,vars,k=2, robust=FALSE,kernel="bisquare",adaptive=FALSE,p=2,
   \item{vars}{a vector of variable names to be evaluated}
   \item{k}{the number of retained components, and it must be less than the number of variables}
   \item{robust}{if TRUE, robust GWPCA will be applied; otherwise basic GWPCA will be applied}
+  \item{scaling}{if TRUE,  the data is scaled to have zero mean and unit variance (standardized); 
+                otherwise the data is centered but not scaled}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);

@@ -11,7 +11,7 @@ gw.fitted <- function(X, beta) {
 
 gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, criterion="dCVR", max.iterations=2000,threshold=0.00001, dMats, var.dMat.indx, p.vals, theta.vals,longlat=FALSE,
                            bws0=NULL, bw.seled, approach = "AIC", bws.thresholds, bws.reOpts=5, verbose=F, hatmatrix=T, 
-                           predictor.centered=rep(T, length(bws0)-1),nlower = 10, parallel.method=F,parallel.arg=NULL)
+                           predictor.centered=rep(T, length(bws0)-1),nlower = 10, parallel.method=F,parallel.arg=NULL, force.armadillo=F)
 {
   ##Record the start time
   timings <- list()
@@ -204,173 +204,236 @@ gwr.multiscale <- function(formula, data, kernel="bisquare", adaptive=FALSE, cri
   #################
   if(length(bw.seled)!=var.n)
     bw.seled <- rep(F, length.out=var.n)
-
-  cat("------   Calculate the initial beta0 from the above bandwidths    ------\n")
-  #dMat <- gw.dist(dp.locat=dp.locat, p=2, theta=0, longlat=longlat)
-  dMat <- dMats[[1]]
-  bw.int0 <- bw.gwr2(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower, parallel.method=parallel.method,parallel.arg=parallel.arg)
-  #betas <- gwr.q(x, y, dp.locat, adaptive=adaptive, bw=bw.int0, kernel=kernel,dMat=dMat)
-  #######Re-initialize the betas by a simple back-fitting process
-  #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,threshold*100)
-  #####Hatmatrix for the whole process
-  if(hatmatrix)
-  {
-    Shat <- matrix(nrow=dp.n, ncol=dp.n)
-    S.arrays <- array(dim=c(var.n, dp.n, dp.n))
-    C <- array(dim=c(dp.n,var.n,dp.n))
-    ####SEs and t-values
-    Beta_SE <- matrix(nrow=dp.n, ncol=var.n)
-    Beta_TV <- matrix(nrow=dp.n, ncol=var.n)
-  }
   
-  res <- gwr.q2(x1, y, dp.locat, adaptive=adaptive, hatmatrix = hatmatrix,bw=bw.int0, kernel=kernel,dMat=dMat)
-  betas <- res[[1]]
-  if(hatmatrix)
-  {
-    Shat <- res[[2]]
-    C <- res[[3]]
-    idm <- diag(var.n)
-    for(i in 1:var.n)
-      for(j in 1:dp.n)
-      {
-        S.arrays[i,j,] <- x1[j,i]*(idm[i,]%*%C[j,,])
-      }
-  }
-  #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,0.0001)
-  cat("------            The end for calculating the initial beta0              ------\n") 
-  cat("------ Select the optimum bandwidths for each independent variable via ", approach, " aproach ------\n")
-  ieration <-0 
-  #bws1 <- bws0
-  bws.vars <- bws0
-  bws.change.NO <- numeric(var.n)
-  criterion.val <- 10000000  
-  #yhat.i <- betas*x
-  #print(yhat.i)
-  resid.i <- y - gw_fitted(x1, betas)
-  RSS0 <- sum(resid.i^2)
-  RSS1 <- 0
-  RSS.vals <- c(RSS0, RSS1, criterion.val)
-  cat("*****  The back-fitting process for model calibration with bandwiths selected *****\n")
-  while((ieration < max.iterations) && criterion.val > threshold)
-  { 
-    #AICcs <- numeric(var.n)
-    cat("    Iteration ", ieration+1, ":\n")   
-    for(i in 1:var.n)
+  #################
+  # Eigen code have only been tested for parallel.method = "omp" and parallel.method = F.
+  # If another parallelization framework is requested, default to original implementation.
+  if ((parallel.method == "omp" || parallel.method == F) && !force.armadillo) {
+    kerneln <- NA
+    if (kernel == "gaussian") kerneln <- 0
+    if (kernel == "exponential") kerneln <- 1
+    if (kernel == "bisquare") kerneln <- 2
+    if (kernel == "tricube") kerneln <- 3
+    if (kernel == "boxcar") kerneln <- 4
+    if (is.na(kerneln)) kerneln <- 2
+    
+    approachn <- NA
+    if (approach == "AIC" || approach == "aic" || approach == "AICc") approachn <- 0
+    if (approach == "BIC" || approach == "bic") approachn <- 1
+    if (approach == "CV" || approach == "cv") approachn <- 2
+    if (is.na(approachn)) approachn <- 0
+    
+    crin <- NA
+    if (criterion == "dCVR") crin <- 0
+    if (criterion == "CVR") crin <- 1
+    if (is.na(crin)) crin <- 0
+    
+    num.cores <- parallel.arg
+    if (is.null(num.cores)) {
+      num.cores <- 0
+    }
+    else if (!is.numeric(num.cores) || is.nan(num.cores) || parallel.method == F) {
+      num.cores <- 1
+    }
+    
+    new_ret <- new_multiscale(x, x1, dMats, dp.locat, y, bws0, var.dMat.indx,
+                              adaptive, verbose, nlower, hatmatrix, 
+                              max.iterations, threshold, num.cores, InDevars,
+                              kerneln, approachn, crin, bws.reOpts)
+    #####Output
+    yhat <- as.matrix(new_ret[[1]])
+    residual <- as.matrix(new_ret[[2]])
+    betas <- new_ret[[3]]
+    Shat <- new_ret[[4]]
+    S.arrays <- array(new_ret[[5]], c(var.n, dp.n, dp.n))
+    Beta_SE <- new_ret[[6]]
+    Beta_TV <- new_ret[[7]]
+    bws0 <- as.numeric(new_ret[[8]])
+    bws.vars <- new_ret[[9]]
+    mgwr.diag <- new_ret[[10]]
+    GW.diagnostic <- NA
+    ###############
+    if(hatmatrix)
     {
-      dMat <- dMats[[var.dMat.indx[i]]]  
-      f.i <- betas[,i]*x1[,i]
-      y.i <- resid.i + f.i
-      if(bw.seled[i])
-        bw.i <- bws0[i]
+      AIC <- mgwr.diag[[1]]
+      AICc <- mgwr.diag[[2]]
+      edf <- mgwr.diag[[3]]
+      enp <- mgwr.diag[[4]]
+      RSS.gw <- mgwr.diag[[5]]
+      R2.val <- mgwr.diag[[6]]
+      R2adj <- mgwr.diag[[7]]
+      BIC <- mgwr.diag[[10]]
+      tr.Shat <- mgwr.diag[[8]]
+      
+      GW.diagnostic<-list(RSS.gw=RSS.gw,AICc=AICc,AIC=AIC,BIC=BIC,R2.val=R2.val, R2adj = R2adj, edf=edf, enp=enp)
+    }
+  } else {
+    cat("------   Calculate the initial beta0 from the above bandwidths    ------\n")
+    #dMat <- gw.dist(dp.locat=dp.locat, p=2, theta=0, longlat=longlat)
+    dMat <- dMats[[1]]
+    bw.int0 <- bw.gwr2(x1, y, dp.locat,approach=approach,kernel=kernel,adaptive=adaptive,dMat,verbose=verbose, nlower = nlower, parallel.method=parallel.method,parallel.arg=parallel.arg)
+    #betas <- gwr.q(x, y, dp.locat, adaptive=adaptive, bw=bw.int0, kernel=kernel,dMat=dMat)
+    #######Re-initialize the betas by a simple back-fitting process
+    #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,threshold*100)
+    #####Hatmatrix for the whole process
+    if(hatmatrix)
+    {
+      Shat <- matrix(nrow=dp.n, ncol=dp.n)
+      S.arrays <- array(dim=c(var.n, dp.n, dp.n))
+      C <- array(dim=c(dp.n,var.n,dp.n))
+      ####SEs and t-values
+      Beta_SE <- matrix(nrow=dp.n, ncol=var.n)
+      Beta_TV <- matrix(nrow=dp.n, ncol=var.n)
+    }
+    
+    res <- gwr.q2(x1, y, dp.locat, adaptive=adaptive, hatmatrix = hatmatrix,bw=bw.int0, kernel=kernel,dMat=dMat)
+    betas <- res[[1]]
+    if(hatmatrix)
+    {
+      Shat <- res[[2]]
+      C <- res[[3]]
+      idm <- diag(var.n)
+      for(i in 1:var.n)
+        for(j in 1:dp.n)
+        {
+          S.arrays[i,j,] <- x1[j,i]*(idm[i,]%*%C[j,,])
+        }
+    }
+    #betas <- gwr.backfit(x, y, betas,dp.locat,dp.locat, FALSE,criterion, adaptive, bws0, kernel,dMats, max.iterations,0.0001)
+    cat("------            The end for calculating the initial beta0              ------\n") 
+    cat("------ Select the optimum bandwidths for each independent variable via ", approach, " aproach ------\n")
+    ieration <-0 
+    #bws1 <- bws0
+    bws.vars <- bws0
+    bws.change.NO <- numeric(var.n)
+    criterion.val <- 10000000  
+    #yhat.i <- betas*x
+    #print(yhat.i)
+    resid.i <- y - gw_fitted(x1, betas)
+    RSS0 <- sum(resid.i^2)
+    RSS1 <- 0
+    RSS.vals <- c(RSS0, RSS1, criterion.val)
+    cat("*****  The back-fitting process for model calibration with bandwiths selected *****\n")
+    while((ieration < max.iterations) && criterion.val > threshold)
+    { 
+      #AICcs <- numeric(var.n)
+      cat("    Iteration ", ieration+1, ":\n")   
+      for(i in 1:var.n)
+      {
+        dMat <- dMats[[var.dMat.indx[i]]]  
+        f.i <- betas[,i]*x1[,i]
+        y.i <- resid.i + f.i
+        if(bw.seled[i])
+          bw.i <- bws0[i]
+        else
+        {
+          cat("Now select an optimum bandwidth for the variable: ", InDevars[i], "\n")
+          bw.i <- bw.gwr2(matrix(x1[, i], ncol = 1), y.i, dp.locat, approach = approach, kernel = kernel, adaptive = adaptive, dMat, verbose = verbose, nlower = nlower,parallel.method=parallel.method,parallel.arg=parallel.arg)
+          cat("The newly selected bandwidth for variable ", InDevars[i])
+          cat(" is: ", bw.i, "\n")
+          cat("The bandwidth used in the last ieration is: ", bws0[i])
+          cat(" and the difference between these two bandwidths is: ", abs(bw.i - bws0[i]), "\n")
+          if (abs(bw.i - bws0[i]) > bws.thresholds[i]) {
+            cat("The bandwidth for variable ", InDevars[i])
+            cat(" will be continually selected in the next ieration.\n")
+            bws.change.NO[i] <- 0
+          }
+          else {
+            bws.change.NO[i] <- bws.change.NO[i] + 1
+            if(bws.change.NO[i] < bws.reOpts)
+            {
+              cat("The bandwidth for variable ", InDevars[i])
+              cat(" seems to be converged for ", bws.change.NO[i], " times.")
+              cat("It will be continually optimized in the next ", bws.reOpts-bws.change.NO[i], " times\n")
+            }
+            else
+            {
+              cat("The bandwidth for variable ", InDevars[i])
+              cat(" seems to be converged and will be kept the same in the following ierations.\n")
+              bw.seled[i] <- T
+            }
+          }
+        }
+        bws0[i] <- bw.i       
+        res <- gwr.q2(matrix(x1[,i], ncol=1), y.i, dp.locat, adaptive=adaptive, hatmatrix = hatmatrix,bw=bw.i, kernel=kernel,dMat=dMat)
+        betai <- res[[1]]
+        if(hatmatrix)
+        {
+          Si <- res[[2]]
+          ###See Yu et al. 2018, eq. 18 on P8
+          S.arrayi <- S.arrays[i,,]
+          S.arrays[i,,] <- Si%*%S.arrayi + Si - Si%*%Shat
+          Shat <- Shat- S.arrayi + S.arrays[i,,] 
+        }
+        
+        #betai <- gwr.q(matrix(x[,i], ncol=1), y.i, loc=dp.locat, adaptive=adaptive, bw=bw.i, kernel=kernel,dMat=dMat)
+        #AICcs[i] <- gwr.aic(bw.i, matrix(x[,i], ncol=1), y.i, kernel, adaptive, dp.locat, dMat=dMat, verbose=F)
+        #yhat.i[,i] <- betai*x[,i]
+        betas[,i] <- betai
+        resid.i <- y - gw_fitted(x1, betas)
+        #resid.i <- ehat(y.i, matrix(x[,i], ncol=1), matrix(betas[,i], ncol=1))
+        #betas[,i] <- betai
+      }
+      bws.vars <- rbind(bws.vars, bws0)
+      #AICc.vals <- rbind(AICc.vals, AICcs) 
+      RSS1 <- sum((y - gw_fitted(x1, betas))^2)   
+      if(criterion=="CVR")
+      {
+        criterion.val <- abs(RSS1-RSS0)
+        cat("    Ieration ", ieration, "the change value of RSS (CVR) is: ", criterion.val,"\n")
+      }
       else
       {
-        cat("Now select an optimum bandwidth for the variable: ", InDevars[i], "\n")
-        bw.i <- bw.gwr2(matrix(x1[, i], ncol = 1), y.i, dp.locat, approach = approach, kernel = kernel, adaptive = adaptive, dMat, verbose = verbose, nlower = nlower,parallel.method=parallel.method,parallel.arg=parallel.arg)
-        cat("The newly selected bandwidth for variable ", InDevars[i])
-        cat(" is: ", bw.i, "\n")
-        cat("The bandwidth used in the last ieration is: ", bws0[i])
-        cat(" and the difference between these two bandwidths is: ", abs(bw.i - bws0[i]), "\n")
-        if (abs(bw.i - bws0[i]) > bws.thresholds[i]) {
-          cat("The bandwidth for variable ", InDevars[i])
-          cat(" will be continually selected in the next ieration.\n")
-          bws.change.NO[i] <- 0
-        }
-        else {
-          bws.change.NO[i] <- bws.change.NO[i] + 1
-          if(bws.change.NO[i] < bws.reOpts)
-          {
-            cat("The bandwidth for variable ", InDevars[i])
-            cat(" seems to be converged for ", bws.change.NO[i], " times.")
-            cat("It will be continually optimized in the next ", bws.reOpts-bws.change.NO[i], " times\n")
-          }
-          else
-          {
-            cat("The bandwidth for variable ", InDevars[i])
-            cat(" seems to be converged and will be kept the same in the following ierations.\n")
-            bw.seled[i] <- T
-          }
-        }
+        criterion.val <- sqrt(abs(RSS1-RSS0)/RSS1)
+        cat("    Ieration ", ieration+1, "the differential change value of RSS (dCVR) is: ", criterion.val,"\n") 
       }
-      bws0[i] <- bw.i       
-      res <- gwr.q2(matrix(x1[,i], ncol=1), y.i, dp.locat, adaptive=adaptive, hatmatrix = hatmatrix,bw=bw.i, kernel=kernel,dMat=dMat)
-      betai <- res[[1]]
-      if(hatmatrix)
+      RSS0 <- RSS1  
+      cat("----------End of    Iteration ", ieration+1, "----------\n") 
+      RSS.vals <- rbind(RSS.vals, c(RSS0, RSS1, criterion.val)) 
+      ieration <- ieration+1            
+    }
+    #####Output
+    yhat <- gw_fitted(x1, betas)
+    residual <- y - yhat
+    GW.diagnostic <- NA
+    ###############
+    # RSS.gw <- RSS1
+    # sigma.hat21 <- RSS.gw/dp.n
+    # yss.g <- sum((y - mean(y))^2)
+    # R2.val <-  1-RSS.gw/yss.g
+    # R2adj <- NA
+    # AICc <- NA
+    # if(hatmatrix)
+    # {
+      # tr.Shat <- sum(diag(Shat))
+      # tr.StShat<-sum(Shat^2)
+      # edf<- dp.n - 2*tr.Shat + tr.StShat
+      # AICc <- dp.n*log(sigma.hat21) + dp.n*log(2*pi) + dp.n *((dp.n + tr.Shat) / (dp.n - 2 - tr.Shat))
+      # R2adj <- 1-(1-R2.val)*(dp.n-1)/(edf-1)
+    # }
+    if(hatmatrix)
+    {
+      mgwr.diag <- gwr_diag(y, x1, betas, Shat)
+    	AIC <- mgwr.diag[[1]]
+    	AICc <- mgwr.diag[[2]]
+    	edf <- mgwr.diag[[3]]
+    	enp <- mgwr.diag[[4]]
+    	RSS.gw <- mgwr.diag[[5]]
+    	R2.val <- mgwr.diag[[6]]
+    	R2adj <- mgwr.diag[[7]]
+    	BIC <- mgwr.diag[[10]]
+      tr.Shat <- mgwr.diag[[8]]
+      ####Calculate the SEs and t-values
+      sigma.hat11 <- RSS.gw/(dp.n-tr.Shat)
+      for(i in 1:var.n)
       {
-        Si <- res[[2]]
-        ###See Yu et al. 2018, eq. 18 on P8
-        S.arrayi <- S.arrays[i,,]
-        S.arrays[i,,] <- Si%*%S.arrayi + Si - Si%*%Shat
-        Shat <- Shat- S.arrayi + S.arrays[i,,] 
+        Ci <- diag(1/x[,i])%*%S.arrays[i,,]
+        Beta_SE[,i] <- sqrt(diag(Ci%*%t(Ci)*sigma.hat11))
+        Beta_TV[,i] <- betas[,i]/Beta_SE[,i]
       }
-      
-      #betai <- gwr.q(matrix(x[,i], ncol=1), y.i, loc=dp.locat, adaptive=adaptive, bw=bw.i, kernel=kernel,dMat=dMat)
-      #AICcs[i] <- gwr.aic(bw.i, matrix(x[,i], ncol=1), y.i, kernel, adaptive, dp.locat, dMat=dMat, verbose=F)
-      #yhat.i[,i] <- betai*x[,i]
-      betas[,i] <- betai
-      resid.i <- y - gw_fitted(x1, betas)
-      #resid.i <- ehat(y.i, matrix(x[,i], ncol=1), matrix(betas[,i], ncol=1))
-      #betas[,i] <- betai
+  	  GW.diagnostic<-list(RSS.gw=RSS.gw,AICc=AICc,AIC=AIC,BIC=BIC,R2.val=R2.val, R2adj = R2adj, edf=edf, enp=enp)
     }
-    bws.vars <- rbind(bws.vars, bws0)
-    #AICc.vals <- rbind(AICc.vals, AICcs) 
-    RSS1 <- sum((y - gw_fitted(x1, betas))^2)   
-    if(criterion=="CVR")
-    {
-      criterion.val <- abs(RSS1-RSS0)
-      cat("    Ieration ", ieration, "the change value of RSS (CVR) is: ", criterion.val,"\n")
-    }
-    else
-    {
-      criterion.val <- sqrt(abs(RSS1-RSS0)/RSS1)
-      cat("    Ieration ", ieration+1, "the differential change value of RSS (dCVR) is: ", criterion.val,"\n") 
-    }
-    RSS0 <- RSS1  
-    cat("----------End of    Iteration ", ieration+1, "----------\n") 
-    RSS.vals <- rbind(RSS.vals, c(RSS0, RSS1, criterion.val)) 
-    ieration <- ieration+1            
-  }
-  #####Output
-  yhat <- gw_fitted(x1, betas)
-  residual <- y - yhat
-  GW.diagnostic <- NA
-  ###############
-  # RSS.gw <- RSS1
-  # sigma.hat21 <- RSS.gw/dp.n
-  # yss.g <- sum((y - mean(y))^2)
-  # R2.val <-  1-RSS.gw/yss.g
-  # R2adj <- NA
-  # AICc <- NA
-  # if(hatmatrix)
-  # {
-    # tr.Shat <- sum(diag(Shat))
-    # tr.StShat<-sum(Shat^2)
-    # edf<- dp.n - 2*tr.Shat + tr.StShat
-    # AICc <- dp.n*log(sigma.hat21) + dp.n*log(2*pi) + dp.n *((dp.n + tr.Shat) / (dp.n - 2 - tr.Shat))
-    # R2adj <- 1-(1-R2.val)*(dp.n-1)/(edf-1)
-  # }
-  
-  if(hatmatrix)
-  {
-    mgwr.diag <- gwr_diag(y, x1, betas, Shat)
-	AIC <- mgwr.diag[[1]]
-	AICc <- mgwr.diag[[2]]
-	edf <- mgwr.diag[[3]]
-	enp <- mgwr.diag[[4]]
-	RSS.gw <- mgwr.diag[[5]]
-	R2.val <- mgwr.diag[[6]]
-	R2adj <- mgwr.diag[[7]]
-	BIC <- mgwr.diag[[10]]
-  tr.Shat <- mgwr.diag[[8]]
-   ####Calculate the SEs and t-values
-    sigma.hat11 <- RSS.gw/(dp.n-tr.Shat)
-    for(i in 1:var.n)
-    {
-      Ci <- diag(1/x[,i])%*%S.arrays[i,,]
-      Beta_SE[,i] <- sqrt(diag(Ci%*%t(Ci)*sigma.hat11))
-      Beta_TV[,i] <- betas[,i]/Beta_SE[,i]
-    }
-	GW.diagnostic<-list(RSS.gw=RSS.gw,AICc=AICc,AIC=AIC,BIC=BIC,R2.val=R2.val, R2adj = R2adj, edf=edf, enp=enp)
-  }
+  }  
   #sigma.hat11<-RSS.gw/(dp.n-2*tr.Shat+tr.StShat)
   
   #########################Retrive the intercept

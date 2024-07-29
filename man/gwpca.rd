@@ -10,7 +10,7 @@
 This function implements basic or robust GWPCA.
 }
 \usage{
-gwpca(data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
+gwpca(data, elocat, vars, k = 2, robust = FALSE, scaling=T, kernel = "bisquare",
                   adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T, scores=F,
                   dMat)
 \method{print}{gwpca}(x, \dots)
@@ -24,6 +24,8 @@ gwpca(data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
   \item{vars}{a vector of variable names to be evaluated}
   \item{k}{the number of retained components; k must be less than the number of variables}
   \item{robust}{if TRUE, robust GWPCA will be applied; otherwise basic GWPCA will be applied}
+  \item{scaling}{if TRUE,  the data is scaled to have zero mean and unit variance (standardized); 
+                otherwise the data is centered but not scaled}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);

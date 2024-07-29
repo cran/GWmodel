@@ -4,6 +4,7 @@
 \alias{print.multiscalegwr}
 \alias{gwr.backfit}
 \alias{gw_fitted}
+\alias{new_multiscale}
 \title{Multiscale GWR}
 \description{
 This function implements multiscale GWR to detect variations in regression relationships across
@@ -19,7 +20,7 @@ gwr.multiscale(formula, data, kernel = "bisquare", adaptive = FALSE,
                  bws.reOpts = 5, verbose = F,
                  hatmatrix = T, predictor.centered = rep(T,
                  length(bws0) - 1), nlower = 10, parallel.method = F,
-                 parallel.arg = NULL)
+                 parallel.arg = NULL, force.armadillo = F)
 \method{print}{multiscalegwr}(x, \dots)
 }
 
@@ -66,6 +67,7 @@ gwr.multiscale(formula, data, kernel = "bisquare", adaptive = FALSE,
                        the number of cores - 1;
                       if parallel.method is "cuda",  parallel.arg refers to the number of calibrations  included in each group, 
                       but note a too large value may cause the overflow of GPU memory. }
+  \item{force.armadillo}{if TRUE, use the original RcppArmadillo implementation instead of the new RcppEigen implementation. Only matters if parallel.method = F or parallel.method = "omp".}
   \item{x}{an object of class \dQuote{multiscalegwr}, returned by the function \link{gwr.multiscale}}
   \item{...}{arguments passed through (unused)}
 }

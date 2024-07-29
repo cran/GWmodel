@@ -2,7 +2,7 @@
 # Note - could make this more general to all other eigenvalues...
 # Arguments as before, but nsims controls number of simulations
 
-gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, scaling=T, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -21,7 +21,7 @@ gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
   }
   if(missing(bw)||bw<=0)
     stop("Bandwidth is not specified incorrectly")
-  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
   n<-nrow(dp.locat)
 	res <- numeric(nsims)
@@ -29,7 +29,7 @@ gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
     mcs <- sample(n)
 		dMat[mcs,]<-dMat[1:n,]
 		dMat[,mcs]<-dMat[,1:n]
-		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
 	simres <- list(actual=actual,sims=res)
 	class(simres) <- "mcsims"
@@ -39,7 +39,7 @@ gwpca.montecarlo.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
 # As above but instead of simulating using a given bandwidth this one runs the automatic choice each simulation
 # More computationally demanding, but more realistic, as it allows for the fact that using cross-validation
 # 'mines' for the bandwidth for a given sample data set.
-gwpca.montecarlo.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+gwpca.montecarlo.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, scaling=T, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -56,9 +56,9 @@ gwpca.montecarlo.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kerne
   {
     dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
   }
-  bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, dMat=dMat)
-  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,scaling=scaling, 
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
   n<-nrow(dp.locat)
 	res <- numeric(nsims)
@@ -66,9 +66,9 @@ gwpca.montecarlo.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kerne
 		mcs <- sample(n)
 		dMat[mcs,]<-dMat[1:n,]
 		dMat[,mcs]<-dMat[,1:n]
-		bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, dMat=dMat)
-		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
 	simres <- list(actual=actual,sims=res)
 	class(simres) <- "mcsims"
@@ -92,7 +92,7 @@ plot.mcsims <- function(x,sname="SD of local eigenvalues from randomisations",..
 		sprintf("%6.3f\n",sum(x$actual < x$sims)/length(x$sims)),sep=''),srt=90,cex=0.7)}
    
 # This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)   
-montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, scaling=T, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -111,7 +111,7 @@ montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
   }
   if(missing(bw)||bw<=0)
     stop("Bandwidth is not specified incorrectly")
-  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
   n<-nrow(dp.locat)
 	res <- numeric(nsims)
@@ -119,7 +119,7 @@ montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
     mcs <- sample(n)
 		dMat[mcs,]<-dMat[1:n,]
 		dMat[,mcs]<-dMat[,1:n]
-		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
 	simres <- list(actual=actual,sims=res)
 	class(simres) <- "mcsims"
@@ -127,7 +127,7 @@ montecarlo.gwpca.1<- function(data, bw, vars, k = 2, nsims=99,robust = FALSE, ke
 
 
 # This version of this function is kept to make the code work with the early versions of GWmodel (before 2.0-1)
-montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
+montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, scaling=T, kernel = "bisquare",
                   adaptive = FALSE,  p = 2, theta = 0, longlat = F,
                   dMat)
 {
@@ -144,9 +144,9 @@ montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kerne
   {
     dMat <- gw.dist(dp.locat=dp.locat, p=p, theta=theta, longlat=longlat)
   }
-  bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, dMat=dMat)
-  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+  actual <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])
   n<-nrow(dp.locat)
 	res <- numeric(nsims)
@@ -154,9 +154,9 @@ montecarlo.gwpca.2 <- function(data, vars, k = 2, nsims=99,robust = FALSE, kerne
 		mcs <- sample(n)
 		dMat[mcs,]<-dMat[1:n,]
 		dMat[,mcs]<-dMat[,1:n]
-		bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		bw <- bw.gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, dMat=dMat)
-		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, kernel = kernel,
+		res[i] <- sd(gwpca(data=data, vars=vars, k = k, robust = robust, scaling=scaling, kernel = kernel,
                   adaptive = adaptive, bw=bw, dMat=dMat)$var[,1])}
 	simres <- list(actual=actual,sims=res)
 	class(simres) <- "mcsims"

@@ -62,7 +62,7 @@ rwpca <- function(x,wt,nu=0,nv=2) {
 # pcafun is the weighted PCA function which can be in a basic or robust form (from before)
 # This returns a list with <loadings> for each eloc; d for each eloc; and the bandwidth used	
 #gwpca <- function(x,loc,bw,k=2,eloc=loc,pcafun=wpca,...) 
-gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare",
+gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, scaling=T,kernel = "bisquare",
                   adaptive = FALSE, bw, p = 2, theta = 0, longlat = F, cv = T, scores=F,
                   dMat)
 {
@@ -133,6 +133,10 @@ gwpca <- function (data, elocat, vars, k = 2, robust = FALSE, kernel = "bisquare
   if(length(var.idx)==0) stop("Variables input doesn't match with data")
   x<-data[,var.idx]
   x<-as.matrix(x)
+  if(scaling)
+     x <- scale(x, center =T, scale=T)
+  else
+     x <- scale(x, center =T)
   var.nms<-colnames(x)
   var.n<-ncol(x)
   if(len.var > var.n)
@@ -310,7 +314,7 @@ print.gwpca<-function(x, ...)
 }
 #######################################Bandwidth selection
 # Function to find a fixed or adaptive bandwidth 
-bw.gwpca<-function(data,vars,k=2, robust = FALSE,kernel="bisquare",adaptive=FALSE,p=2, theta=0, longlat=F,dMat)
+bw.gwpca<-function(data,vars,k=2, robust = FALSE, scaling=T, kernel="bisquare",adaptive=FALSE, p=2, theta=0, longlat=F,dMat)
 {
   if (is(data, "Spatial"))
   {
@@ -347,6 +351,10 @@ bw.gwpca<-function(data,vars,k=2, robust = FALSE,kernel="bisquare",adaptive=FALS
   if(length(var.idx)==0) stop("Variables input doesn't match with data")
   x<-data[,var.idx]
   x<-as.matrix(x)
+  if(scaling)
+     x <- scale(x, center =T, scale=T)
+  else
+     x <- scale(x, center =T)
   var.nms<-colnames(x)
   var.n<-ncol(x)
   #########Find the range of the fixed bandwidth

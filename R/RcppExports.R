@@ -220,3 +220,7 @@ gwr_mixed_2 <- function(x1, x2, y, dMat, dMat.rp, bw, kernel, adaptive)
                        boxcar   = 4)
    .Call('GWmodel_gwr_mixed_2', PACKAGE = 'GWmodel', x1, x2, y, dMat, dMat.rp, bw, kernel.id, adaptive)  
 }
+
+new_multiscale <- function(x, x1, dMatsParam, dp_locat, y, bws0, var_dMat_index, adaptive, verbose, nlower, hatmatrix, max_iterations, threshold, max_threads, variable_names, kerneln, approachn, crin, bws_reOpts) {
+  .Call('_GWmodel_new_multiscale', PACKAGE = 'GWmodel', x, x1, dMatsParam, dp_locat, y, bws0, var_dMat_index, adaptive, verbose, nlower, hatmatrix, max_iterations, threshold, max_threads, variable_names, kerneln, approachn, crin, bws_reOpts)
+}

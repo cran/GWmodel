@@ -10,8 +10,9 @@ GW PCA with the bandwidth pre-specified  and constant. The test evaluates whethe
 the GW eigenvalues vary significantly across space for the first component only.
 }
 \usage{
-gwpca.montecarlo.1(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
-                   adaptive = FALSE,  p = 2, theta = 0, longlat = F, dMat)
+gwpca.montecarlo.1(data, bw, vars, k = 2, nsims=99,robust = FALSE, scaling=T, 
+                   kernel = "bisquare", adaptive = FALSE,  p = 2, theta = 0, 
+                   longlat = F, dMat)
 \method{plot}{mcsims}(x, sname="SD of local eigenvalues from randomisations", \dots)
 }
 
@@ -22,6 +23,8 @@ gwpca.montecarlo.1(data, bw, vars, k = 2, nsims=99,robust = FALSE, kernel = "bis
   \item{k}{the number of retained components; k must be less than the number of variables}
   \item{nsims}{the number of simulations for MontCarlo test}
   \item{robust}{if TRUE, robust GWPCA will be applied; otherwise basic GWPCA will be applied}
+  \item{scaling}{if TRUE,  the data is scaled to have zero mean and unit variance (standardized); 
+                otherwise the data is centered but not scaled}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);

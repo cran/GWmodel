@@ -9,8 +9,9 @@ automatically re-selected via the cross-validation approach. The test evaluates 
 vary significantly across space for the first component only.
 }
 \usage{
-gwpca.montecarlo.2(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquare",
-                   adaptive = FALSE,  p = 2, theta = 0, longlat = F, dMat)
+gwpca.montecarlo.2(data, vars, k = 2, nsims=99,robust = FALSE, scaling=T, 
+                   kernel = "bisquare", adaptive = FALSE,  p = 2, 
+                   theta = 0, longlat = F, dMat)
 }
 
 \arguments{
@@ -19,6 +20,8 @@ gwpca.montecarlo.2(data, vars, k = 2, nsims=99,robust = FALSE, kernel = "bisquar
   \item{k}{the number of retained components; k must be less than the number of variables}
   \item{nsims}{the number of simulations for MontCarlo test}
   \item{robust}{if TRUE, robust GWPCA will be applied; otherwise basic GWPCA will be applied}
+  \item{scaling}{if TRUE,  the data is scaled to have zero mean and unit variance (standardized); 
+                otherwise the data is centered but not scaled}
   \item{kernel}{function chosen as follows:
   
                 gaussian: wgt = exp(-.5*(vdist/bw)^2);

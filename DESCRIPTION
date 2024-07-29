@@ -1,19 +1,55 @@
 Package: GWmodel
 Type: Package
-Version: 2.3-2
-Date: 2024-01-30
+Version: 2.3-3
+Date: 2024-07-29
 Title: Geographically-Weighted Models
-Depends: R (>= 3.0.0), robustbase,sp (> 1.4-0),Rcpp
+Depends: R (>= 3.0.0), robustbase,sp (> 1.4-0), Rcpp (>= 1.0.12)
 Imports: methods, sf, grDevices, spacetime,spdep,spatialreg,FNN
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: Rcpp, RcppArmadillo, RcppEigen
 Suggests: mvoutlier, RColorBrewer, gstat,spData
 Description: Techniques from a particular branch of spatial statistics,termed geographically-weighted (GW) models. GW models suit situations when data are not described well by some global model, but where there are spatial regions where a suitably localised calibration provides a better description. 'GWmodel' includes functions to calibrate: GW summary statistics (Brunsdon et al., 2002)<doi: 10.1016/s0198-9715(01)00009-6>, GW principal components analysis (Harris et al., 2011)<doi: 10.1080/13658816.2011.554838>, GW discriminant analysis (Brunsdon et al., 2007)<doi: 10.1111/j.1538-4632.2007.00709.x> and various forms of GW regression (Brunsdon et al., 1996)<doi: 10.1111/j.1538-4632.1996.tb00936.x>; some of which are provided in basic and robust (outlier resistant) forms.
-Author: Binbin Lu[aut], Paul Harris[aut], Martin Charlton[aut], Chris Brunsdon[aut], Tomoki Nakaya[aut], Daisuke Murakami[aut],Isabella Gollini[ctb], Yigong Hu[ctb], Fiona H Evans[ctb]
+Authors@R: c(person(given = "Binbin",
+                      family = "Lu",
+                      role = c("aut", "cre"),
+                      email = "binbinlu@whu.edu.cn"),
+               person(given = "Paul",
+                      family = "Harris",
+                      role = "aut"),
+               person(given = "Martin",
+                      family = "Charlton",
+                      role = "aut"),
+               person(given = "Chris",
+                      family = "Brunsdon",
+                      role = "aut"),
+               person(given = "Tomoki",
+                      family = "Nakaya",
+                      role = "aut"),
+               person(given = "Daisuke",
+                      family = "Murakami",
+                      role = "ctb"),
+               person(given = "Yigong",
+                      family = "Hu",
+                      role = "ctb"),
+               person(given = c("Fiona", "H"),
+                      family = "Evans",
+                      role = "ctb"),
+               person(given = "Hjalmar",
+                      family = "H<c3><b6>glund",
+                      role = "ctb"))
 Maintainer: Binbin Lu <binbinlu@whu.edu.cn>
 License: GPL (>= 2)
 Repository: CRAN
 URL: http://gwr.nuim.ie/
 NeedsCompilation: yes
 SystemRequirements: GNU make
-Packaged: 2024-01-30 09:38:11 UTC; Lenovo
-Date/Publication: 2024-01-31 16:30:06 UTC
+Packaged: 2024-07-29 11:58:39 UTC; Lenovo
+Date/Publication: 2024-07-29 12:40:02 UTC
+Author: Binbin Lu [aut, cre],
+  Paul Harris [aut],
+  Martin Charlton [aut],
+  Chris Brunsdon [aut],
+  Tomoki Nakaya [aut],
+  Daisuke Murakami [ctb],
+  Yigong Hu [ctb],
+  Fiona H Evans [ctb],
+  Hjalmar H<c3><b6>glund [ctb]

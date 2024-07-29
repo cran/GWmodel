@@ -19,8 +19,8 @@ to be adopted for efficient calibrations.
 \tabular{ll}{
 Package: \tab GWmodel\cr
 Type: \tab Package\cr
-Version: \tab 2.3-2\cr
-Date: \tab 2024-01-30\cr
+Version: \tab 2.3-3\cr
+Date: \tab 2024-07-29\cr
 License: \tab GPL (>=2)\cr
 LazyLoad: \tab yes\cr
 }
